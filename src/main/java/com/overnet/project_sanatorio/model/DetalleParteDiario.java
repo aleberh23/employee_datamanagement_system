@@ -36,14 +36,16 @@ public class DetalleParteDiario implements Serializable {
             joinColumns =@JoinColumn(name="id_detallepd"),
             inverseJoinColumns=@JoinColumn(name="id_empleado"))
     private List<Empleado> empleados;
+    @ManyToMany
     @JoinTable(name="contrato_detallepdiario",
             joinColumns =@JoinColumn(name="id_detallepd"),
             inverseJoinColumns=@JoinColumn(name="id_contrato"))
     private List<Contrato> contratos;
-    /*@JoinTable(name="licTomada_detallepdiario",
+    @ManyToMany
+    @JoinTable(name="licTomada_detallepdiario",
             joinColumns =@JoinColumn(name="id_detallepd"),
             inverseJoinColumns=@JoinColumn(name="id_licencia_tomada"))
-    private List<LicenciaTomada> licTomadas;*/
+    private List<LicenciaTomada> licTomadas;
 
     public DetalleParteDiario(int idDetallePd, int sector, ParteDiario parteDiario) {
         this.idDetallePd = idDetallePd;
@@ -51,12 +53,12 @@ public class DetalleParteDiario implements Serializable {
         this.parteDiario = parteDiario;
         this.empleados = new ArrayList();
         this.contratos = new ArrayList();
-        //this.licTomadas = new ArrayList();
+        this.licTomadas = new ArrayList();
     }
 
     public DetalleParteDiario() {
         this.empleados = new ArrayList();
         this.contratos = new ArrayList();
-       // this.licTomadas = new ArrayList();
+        this.licTomadas = new ArrayList();
     }
 }

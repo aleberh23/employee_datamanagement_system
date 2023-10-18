@@ -39,8 +39,8 @@ public class LicenciaTomada implements Serializable {
     @ManyToOne
     @JoinColumn(name="id_empleado")
     private Empleado empleado;
-    /*@ManyToMany(mappedBy="licTomadas")
-    private List<DetalleParteDiario>detallespd;*/
+    @ManyToMany(mappedBy="licTomadas")
+    private List<DetalleParteDiario>detallespd;
 
     public LicenciaTomada(int idLicenciaTomada, Calendar fechaDesde, Calendar fechaHasta, String tipo, String descripcion, boolean certificado, Empleado empleado) {
         this.idLicenciaTomada = idLicenciaTomada;
@@ -50,11 +50,11 @@ public class LicenciaTomada implements Serializable {
         this.descripcion = descripcion;
         this.certificado = certificado;
         this.empleado = empleado;
-        //this.detallespd=new ArrayList();
+        this.detallespd=new ArrayList();
     }
 
     public LicenciaTomada() {
-        //this.detallespd=new ArrayList();
+        this.detallespd=new ArrayList();
     }
 
     

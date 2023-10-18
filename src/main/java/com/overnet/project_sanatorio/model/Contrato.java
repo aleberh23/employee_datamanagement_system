@@ -43,11 +43,11 @@ public class Contrato implements Serializable {
         this.fechaInicio = fechaInicio;
         this.descripcion = descripcion;
         this.empleado = empleado;
-        this.detallespd = new ArrayList();
+        //this.detallespd = new ArrayList();
     }
 
     public Contrato() {
-        this.detallespd = new ArrayList();
+        //this.detallespd = new ArrayList();
     }
     
 }
