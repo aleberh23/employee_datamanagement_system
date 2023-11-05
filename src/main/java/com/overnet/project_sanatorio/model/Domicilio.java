@@ -27,17 +27,20 @@ public class Domicilio implements Serializable {
     private String localidad;
     @Column(name="auditoria_medica")
     private boolean auditoriaMedica;
+    @Column(name="baja")
+    private boolean baja;
     @ManyToOne
     @JoinColumn(name="id_empleado")
     private Empleado empleado;
 
-    public Domicilio(int id, String calle, int numero, String localidad, boolean auditoriaMedica, Empleado empleado) {
+    public Domicilio(int id, String calle, int numero, String localidad, boolean auditoriaMedica, boolean baja, Empleado empleado) {
         this.id = id;
         this.calle = calle;
         this.numero = numero;
         this.localidad = localidad;
         this.auditoriaMedica = auditoriaMedica;
         this.empleado = empleado;
+        this.baja=baja;
     }
 
     public Domicilio() {

@@ -15,11 +15,12 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 @Entity
@@ -49,16 +50,22 @@ public class Empleado implements Serializable {
     private boolean contratado;
     @Temporal(TemporalType.DATE)
     @Column(name="fecha_ingreso")
-    private Calendar fechaIngreso;
+    @DateTimeFormat (pattern="yyyy-MM-dd")
+    private LocalDate fechaIngreso;
+    @Column(name="baja")
+    private boolean baja;
     @Temporal(TemporalType.DATE)
     @Column(name="fecha_baja")
-    private Calendar fechaBaja;
+    @DateTimeFormat (pattern="yyyy-MM-dd")
+    private LocalDate fechaBaja;
     @Temporal(TemporalType.DATE)
     @Column(name="fecha_nacimiento")
-    private Calendar fechaNacimiento;
+    @DateTimeFormat (pattern="yyyy-MM-dd")
+    private LocalDate fechaNacimiento;
     @Temporal(TemporalType.DATE)
     @Column(name="fecha_jubilacion")
-    private Calendar fechaJubilacion;
+    @DateTimeFormat (pattern="yyyy-MM-dd")
+    private LocalDate fechaJubilacion;
     @ManyToOne
     @JoinColumn(name="id_sector")
     private Sector sector;
@@ -76,7 +83,7 @@ public class Empleado implements Serializable {
     private List<DetalleParteDiario>detallespd;
     
 
-    public Empleado(int id, String nombre, String apellido, String correoElectronico, BigInteger nroCelular, String tipoDocumento, BigInteger nroDocumento, BigInteger nroLegajo, BigInteger cuil, boolean contratado, Calendar fechaIngreso, Calendar fechaBaja, Calendar fechaNacimiento, Calendar fechaJubilacion/*, Sector sector*/) {
+    public Empleado(int id, String nombre, String apellido, String correoElectronico, BigInteger nroCelular, String tipoDocumento, BigInteger nroDocumento, BigInteger nroLegajo, BigInteger cuil, boolean contratado, LocalDate fechaIngreso, LocalDate fechaBaja, LocalDate fechaNacimiento, LocalDate fechaJubilacion, Sector sector) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
