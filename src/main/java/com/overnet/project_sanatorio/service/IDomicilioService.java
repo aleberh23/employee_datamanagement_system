@@ -8,5 +8,5 @@ public interface IDomicilioService {
     public Domicilio findDocimicilio(int id);
     public void saveDomicilio(Domicilio domicilio);
     public void updateDomicilio(Domicilio domicilio);
-    public void bajaEmpleado(int id);
+    public void bajaDomicilio(int id);
 }

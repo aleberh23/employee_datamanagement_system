@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface IDomicilioRepository extends JpaRepository<Domicilio, Integer>{
     @Modifying
     @Transactional
-    @Query("UPDATE Domicilio d SET d.baja = true WHERE d.id = ?1")
+    @Query("UPDATE domicilio d SET d.baja = true WHERE d.id = ?1")
     public void darDeBaja(int domicilioId);
-    @Query("SELECT d FROM domicilio d WHERE e.baja = TRUE")
+    @Query("SELECT d FROM domicilio d WHERE d.baja = TRUE")
     public List<Domicilio> findAllActivos();
 }

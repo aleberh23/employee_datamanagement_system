@@ -2,9 +2,9 @@ package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.model.Domicilio;
 import com.overnet.project_sanatorio.model.Empleado;
+import com.overnet.project_sanatorio.service.DomicilioService;
 import com.overnet.project_sanatorio.service.EmpleadoService;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,27 +21,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EmpleadoController {
     @Autowired
     private EmpleadoService empleadoser;
+    @Autowired
+    private DomicilioService domicilioser;
     
     
    @GetMapping("/empleado/alta")
-    public String mostrarFormAltaEstudiante(Model modelo){
+    public String mostrarFormAltaEmpleado(Model modelo){
         Empleado emp = new Empleado();
+        Domicilio dom = new Domicilio();
         modelo.addAttribute("empleado", emp);
+        modelo.addAttribute("domicilio", dom);
         return "alta_empleado";
     }
     @PostMapping("/empleado/alta")
-    public String guardarEmpleado(@ModelAttribute("empleado")Empleado emp){
+    public String guardarEmpleado(@ModelAttribute("empleado")Empleado emp, @ModelAttribute("domicilio")Domicilio dom){
+    dom.setEmpleado(emp);
     empleadoser.saveEmpleado(emp);
+    domicilioser.saveDomicilio(dom);
     return "redirect:/empleado/alta";
     }
     @GetMapping("empleado/ver")
     public String traerEmpleados(Model modelo, @Param("palabra")String palabra, @Param("deBaja")boolean deBaja){
-        
+
         if (palabra == null) {
             palabra = ""; //
         }
         System.out.println(!deBaja);
-        List<Empleado> empleados = empleadoser.getEmpleados(palabra, !deBaja);
+        List<Empleado> empleados = empleadoser.getEmpleados(palabra, deBaja);
         modelo.addAttribute("empleados", empleados);
         modelo.addAttribute("palabra", palabra);
         modelo.addAttribute("deBaja", deBaja);
@@ -86,6 +92,7 @@ public class EmpleadoController {
         Empleado emp=empleadoser.findEmpleado(id);
         List<Domicilio> domicilios= emp.getDomicilios();
         modelo.addAttribute("domicilios", domicilios);
+        modelo.addAttribute("idEmpleado", id);
         return "ver_domicilios_empleado";
     }
 }

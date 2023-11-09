@@ -30,20 +30,12 @@ public class DomicilioService implements IDomicilioService {
 
     @Override
     public void updateDomicilio(Domicilio domicilio) {
-        Domicilio dom = new Domicilio();
-        dom.setCalle(domicilio.getCalle());
-        dom.setNumero(domicilio.getNumero());
-        dom.setLocalidad(domicilio.getLocalidad());
-        dom.setAuditoriaMedica(domicilio.isAuditoriaMedica());
-        dom.setBaja(domicilio.isBaja());
-        dom.setEmpleado(domicilio.getEmpleado());
-        
-        domiciliorep.save(dom);
+        domiciliorep.save(domicilio);
     }
 
     @Override
-    public void bajaEmpleado(int id) {
-       
+    public void bajaDomicilio(int id) {
+       domiciliorep.darDeBaja(id);
     }
     
 }

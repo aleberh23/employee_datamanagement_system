@@ -98,14 +98,15 @@
             <br><br>
     <!-- Formulario de Filtros -->
         <div class="row">
-            <div class="col-12 col-md-4"> <!-- Cambiar col-md-4 para controlar el tamaño -->
+            <div class="col-12 col-md-4"> 
                 <form class="form-inline" th:action="@{/empleado/ver}">
                     <div class="form-group mb-2">
                         <input type="text" class="form-control" name="palabra" placeholder="Buscar" id="palabra" th:value="${palabraClave}">
                     </div>
                     <div class="form-group form-check mx-sm-3 mb-2">
                         <input type="checkbox" class="form-check-input" name="deBaja" id="deBaja" th:checked="${deBaja}">
-                        <label class="form-check-label" for="empleadosActivos">Empleados activos</label>
+
+                        <label class="form-check-label" for="deBaha">Empleados no activos</label>
                     </div>
                      <input type="submit" class="btn btn-secondary mb2" value="Limpiar">
                      &nbsp;
@@ -129,7 +130,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each = "empleado : ${empleados}">
+                                <tr th:each = "empleado : ${empleados}" th:class="${empleado.baja} ? 'table-danger' : 'table-success'">
                                     <td th:text="${empleado.id}">ID</td>
                                     <td th:text="${empleado.nombre}">Nombre</td>
                                     <td th:text="${empleado.apellido}">Apellido</td>
