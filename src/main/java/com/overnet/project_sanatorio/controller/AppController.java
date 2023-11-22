@@ -6,10 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AppController {
-    
-    @GetMapping("/")
-    public String index(){
-    return "index";
+     @GetMapping("/")
+    public String menu() {
+        return "index";
+    }
+    @GetMapping("/login")
+    public String login(){
+    return "login";
     }
    
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/login?logout";
+    }
 }

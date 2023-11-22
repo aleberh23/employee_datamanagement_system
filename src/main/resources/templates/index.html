@@ -11,11 +11,21 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a href="" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
+                
+                 <div class="ms-auto d-flex align-items-center">
+                    <div>
+                        <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
+                        <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
+                    </div>
+                    <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
+                </div>
+                
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                 
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -28,36 +38,46 @@
 
                     <div class="offcanvas-body d-flex flex-column
                          justify-content-between px-0">
-                        <ul class="navbar-nav fs-5">
-                            <li class="nav-item p-3 py-md-1 bg-dark text-info text-large">Empleados:
+                        <ul class="navbar-nav fs-5" >
+                            <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"  class="nav-item p-3 py-md-1 bg-dark text-info text-large">Empleados:
                                 <ul class="navbar-nav fs-5">
                                     <li><a th:href="@{/empleado/alta}" class="nav-link">Alta</a></li>
                                     <li><a th:href="@{/empleado/ver}" class="nav-link">Vista</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item p-3 py-md-2 bg-dark text-info">Domicilios:
+                            <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
+                                class="nav-item p-3 py-md-2 bg-dark text-info">Domicilios:
                                 <ul class="navbar-nav fs-5">
                                     <li><a href="#" class="nav-link">Vista</a></li>
                                     <li><a href="#" class="nav-link">Cobertura</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item p-3 py-md-1 bg-dark text-info">Contratos:
+                            <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
+                                class="nav-item p-3 py-md-1 bg-dark text-info" >Contratos:
                                 <ul class="navbar-nav fs-5">
                                     <li><a href="#" class="nav-link">Nuevo</a></li>
                                     <li><a href="#" class="nav-link">Vigentes</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item p-3 py-md-1 bg-dark text-info">Licencias:
+                            <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
+                                class="nav-item p-3 py-md-1 bg-dark text-info" >Licencias:
                                 <ul class="navbar-nav fs-5">
                                     <li><a href="#" class="nav-link">Generar Ordinarias</a></li>
                                     <li><a href="#" class="nav-link">Vista Tomadas</a></li>
                                     <li><a href="#" class="nav-link">Generar Tomada</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item p-3 py-md-1 bg-dark text-info">Parte Diario:
+                            <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
+                                class="nav-item p-3 py-md-1 bg-dark text-info" >Parte Diario:
                                 <ul class="navbar-nav fs-5">
                                     <li><a href="#" class="nav-link">Vista</a></li>
                                     <li><a href="#" class="nav-link">Antiguos</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item p-3 py-md-1 bg-dark text-info text-large">Inasistencias:
+                                <ul class="navbar-nav fs-5">
+                                    <li><a href="#" class="nav-link">Carga temporales</a></li>
+                                    <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"><a href="#" class="nav-link">Validar temporales</a></li>
                                 </ul>
                             </li>
                         </ul>
