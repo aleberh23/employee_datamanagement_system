@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DomicilioController {
     
     @Autowired
-    DomicilioService domicilioser;
+    private DomicilioService domicilioser;
     @Autowired
-    EmpleadoService empleadoser;
+    private EmpleadoService empleadoser;
     
     @GetMapping("/empleado/domicilio/alta/{idEmpleado}")
     public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado){
@@ -52,15 +52,16 @@ public class DomicilioController {
     }
         
     @GetMapping("domicilio/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo){
+    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam int idEmpleado){
         Domicilio domicilio = domicilioser.findDocimicilio(id);
         modelo.addAttribute("domicilio", domicilio);
+        modelo.addAttribute("idEmpleado", idEmpleado);
         
         return "editar_domicilio_emp";
     }
     
    @PostMapping("domicilio/editar/{id}")
-    public String editarDomicilio(@PathVariable int id, @ModelAttribute("domicilio")Domicilio domicilio, Model modelo, @RequestParam int idEmpleado){
+    public String editarDomicilio(@PathVariable int id, @ModelAttribute("domicilio")Domicilio domicilio, @ModelAttribute("idEmpleado")int idEmpleado, Model modelo){
         System.out.println("Entro");
         Domicilio dom = domicilioser.findDocimicilio(id);
         dom.setId(domicilio.getId());

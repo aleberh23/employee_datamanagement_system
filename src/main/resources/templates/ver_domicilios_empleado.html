@@ -137,7 +137,7 @@
                                         <span th:unless="${domicilio.auditoriaMedica}"><i class="bi bi-x-circle-fill text-danger"></i></span></td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a th:href="@{/domicilio/editar/{id}(id=${domicilio.id})}"><button class="btn btn-primary px-2">Editar</button></a>
+                                            <a th:href="@{/domicilio/editar/{id}(id=${domicilio.id}, idEmpleado=${idEmpleado})}"><button class="btn btn-primary px-2">Editar</button></a>
                                             &nbsp;&nbsp;
                                             <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${domicilio.id}" th:if="${!domicilio.baja}">Baja</button>
                                             &nbsp; &nbsp;

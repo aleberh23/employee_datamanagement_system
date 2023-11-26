@@ -159,16 +159,16 @@
                             <!-- Campo de Sector (no editable) -->
                             <div class="mb-3">
                                 <label class="fw-semibold" for="sector">Sector:</label>
-                                <p><span name="sector" th:text="${empleado.sector}" class="text-primary display-2 fs-3">></span></p>
+                                <p><span name="sector" th:text="${empleado.sector.nombre}" class="text-primary display-2 fs-3">></span></p>
                             </div>
                             <br><br>
                            <div class="d-flex justify-content-end">
                                <a th:href="@{/empleado/domicilio/ver/{id}(id=${empleado.id})}" class="btn btn-primary ml-3">Domicilios</a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button type="button" class="btn btn-primary ml-3">Cargas de familia</button>
+                               <a th:href="@{/empleado/cargaDeFamilia/ver/{id}(id=${empleado.id})}" class="btn btn-primary ml-3">Cargas De Familia</a>
                                 &nbsp;&nbsp;&nbsp;
                                 <button type="button" class="btn btn-primary" th:if="${empleado.contratado}">Contratos</button>
-                            </div>
+                           </div>
                     </div>
                 </div>
             </div>

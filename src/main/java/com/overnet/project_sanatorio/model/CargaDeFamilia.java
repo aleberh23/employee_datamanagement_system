@@ -29,11 +29,13 @@ public class CargaDeFamilia implements Serializable {
     private String apellido;
     @Column(name="vinculo")
     private String vinculo;
+    @Column(name="baja")
+    private boolean baja;
     @ManyToOne
     @JoinColumn(name="id_empleado")
     private Empleado empleado;
 
-    public CargaDeFamilia(int id, String tipoDoc, int nroDoc, String nombre, String apellido, String vinculo, Empleado empleado) {
+    public CargaDeFamilia(int id, String tipoDoc, int nroDoc, String nombre, String apellido, String vinculo, boolean baja, Empleado empleado) {
         this.id = id;
         this.tipoDoc = tipoDoc;
         this.nroDoc = nroDoc;
@@ -41,6 +43,7 @@ public class CargaDeFamilia implements Serializable {
         this.apellido = apellido;
         this.vinculo = vinculo;
         this.empleado = empleado;
+        this.baja = baja;
     }
 
     public CargaDeFamilia() {
