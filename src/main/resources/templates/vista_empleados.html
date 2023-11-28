@@ -32,24 +32,24 @@
             </div>
         </div>
 
-         <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
-                <a href="" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+                <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -70,17 +70,9 @@
                                 </ul>
                             </li>
                             <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
-                                class="nav-item p-3 py-md-2 bg-dark text-info">Domicilios:
-                                <ul class="navbar-nav fs-5">
-                                    <li><a href="#" class="nav-link">Vista</a></li>
-                                    <li><a href="#" class="nav-link">Cobertura</a></li>
-                                </ul>
-                            </li>
-                            <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
                                 class="nav-item p-3 py-md-1 bg-dark text-info" >Contratos:
                                 <ul class="navbar-nav fs-5">
-                                    <li><a href="#" class="nav-link">Nuevo</a></li>
-                                    <li><a href="#" class="nav-link">Vigentes</a></li>
+                                    <li><a th:href="@{/contrato/lista}" class="nav-link">Vista</a></li>
                                 </ul>
                             </li>
                             <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
@@ -94,14 +86,14 @@
                             <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
                                 class="nav-item p-3 py-md-1 bg-dark text-info" >Parte Diario:
                                 <ul class="navbar-nav fs-5">
+                                    <li><a href="#" class="nav-link">Generar</a></li>
                                     <li><a href="#" class="nav-link">Vista</a></li>
-                                    <li><a href="#" class="nav-link">Antiguos</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item p-3 py-md-1 bg-dark text-info text-large">Inasistencias:
                                 <ul class="navbar-nav fs-5">
-                                    <li><a href="#" class="nav-link">Carga temporales</a></li>
-                                    <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"><a href="#" class="nav-link">Validar temporales</a></li>
+                                    <li><a href="#" class="nav-link">Carga Ausencias</a></li>
+                                    <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"><a href="#" class="nav-link">Generar Inasistencia</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -113,79 +105,88 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-        
+
         <div class="container">
             <br><br>
-    <!-- Formulario de Filtros -->
-        <div class="row">
-            <div class="col-12 col-md-4"> 
-                <form class="form-inline" th:action="@{/empleado/ver}">
-                    <div class="form-group mb-2">
-                        <input type="text" class="form-control" name="palabra" placeholder="Buscar" id="palabra" th:value="${palabraClave}">
-                    </div>
-                    <div class="form-group form-check mx-sm-3 mb-2">
-                        <input type="checkbox" class="form-check-input" name="deBaja" id="deBaja" th:checked="${deBaja}">
-
-                        <label class="form-check-label" for="deBaha">Empleados no activos</label>
-                    </div>
-                     <input type="submit" class="btn btn-secondary mb2" value="Limpiar">
-                     &nbsp;
-                     <input type="submit" class="btn btn-primary mb2" value="Buscar">
-                </form>
-            </div>
-     </div>
-    <br><br>
-        <div class="container">
+            <!-- Formulario de Filtros -->
             <div class="row">
-                <h1>Lista de empleados<h1>
+                <div class="col-12 col-md-4"> 
+                    <form class="form-inline" th:action="@{/empleado/ver}">
+                        <div class="form-group mb-2">
+                            <input type="text" class="form-control" name="palabra" placeholder="Buscar" id="palabra" th:value="${palabraClave}">
                         </div>
-                        <table class="table table-success table-striped table-bordered">
-                            <thead class="table">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Sector</th>
-                                    <th>Nro Legajo</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each = "empleado : ${empleados}" th:class="${empleado.baja} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${empleado.id}">ID</td>
-                                    <td th:text="${empleado.nombre}">Nombre</td>
-                                    <td th:text="${empleado.apellido}">Apellido</td>
-                                    <td>
-                                        <span th:if="${empleado.sector != null}" th:text="${empleado.sector.nombre}">Sector</span>
-                                        <span th:unless="${empleado.sector != null}">No asignado.</span>
-                                    </td>
-                                    <td th:text="${empleado.nroLegajo}">Nro Legajo</td>
-                                    <td>
-                                         <div class="btn-group" role="group">
-                                            <a th:href="@{/empleado/editar/{id}(id=${empleado.id})}"><button class="btn btn-primary px-2">Editar</button></a>
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${empleado.id}" th:if="${!empleado.baja}">Baja</button>
-                                            &nbsp; &nbsp;
-                                            <a th:href="@{/empleado/detalle/{id}(id=${empleado.id})}"><button class="btn btn-info px-2">Detalles</button></a>
-                                            &nbsp; &nbsp;
-                                        </div>
-                                    </td>  
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="form-group form-check mx-sm-3 mb-2">
+                            <input type="checkbox" class="form-check-input" name="deBaja" id="deBaja" th:checked="${deBaja}">
+
+                            <label class="form-check-label" for="deBaha">Empleados no activos</label>
+                        </div>
+                        <input type="submit" class="btn btn-secondary mb2" value="Limpiar">
+                        &nbsp;
+                        <input type="submit" class="btn btn-primary mb2" value="Buscar">
+                    </form>
                 </div>
+            </div>
+            <br><br>
+            <div class="container">
+                <div class="row">
+                    <h1>Lista de empleados<h1>
+                            </div>
+                            <table class="table table-success table-striped table-bordered">
+                                <thead class="table">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>
+                                        <th>Sector</th>
+                                        <th>Nro Legajo</th>
+                                        <th>Contratado?</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each = "empleado : ${empleados}" th:class="${empleado.baja} ? 'table-danger' : 'table-success'">
+                                        <td th:text="${empleado.id}">ID</td>
+                                        <td th:text="${empleado.nombre}">Nombre</td>
+                                        <td th:text="${empleado.apellido}">Apellido</td>
+                                        <td>
+                                            <span th:if="${empleado.sector != null}" th:text="${empleado.sector.nombre}">Sector</span>
+                                            <span th:unless="${empleado.sector != null}">No asignado.</span>
+                                        </td>
+                                        <td th:text="${empleado.nroLegajo}">Nro Legajo</td>
+                                        <td class="text-center">
+                                            <span th:if="${empleado.contratado}" class="text-success">
+                                                <i class="bi bi-check-circle"></i> <!-- Icono de tilde verde -->
+                                            </span>
+                                            <span th:unless="${empleado.contratado}" class="text-danger">
+                                                <i class="bi bi-x-circle"></i> <!-- Icono de cruz roja -->
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a th:href="@{/empleado/editar/{id}(id=${empleado.id})}"><button class="btn btn-primary px-2">Editar</button></a>
+                                                &nbsp;&nbsp;
+                                                <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${empleado.id}" th:if="${!empleado.baja}">Baja</button>
+                                                &nbsp; &nbsp;
+                                                <a th:href="@{/empleado/detalle/{id}(id=${empleado.id})}"><button class="btn btn-info px-2">Detalles</button></a>
+                                                &nbsp; &nbsp;
+                                            </div>
+                                        </td>  
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
             <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
             <script>
-                $(document).on("click", "#btnBaja", function (){
-                    var id =$(this).data("id");
-                    
+                $(document).on("click", "#btnBaja", function () {
+                    var id = $(this).data("id");
+
                     $("#empleadoId").val(id);
                 });
 
             </script>
 
-    
-    </body>
-</html>
+
+        </body>
+        </html>

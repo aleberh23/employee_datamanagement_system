@@ -1,30 +1,30 @@
 <html>
     <head>
-        <title>Alta de domicilio</title>
+        <title>Alta Contrato</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     </head>
     <body>
-        <nav class="navbar navbar-dark bg-dark">
+              <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-
-                <div class="ms-auto d-flex align-items-center">
+                
+                 <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-
+                
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
+                 
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -80,54 +80,42 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h2 class="card-title">Registro de Carga de familia</h2>
-                            <form th:action="@{/empleado/cargaDeFamilia/alta/}" th:object="${cargadefamilia}" method="POST">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" th:field="*{nombre}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="apellido" placeholder="Apellido" th:field="*{apellido}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="tipoVinculo">Tipo de vínculo:</label>
-                                    <select id="tipoVinculo" name="tipoVinculo" th:field="*{vinculo}">
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Esposo/a">Esposo/a</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="tipoDoc">Tipo de documento:</label>
-                                    <select id="tipoDoc" name="tipoVinculo" th:field="*{tipoDoc}">
-                                        <option value="Dni">Dni</option>
-                                        <option value="Pasaporte">Pasaporte</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nrodocumento" placeholder="Nro. Documento" th:field="*{nroDoc}" required>
-                                    <input type="hidden" name="idEmpleado" th:value="${idEmpleado}">
-                                </div>
-                        </div>
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary m-3">Guardar</button>
-                            </form>
-                            <a th:href="@{/empleado/cargaDeFamilia/alta/cancelar/{id}(id=${idEmpleado})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+         <!-- Modal Nuevo Empleado -->
+    <div class="modal fade" id="nuevoEmpleadoModal" tabindex="-1" ria-labelledby="modalBajaLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               
+           </div>
+       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>        
-</body>
+
+    <!-- Modal Seleccionar Empleado Existente -->
+    <div class="modal fade" id="seleccionarEmpleadoModal" tabindex="-1" ria-labelledby="modalBajaLabel" aria-hidden="true">
+         <div class="modal-dialog">
+           <div class="modal-content">
+               
+           </div>
+       </div>
+    </div>
+     <h2>Registrar Contrato</h2>
+    
+    <form th:action="@{/contrato/registrar}" method="post">
+        <!-- Agrega campos para los detalles del contrato (fecha de inicio, etc.) -->
+        
+        <button type="button" data-bs-toggle="modal" data-bs-target="#nuevoEmpleadoModal">Empleado Nuevo</button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#seleccionarEmpleadoModal">Seleccionar Empleado Existente</button>
+        
+        <!-- Container para mostrar datos del empleado -->
+        <div id="empleadoContainer">
+            <!-- Aquí se mostrarán los datos del empleado seleccionado o nuevo -->
+        </div>
+        
+        <button type="submit">Guardar</button>
+    </form>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    </body>
 </html>

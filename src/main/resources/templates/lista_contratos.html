@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>Registro de Empleado</title>
+        <title>Lista de contratos</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <nav class="navbar navbar-dark bg-dark">
@@ -80,77 +80,95 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h2 class="card-title">Editar Empleado</h2>
-                            <form id="empleadoForm" th:action="@{/empleado/editar/{id}(id=${empleado.id})}" th:object="${empleado}" method="POST">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" th:field="*{nombre}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="apellido" placeholder="Apellido" th:field="*{apellido}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="email" class="form-control" name="email" placeholder="Correo Electrónico" th:field="*{correoElectronico}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="tel" class="form-control" name="telefono" placeholder="Nro de Teléfono" th:field="*{nroCelular}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="tipo_documento">Tipo de documento:</label>
-                                    <select class="form-select" name="tipo_documento" th:field="*{tipoDocumento}">
-                                        <option value="DNI" th:selected="${empleado.tipoDocumento == 'DNI'}">DNI</option>
-                                        <option value="PASAPORTE" th:selected="${empleado.tipoDocumento == 'PASAPORTE'}">Pasaporte</option>
-                                        <option value="OTRO" th:selected="${empleado.tipoDocumento == 'OTRO'}">Otro</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nro_documento" placeholder="Nro de Documento" th:field="*{nroDocumento}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nro_legajo" placeholder="Nro de Legajo" th:field="*{nroLegajo}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nro_cuil" placeholder="Nro de CUIL" th:field="*{cuil}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="fechaIngreso">Fecha de ingreso:</label>
-                                    <input type="date" class="form-control" name="fechaIngreso" th:value="${{empleado.fechaIngreso}}" th:field="*{fechaIngreso}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="fechaNacimiento: ">Fecha de nacimiento:</label>
-                                    <input type="date" class="form-control" name="fechaNacimiento" th:value="${{empleado.fechaNacimiento}}" th:field="*{fechaNacimiento}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <p>Selecciona un sector:</p>
-                                    <select id="sector" name="sectorId" th:field="*{sector.id}" required>
-                                        <option th:each="sector : ${sectores}" th:value="${sector.id}" th:text="${sector.nombre}"></option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <button type="button" onclick="submitForm()" class="btn btn-primary">Guardar Empleado</button>
-                                </div>
-                            </form>
+
+        <div class="modal" tabindex="-1" id="modalBaja" aria-labelledby="modalBajaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/contrato/baja/}" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Baja Contrato</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <input type="hidden" id="contratoId" name="id" value="">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Baja</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <br><br>
+            <!-- Formulario de Filtros -->
+            <div class="row">
+                <div class="col-12 col-md-4"> 
+                    <form class="form-inline" th:action="@{/contrato/lista}">
+                        <div class="form-group mb-2">
+                            <input type="text" class="form-control" name="palabra" placeholder="Buscar" id="palabra" th:value="${palabra}">
+                        </div>
+                        <div class="form-group form-check mx-sm-3 mb-2">
+                            <input type="checkbox" class="form-check-input" name="deBaja" id="deBaja" th:checked="${deBaja}">
+
+                            <label class="form-check-label" for="deBaja">Contratos finalizados / de baja</label>
+                        </div>
+                        <input type="submit" class="btn btn-primary mb2" value="Buscar">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+        <div class="container">
+            <div class="row">
+                <h1>Lista de contratos:<h1>
+                        </div>
+                        <table class="table table-success table-striped table-bordered">
+                            <thead class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>NRO Legajo</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each = "contrato : ${contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
+                                    <td th:text="${contrato.idContrato}">ID</td>
+                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
+                                    <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${contrato.fechaInicio}">Fecha Inicio</td>
+                                    <td th:text="${contrato.fechaFin}">Fecha Fin</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${contrato.idContrato}" th:if="${!contrato.baja}">Baja</button>
+                                            &nbsp; &nbsp;
+                                            <a th:href="@{/contrato/detalle/{id}(id=${contrato.idContrato})}"><button class="btn btn-info px-2">Detalles</button></a>
+                                            &nbsp; &nbsp;
+                                        </div>
+                                    </td>  
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script th:inline="javascript">
-                                        /*<![CDATA[*/
-                                        function submitForm() {
-                                            console.log("Submit form button clicked");
-                                            var sectorId = $("#sector").val();
-                                            var form = $("#empleadoForm");
-                                            form.attr("action", form.attr("action") + "?sectorId=" + sectorId);
-                                            form.submit();
-                                        }
-                                        /*]]>*/
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <script>
+            $(document).on("click", "#btnBaja", function () {
+                const id = $(this).data("id");
+                const parsedId = parseInt(id);
+                console.log("ID del contrato " + parsedId); // Verifica si se muestra el ID correctamente
+                $("#contratoId").val(parsedId);
+            });
+
         </script>
     </body>
 </html>

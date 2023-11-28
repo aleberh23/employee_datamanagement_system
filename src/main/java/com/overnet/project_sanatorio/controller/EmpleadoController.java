@@ -1,9 +1,11 @@
 package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.model.CargaDeFamilia;
+import com.overnet.project_sanatorio.model.Contrato;
 import com.overnet.project_sanatorio.model.Domicilio;
 import com.overnet.project_sanatorio.model.Empleado;
 import com.overnet.project_sanatorio.model.Sector;
+import com.overnet.project_sanatorio.service.IContratoService;
 import com.overnet.project_sanatorio.service.IDomicilioService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import com.overnet.project_sanatorio.service.ISectorService;
@@ -28,6 +30,8 @@ public class EmpleadoController {
     private IDomicilioService domicilioser;
     @Autowired
     private ISectorService sectorser;
+    @Autowired
+    private IContratoService contratoser;
     
     
    @GetMapping("/empleado/alta")
@@ -116,4 +120,14 @@ public class EmpleadoController {
         modelo.addAttribute("idEmpleado", id);
         return "ver_cargasdefamilia_empleado";
     }
+    
+    @GetMapping("empleado/contrato/ver/{id}")
+    public String contratosEmpleado(@PathVariable int id, Model modelo){
+        Empleado emp=empleadoser.findEmpleado(id);
+        List<Contrato> contratos= emp.getContratos();
+        modelo.addAttribute("contratos", contratos);
+        modelo.addAttribute("idEmpleado", id);
+        return "ver_contratos_empleado";
+    }
+    
 }

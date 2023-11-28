@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Alta de domicilio</title>
+        <title>Editar contrato</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -85,42 +85,26 @@
                 <div class="col-12">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h2 class="card-title">Registro de Carga de familia</h2>
-                            <form th:action="@{/empleado/cargaDeFamilia/alta/}" th:object="${cargadefamilia}" method="POST">
+                            <h2 class="card-title">Editar contrato: </h2>
+                            <form th:action="@{/contrato/editar/{id}(id=${contrato.idContrato})}" th:object="${contrato}" method="POST">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" th:field="*{nombre}" required>
+                                    <label class="form-check-label" for="fechaInicio">Fecha de inicio:</label>
+                                    <input type="date" class="form-control" name="fechaInicio" th:value="${{contrato.fechaInicio}}" th:field="*{fechaInicio}" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="apellido" placeholder="Apellido" th:field="*{apellido}" required>
+                                    <label class="form-check-label" for="fechaFin">Fecha de fin:</label>
+                                    <input type="date" class="form-control" name="fechaFin" th:value="${{contrato.fechaInicio}}" th:field="*{fechaFin}" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="tipoVinculo">Tipo de vínculo:</label>
-                                    <select id="tipoVinculo" name="tipoVinculo" th:field="*{vinculo}">
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Esposo/a">Esposo/a</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="tipoDoc">Tipo de documento:</label>
-                                    <select id="tipoDoc" name="tipoVinculo" th:field="*{tipoDoc}">
-                                        <option value="Dni">Dni</option>
-                                        <option value="Pasaporte">Pasaporte</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nrodocumento" placeholder="Nro. Documento" th:field="*{nroDoc}" required>
+                                    <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required>
                                     <input type="hidden" name="idEmpleado" th:value="${idEmpleado}">
                                 </div>
                         </div>
+
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary m-3">Guardar</button>
+                            <button type="submit" class="btn btn-primary m-3">Guardar Contrato</button>
                             </form>
-                            <a th:href="@{/empleado/cargaDeFamilia/alta/cancelar/{id}(id=${idEmpleado})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
+                            <a th:href="@{/empleado/contrato/alta/cancelar/{id}(id=${idEmpleado})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
                         </div>
 
                     </div>

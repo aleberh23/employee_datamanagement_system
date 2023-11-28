@@ -1,12 +1,10 @@
 package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.model.CargaDeFamilia;
-import com.overnet.project_sanatorio.model.Domicilio;
 import com.overnet.project_sanatorio.service.EmpleadoService;
 import com.overnet.project_sanatorio.service.ICargaDeFamiliaService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +49,7 @@ public class CargaDeFamiliaController {
         return "redirect:/empleado/cargaDeFamilia/ver/"+id;
     }
         
-    @GetMapping("cargaDeFamilia/editar/{id}")
+    @GetMapping("/cargaDeFamilia/editar/{id}")
     public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam int idEmpleado){
         CargaDeFamilia car = cargaser.findCargaDeFamila(id);
         modelo.addAttribute("cargadefamilia", car);
@@ -59,7 +57,7 @@ public class CargaDeFamiliaController {
         return "editar_cargadefamilia_emp";
     }
     
-   @PostMapping("cargaDeFamilia/editar/{id}")
+   @PostMapping("/cargaDeFamilia/editar/{id}")
     public String editarCargaDeFamilia(@PathVariable int id, @ModelAttribute("cargadefamilia")CargaDeFamilia car, @ModelAttribute("idEmpleado")int idEmpleado, Model modelo){
         System.out.println("Entro");
         CargaDeFamilia c = cargaser.findCargaDeFamila(id);
