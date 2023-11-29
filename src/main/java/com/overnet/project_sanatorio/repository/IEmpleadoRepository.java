@@ -21,4 +21,9 @@ public interface IEmpleadoRepository extends JpaRepository<Empleado, Integer>{
     public List<Empleado> findAll(String palabra, boolean deBaja);
     @Query("SELECT e FROM Empleado e WHERE e.baja = ?1")
     public List<Empleado> findAll(boolean deBaja);
+    
+    @Query("SELECT COUNT(lo) FROM licencia_ordinaria lo WHERE lo.empleado.id = ?1 AND lo.anio = ?2")
+    public int contarLicenciasOrdinariasPorAnioYEmpleado(int idEmpleado, Integer anio);
+    
+    public List<Empleado> findByBajaFalse();
 }

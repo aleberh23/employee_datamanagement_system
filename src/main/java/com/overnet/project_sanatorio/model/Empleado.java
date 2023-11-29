@@ -16,6 +16,7 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -113,6 +114,35 @@ public class Empleado implements Serializable {
        this.contratos=new ArrayList();
        this.cargasDeFamilia=new ArrayList();
        this.detallespd=new ArrayList();
+    }
+    
+      public int calcularDiasDeLicencia() {
+        LocalDate fechaActual = LocalDate.now();
+        LocalDate fechaIngreso = this.fechaIngreso; // Suponiendo que tienes un campo fechaIngreso en tu clase Empleado
+
+        long semanasTrabajo = ChronoUnit.WEEKS.between(fechaIngreso, fechaActual);
+
+        if (semanasTrabajo >= 4 && semanasTrabajo <= 7) {
+            return 1;
+        } else if (semanasTrabajo >= 8 && semanasTrabajo <= 11) {
+            return 2;
+        } else if (semanasTrabajo >= 12 && semanasTrabajo <= 15) {
+            return 3;
+        } else if (semanasTrabajo >= 16 && semanasTrabajo <= 19) {
+            return 4;
+        } else if (semanasTrabajo > 20 && semanasTrabajo <= 26) { // 26 semanas es aproximadamente 6 meses
+            return 5;
+        } else if (semanasTrabajo > 26 && semanasTrabajo <= 260) { // 260 semanas es aproximadamente 5 años
+            return 14;
+        } else if (semanasTrabajo > 260 && semanasTrabajo <= 520) { // 520 semanas es aproximadamente 10 años
+            return 21;
+        } else if (semanasTrabajo > 520 && semanasTrabajo <= 1040) { // 1040 semanas es aproximadamente 20 años
+            return 28;
+        } else if (semanasTrabajo > 1040) { // Más de 20 años
+            return 35;
+        } else {
+            return 0; // En caso de que no se cumpla ninguna condición
+        }
     }
     
     
