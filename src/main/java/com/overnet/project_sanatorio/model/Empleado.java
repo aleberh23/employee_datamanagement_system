@@ -22,6 +22,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Getter
 @Setter
 @Entity
@@ -49,23 +50,19 @@ public class Empleado implements Serializable {
     private BigInteger cuil;
     @Column(name="es_contratado")
     private boolean contratado;
-    @Temporal(TemporalType.DATE)
     @Column(name="fecha_ingreso")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaIngreso;
     @Column(name="baja")
     private boolean baja;
-    @Temporal(TemporalType.DATE)
     @Column(name="fecha_baja")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaBaja;
-    @Temporal(TemporalType.DATE)
     @Column(name="fecha_nacimiento")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaNacimiento;
-    @Temporal(TemporalType.DATE)
     @Column(name="fecha_jubilacion")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaJubilacion;
     @ManyToOne
     @JoinColumn(name="id_sector")

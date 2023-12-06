@@ -4,10 +4,12 @@ import com.overnet.project_sanatorio.model.CargaDeFamilia;
 import com.overnet.project_sanatorio.model.Contrato;
 import com.overnet.project_sanatorio.model.Domicilio;
 import com.overnet.project_sanatorio.model.Empleado;
+import com.overnet.project_sanatorio.model.LicenciaTomada;
 import com.overnet.project_sanatorio.model.Sector;
 import com.overnet.project_sanatorio.service.IContratoService;
 import com.overnet.project_sanatorio.service.IDomicilioService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
+import com.overnet.project_sanatorio.service.ILicenciaTomadaService;
 import com.overnet.project_sanatorio.service.ISectorService;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,6 +34,8 @@ public class EmpleadoController {
     private ISectorService sectorser;
     @Autowired
     private IContratoService contratoser;
+    @Autowired
+    private ILicenciaTomadaService lictomser;
     
     
    @GetMapping("/empleado/alta")
@@ -128,6 +132,15 @@ public class EmpleadoController {
         modelo.addAttribute("contratos", contratos);
         modelo.addAttribute("idEmpleado", id);
         return "ver_contratos_empleado";
+    }
+    
+    @GetMapping("empleado/licencia/ver/{id}")
+    public String licenciasEmpleado(@PathVariable int id, Model modelo){
+        Empleado emp=empleadoser.findEmpleado(id);
+        List<LicenciaTomada> licencias= emp.getLicenciasTomadas();
+        modelo.addAttribute("licencias", licencias);
+        modelo.addAttribute("idEmpleado", id);
+        return "ver_licencias_empleado";
     }
     
 }

@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title>Lista de contratos</title>
+        <title>Lista de licencias</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <nav class="navbar navbar-dark bg-dark">
+       <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
                 
@@ -83,19 +83,22 @@
         <div class="modal" tabindex="-1" id="modalBaja" aria-labelledby="modalBajaLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form th:action="@{/contrato/baja/}" method="POST">
+                    <form th:action="@{/licencia/baja/}" method="POST">
                         <div class="modal-header">
-                            <h5 class="modal-title">Baja Contrato</h5>
+                            <h5 class="modal-title">Eliminar licencia</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>ADVERTENCIA:</strong> Si presiona en "Eliminar", la licencia se eliminará de forma PERMANENTE.
+                            </div>
                             <div class="mb-3">
-                                <input type="hidden" id="contratoId" name="id" value="">
+                                <input type="hidden" id="licenciaId" name="id" value="">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Baja</button>
+                            <button type="submit" class="btn btn-primary">Eliminar</button>
                         </div>
                     </form>
                 </div>
@@ -107,14 +110,14 @@
             <!-- Formulario de Filtros -->
             <div class="row">
                 <div class="col-12 col-md-4"> 
-                    <form class="form-inline" th:action="@{/contrato/lista}">
+                    <form class="form-inline" th:action="@{/licencia/lista}">
                         <div class="form-group mb-2">
                             <input type="text" class="form-control" name="palabra" placeholder="Buscar" id="palabra" th:value="${palabra}">
                         </div>
                         <div class="form-group form-check mx-sm-3 mb-2">
-                            <input type="checkbox" class="form-check-input" name="deBaja" id="deBaja" th:checked="${deBaja}">
+                            <input type="checkbox" class="form-check-input" name="terminada" id="terminada" th:checked="${terminada}">
 
-                            <label class="form-check-label" for="deBaja">Contratos finalizados / de baja</label>
+                            <label class="form-check-label" for="terminada">Licencias terminadas</label>
                         </div>
                         <input type="submit" class="btn btn-primary mb2" value="Buscar">
                     </form>
@@ -125,7 +128,7 @@
         <br><br>
         <div class="container">
             <div class="row">
-                <h1>Lista de contratos:<h1>
+                <h1>Lista de licencias:<h1>
                         </div>
                         <table class="table table-success table-striped table-bordered">
                             <thead class="table">
@@ -133,23 +136,25 @@
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>NRO Legajo</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
+                                    <th>Fecha Desde</th>
+                                    <th>Fecha Hasta</th>
+                                    <th>Tipo</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each = "contrato : ${contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${contrato.idContrato}">ID</td>
-                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
-                                    <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
-                                    <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
-                                    <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}">Fecha Fin</td>
+                                <tr th:each = "licencia : ${licencias}" th:class="${licencia.terminada} ? 'table-danger' : 'table-success'">
+                                    <td th:text="${licencia.idLicenciaTomada}">ID</td>
+                                    <td th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}">Empleado</td>
+                                    <td th:text="${licencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Desde</td>
+                                    <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Hasta</td>
+                                    <td th:text="${licencia.tipoLicencia.nombre}">Tipo</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${contrato.idContrato}" th:if="${!contrato.baja}">Baja</button>
+                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${licencia.idLicenciaTomada}">Eliminar</button>
                                             &nbsp; &nbsp;
-                                            <a th:href="@{/contrato/detalle/{id}(id=${contrato.idContrato})}"><button class="btn btn-info px-2">Detalles</button></a>
+                                            <a th:href="@{/licencia/detalle/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-info px-2">Detalles</button></a>
                                             &nbsp; &nbsp;
                                         </div>
                                     </td>  
@@ -164,8 +169,9 @@
             $(document).on("click", "#btnBaja", function () {
                 const id = $(this).data("id");
                 const parsedId = parseInt(id);
-                console.log("ID del contrato " + parsedId); // Verifica si se muestra el ID correctamente
-                $("#contratoId").val(parsedId);
+                console.log("ID de la licencia " + parsedId); // Verifica si se muestra el ID correctamente
+                $("#licenciaId").val(parsedId);
+
             });
 
         </script>

@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/cargaDeFamilia/**").hasAnyAuthority("RRHH")
                                 .requestMatchers("/licenciasOrdinaria/**").hasAnyAuthority("RRHH")
                                 .requestMatchers("/licenciasOrdinarias/**").hasAnyAuthority("RRHH")
+                                .requestMatchers("/licencia/**").hasAnyAuthority("RRHH")
                                 .requestMatchers("/inasistencias/temporal").hasAnyAuthority("M_ENTRADA")
                                 .anyRequest().authenticated()
                                 )

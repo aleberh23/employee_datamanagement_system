@@ -103,4 +103,6 @@ public class ContratoController {
         modelo.addAttribute("contrato", c);
         return "ver_contrato_emp";
     }
+    
+
 }

@@ -10,21 +10,21 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-
-                <div class="ms-auto d-flex align-items-center">
+                
+                 <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-
+                
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
+                 
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -54,8 +54,7 @@
                                 class="nav-item p-3 py-md-1 bg-dark text-info" >Licencias:
                                 <ul class="navbar-nav fs-5">
                                     <li><a th:href="@{/licenciasOrdinaria/generar}" class="nav-link">Generar Ordinarias</a></li>
-                                    <li><a href="#" class="nav-link">Vista Tomadas</a></li>
-                                    <li><a href="#" class="nav-link">Generar Tomada</a></li>
+                                    <li><a th:href="@{/licencia/lista}" class="nav-link">Vista Tomadas</a></li>
                                 </ul>
                             </li>
                             <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
@@ -141,12 +140,12 @@
                             <!-- Campo de Fecha de Ingreso (no editable) -->
                             <div class="mb-3">
                                 <label class="fw-semibold" for="fechaIngreso">Fecha de Ingreso:</label>
-                                <p><span name="fechaIngreso" th:text="${empleado.fechaIngreso}" class="text-primary display-2 fs-3 fst-italic"></span></p>
+                                <p><span name="fechaIngreso" th:text="${#temporals.format(empleado.fechaIngreso, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                             </div>
                             <!-- Campo de Fecha de Nacimiento (no editable) -->
                             <div class="mb-3">
                                 <label class="fw-semibold" for="fechaNacimiento">Fecha de Nacimiento:</label>
-                                <p><span name="fechaNacimiento" th:text="${empleado.fechaNacimiento}" class="text-primary display-2 fs-3 fst-italic"></span></p>
+                                <p><span name="fechaNacimiento" th:text="${#temporals.format(empleado.fechaNacimiento, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                             </div>
                             <!-- Campo de Sector (no editable) -->
                             <div class="mb-3">
@@ -165,6 +164,8 @@
                                 <a th:href="@{/empleado/cargaDeFamilia/ver/{id}(id=${empleado.id})}" class="btn btn-primary ml-3">Cargas De Familia</a>
                                 &nbsp;&nbsp;&nbsp;
                                 <a th:href="@{/empleado/contrato/ver/{id}(id=${empleado.id})}" class="btn btn-primary ml-3">Contratos</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a th:href="@{/empleado/licencia/ver/{id}(id=${empleado.id})}" class="btn btn-primary ml-3">Licencias</a>
                             </div>
                         </div>
                     </div>

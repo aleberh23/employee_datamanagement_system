@@ -8,16 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.time.LocalDate;
-
-import java.util.Calendar;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Entity(name="contrato")
 @Getter
 @Setter
@@ -26,13 +23,11 @@ public class Contrato implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_contrato")
     private int idContrato;
-    @Temporal(TemporalType.DATE)
     @Column(name="fecha_inicio")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaInicio;
-    @Temporal(TemporalType.DATE)
     @Column(name="fecha_fin")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaFin;
     @Column(name="descripcion")
     private String descripcion;

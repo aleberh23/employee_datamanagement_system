@@ -1,7 +1,6 @@
 package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.dto.LicenciaOrdinariaDTO;
-import com.overnet.project_sanatorio.model.LicenciaOrdinaria;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import com.overnet.project_sanatorio.service.ILicenciaOridinariaService;
 import java.util.HashMap;
