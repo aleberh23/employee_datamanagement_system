@@ -12,15 +12,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class TipoLicencia {
+@AllArgsConstructor
+@Entity(name="sector_pdiario")
+public class SectorDetalleParteDiario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_tipo")
+    @Column(name="id_sectorpdiario")
     private int id;
     private String nombre;
-    @Column(nullable = true)
-    private Integer cantidadDias;
 }

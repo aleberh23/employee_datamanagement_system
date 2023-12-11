@@ -1,6 +1,7 @@
 package com.overnet.project_sanatorio.repository;
 
 import com.overnet.project_sanatorio.model.LicenciaTomada;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,7 @@ public interface ILicenciaTomadaRepository extends JpaRepository<LicenciaTomada,
        "WHERE LOWER(CONCAT(TO_CHAR(lt.fechaDesde, 'DD/MM/YYYY'), TO_CHAR(lt.fechaHasta, 'DD/MM/YYYY'), " + 
                          "lt.descripcion, tl.nombre, empl.nombre, empl.apellido)) LIKE %?1% AND lt.terminada = ?2")
     public List<LicenciaTomada> buscar(String palabra, boolean terminada);
+    @Query("SELECT lt FROM licencia_tomada lt WHERE lt.fechaHasta = ?1")
+    public List<LicenciaTomada> findByFechaHasta(LocalDate fechaHasta);
     
 }

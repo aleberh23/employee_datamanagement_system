@@ -59,5 +59,12 @@ public class EmpleadoService implements IEmpleadoService {
         System.out.println("Palabra vacia");
         return empleadorep.findAll(deBaja);
     }
+
+    @Override
+    public List<Empleado> getEmpleadosByNombreApellidoNroLeg(String filtro) {
+        return empleadorep.findByNombreApellidoNroLegajo(filtro);
+    }
+    
+    
     
 }

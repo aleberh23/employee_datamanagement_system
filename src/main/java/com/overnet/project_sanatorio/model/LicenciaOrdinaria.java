@@ -8,11 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "licencia_ordinaria")
 public class LicenciaOrdinaria implements Serializable {
     @Id
@@ -26,17 +30,6 @@ public class LicenciaOrdinaria implements Serializable {
     @ManyToOne
     @JoinColumn(name="id_empleado")
     private Empleado empleado;
-
-    public LicenciaOrdinaria(int idLicenciaOrdinaria, int anio, int cantidadDeDias, Empleado empleado) {
-        this.idLicenciaOrdinaria = idLicenciaOrdinaria;
-        this.anio = anio;
-        this.cantidadDeDias = cantidadDeDias;
-        this.empleado = empleado;
-    }
-
-    public LicenciaOrdinaria() {
-    }
-
 }
 
                  

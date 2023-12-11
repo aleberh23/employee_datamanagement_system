@@ -1,33 +1,17 @@
 package com.overnet.project_sanatorio.security;
 
 import com.overnet.project_sanatorio.service.IUsuarioService;
-import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import static org.springframework.security.config.Customizer.withDefaults;
-import org.springframework.security.config.annotation.SecurityBuilder;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
@@ -56,7 +40,9 @@ public class WebSecurityConfig {
                                 .requestMatchers("/licenciasOrdinaria/**").hasAnyAuthority("RRHH")
                                 .requestMatchers("/licenciasOrdinarias/**").hasAnyAuthority("RRHH")
                                 .requestMatchers("/licencia/**").hasAnyAuthority("RRHH")
-                                .requestMatchers("/inasistencias/temporal").hasAnyAuthority("M_ENTRADA")
+                                .requestMatchers("/ausencia/**").hasAnyAuthority("M_ENTRADA")
+                                .requestMatchers("/ausencia/**").hasAnyAuthority("RRHH")
+                                .requestMatchers("/partediario/**").hasAnyAuthority("RRHH")
                                 .anyRequest().authenticated()
                                 )
                                

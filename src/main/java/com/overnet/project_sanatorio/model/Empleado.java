@@ -11,20 +11,21 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="EMPLEADO")
 public class Empleado implements Serializable {
@@ -68,6 +69,10 @@ public class Empleado implements Serializable {
     @JoinColumn(name="id_sector")
     private Sector sector;
     @OneToMany(mappedBy = "empleado")
+    private List<Ausencia> ausencias;
+    @OneToMany(mappedBy = "empleado")
+    private List<Inasistencia> inasistencias;
+    @OneToMany(mappedBy = "empleado")
     private List<LicenciaOrdinaria> licenciasOrd;
     @OneToMany(mappedBy = "empleado")
     private List<LicenciaTomada> licenciasTomadas;
@@ -80,42 +85,10 @@ public class Empleado implements Serializable {
     @ManyToMany(mappedBy="empleados")
     private List<DetalleParteDiario>detallespd;
     
-
-    public Empleado(int id, String nombre, String apellido, String correoElectronico, BigInteger nroCelular, String tipoDocumento, BigInteger nroDocumento, BigInteger nroLegajo, BigInteger cuil, boolean contratado, LocalDate fechaIngreso, LocalDate fechaBaja, LocalDate fechaNacimiento, LocalDate fechaJubilacion, Sector sector) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.correoElectronico = correoElectronico;
-        this.nroCelular = nroCelular;
-        this.tipoDocumento = tipoDocumento;
-        this.nroDocumento = nroDocumento;
-        this.nroLegajo = nroLegajo;
-        this.cuil = cuil;
-        this.contratado = contratado;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaBaja = fechaBaja;
-        this.fechaNacimiento = fechaNacimiento;
-        this.fechaJubilacion = fechaJubilacion;
-        this.sector=sector;
-        this.licenciasOrd=new ArrayList();
-        this.licenciasTomadas=new ArrayList();
-        this.contratos=new ArrayList();
-        this.cargasDeFamilia=new ArrayList();
-        this.detallespd=new ArrayList();
-    }
-  
-
-    public Empleado() {
-       this.licenciasOrd=new ArrayList();
-       this.licenciasTomadas=new ArrayList();
-       this.contratos=new ArrayList();
-       this.cargasDeFamilia=new ArrayList();
-       this.detallespd=new ArrayList();
-    }
     
       public int calcularDiasDeLicencia() {
         LocalDate fechaActual = LocalDate.now();
-        LocalDate fechaIngreso = this.fechaIngreso; // Suponiendo que tienes un campo fechaIngreso en tu clase Empleado
+        LocalDate fechaIngreso = this.fechaIngreso; 
 
         long semanasTrabajo = ChronoUnit.WEEKS.between(fechaIngreso, fechaActual);
 
@@ -127,18 +100,18 @@ public class Empleado implements Serializable {
             return 3;
         } else if (semanasTrabajo >= 16 && semanasTrabajo <= 19) {
             return 4;
-        } else if (semanasTrabajo > 20 && semanasTrabajo <= 26) { // 26 semanas es aproximadamente 6 meses
+        } else if (semanasTrabajo > 20 && semanasTrabajo <= 26) { 
             return 5;
-        } else if (semanasTrabajo > 26 && semanasTrabajo <= 260) { // 260 semanas es aproximadamente 5 años
+        } else if (semanasTrabajo > 26 && semanasTrabajo <= 260) { 
             return 14;
-        } else if (semanasTrabajo > 260 && semanasTrabajo <= 520) { // 520 semanas es aproximadamente 10 años
+        } else if (semanasTrabajo > 260 && semanasTrabajo <= 520) { 
             return 21;
-        } else if (semanasTrabajo > 520 && semanasTrabajo <= 1040) { // 1040 semanas es aproximadamente 20 años
+        } else if (semanasTrabajo > 520 && semanasTrabajo <= 1040) { 
             return 28;
-        } else if (semanasTrabajo > 1040) { // Más de 20 años
+        } else if (semanasTrabajo > 1040) { 
             return 35;
         } else {
-            return 0; // En caso de que no se cumpla ninguna condición
+            return 0; 
         }
     }
     

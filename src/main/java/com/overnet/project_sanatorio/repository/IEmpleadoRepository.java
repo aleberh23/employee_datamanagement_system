@@ -2,6 +2,7 @@ package com.overnet.project_sanatorio.repository;
 
 import com.overnet.project_sanatorio.model.Empleado;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,4 +27,13 @@ public interface IEmpleadoRepository extends JpaRepository<Empleado, Integer>{
     public int contarLicenciasOrdinariasPorAnioYEmpleado(int idEmpleado, Integer anio);
     
     public List<Empleado> findByBajaFalse();
+    
+   @Query("SELECT e FROM Empleado e " +
+       "WHERE (LOWER(CONCAT(e.nombre, e.apellido, e.nroLegajo)) LIKE LOWER(CONCAT('%', ?1, '%')))" +
+       "AND e.baja = false")
+    public List<Empleado> findByNombreApellidoNroLegajo(String filtro);
+    
+    @Query("SELECT e FROM Empleado e WHERE e.fechaJubilacion = ?1")
+    public List<Empleado> findByFechaJubilacion(LocalDate fechaJubilacion);
+
 }

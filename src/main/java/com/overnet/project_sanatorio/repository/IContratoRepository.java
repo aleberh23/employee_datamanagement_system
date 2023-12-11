@@ -2,6 +2,7 @@ package com.overnet.project_sanatorio.repository;
 
 import com.overnet.project_sanatorio.model.Contrato;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,5 +22,7 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer>{
     @Query("SELECT c FROM contrato c JOIN c.empleado e " +  
        "WHERE LOWER(CONCAT(TO_CHAR(c.fechaInicio, 'DD/MM/YYYY'), TO_CHAR(c.fechaFin, 'DD/MM/YYYY'), c.descripcion, e.nombre, e.apellido, e.nroLegajo)) LIKE %?1% AND c.baja = ?2")
     public List<Contrato> findAll(String palabra, boolean deBaja);
+    @Query("SELECT c FROM contrato c WHERE c.fechaFin = ?1")
+    public List<Contrato> findByFechaFin(LocalDate fechaFin);
 
 }

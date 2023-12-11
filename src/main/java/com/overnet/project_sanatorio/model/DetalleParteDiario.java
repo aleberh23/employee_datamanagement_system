@@ -16,18 +16,23 @@ import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name="detalle_pdiario")
 public class DetalleParteDiario implements Serializable {
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     @Column(name="detalle_parte_diario")
     private int idDetallePd;
-    @Column(name="sector")
-    private int sector;
+    @ManyToOne
+    @JoinColumn(name="id_sectorpdiario")
+    private SectorDetalleParteDiario sector;
     @ManyToOne
     @JoinColumn(name="id_pdiario")
     private ParteDiario parteDiario;
@@ -46,19 +51,10 @@ public class DetalleParteDiario implements Serializable {
             joinColumns =@JoinColumn(name="id_detallepd"),
             inverseJoinColumns=@JoinColumn(name="id_licencia_tomada"))
     private List<LicenciaTomada> licTomadas;
-
-    public DetalleParteDiario(int idDetallePd, int sector, ParteDiario parteDiario) {
-        this.idDetallePd = idDetallePd;
-        this.sector = sector;
-        this.parteDiario = parteDiario;
-        this.empleados = new ArrayList();
-        this.contratos = new ArrayList();
-        this.licTomadas = new ArrayList();
-    }
-
-    public DetalleParteDiario() {
-        this.empleados = new ArrayList();
-        this.contratos = new ArrayList();
-        this.licTomadas = new ArrayList();
-    }
+    
+    @ManyToMany
+    @JoinTable(name="inasistencia_detallepdiario",
+            joinColumns =@JoinColumn(name="id_detallepd"),
+            inverseJoinColumns=@JoinColumn(name="id"))
+    private List<Inasistencia> inasistencias;
 }

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Alta de domicilio</title>
+        <title>Seleccione empleado</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -79,53 +79,39 @@
             </div>
         </nav>
         <div class="container">
+            <br><br>
+            <!-- Formulario de Filtros -->
             <div class="row">
-                <div class="col-12">
-                    <div class="card mt-3">
+                <div class="col-12 col-md-4"> 
+                    <form class="form-inline" th:action="@{/ausencia/alta/empleado}">
+                        <div class="form-group mb-2">
+                            <input type="text" class="form-control" name="filtro" placeholder="Buscar" id="filtro" th:value="${filtro}">
+                        </div>
+                        <input type="submit" class="btn btn-primary mb2" value="Buscar">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div th:each="empleado : ${empleados}" class="col-md-6">
+                    <div class="card mb-4">
                         <div class="card-body">
-                            <h2 class="card-title">Registro de Carga de familia</h2>
-                            <form th:action="@{/empleado/cargaDeFamilia/alta/}" th:object="${cargadefamilia}" method="POST">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" th:field="*{nombre}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="apellido" placeholder="Apellido" th:field="*{apellido}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="tipoVinculo">Tipo de vínculo:</label>
-                                    <select id="tipoVinculo" name="tipoVinculo" th:field="*{vinculo}">
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Esposo/a">Esposo/a</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="tipoDoc">Tipo de documento:</label>
-                                    <select id="tipoDoc" name="tipoVinculo" th:field="*{tipoDoc}">
-                                        <option value="Dni">Dni</option>
-                                        <option value="Pasaporte">Pasaporte</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" name="nrodocumento" placeholder="Nro. Documento" th:field="*{nroDoc}" required>
-                                    <input type="hidden" name="idEmpleado" th:value="${idEmpleado}">
-                                </div>
+                            <h5 class="card-title" th:text="${'Nro Legajo: ' + empleado.nroLegajo}"></h5>
+                            <p class="card-text" th:text="${'Nombre: ' + empleado.nombre}"></p>
+                            <p class="card-text" th:text="${'Apellido: ' + empleado.apellido}"></p>
+                            <a th:href="@{/ausencia/alta(idEmpleado=${empleado.id})}" class="btn btn-primary">Seleccionar</a>
                         </div>
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary m-3">Guardar</button>
-                            </form>
-                            <a th:href="@{/empleado/cargaDeFamilia/alta/cancelar/{id}(id=${idEmpleado})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>        
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-wtvr0erMksdbyfAVnXWntNpO38uTJTkFmJ1bF71l2Z6ERxGHZL/dktH6Yj2gTKKG" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyOuU8fY+X1qeXrA4lKae1c8URMCIBy6kF" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title>Detalle licencia</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lista de ausencias</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <nav class="navbar navbar-dark bg-dark">
+       <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
                 
@@ -78,64 +78,96 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-        <!-- Contenedor principal -->
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <div class="card-body d-flex justify-content-between">
-                                <h2 class="card-title">Detalle de Empleado</h2>
-                                <a th:href="@{/licencia/lista}" class="btn btn-danger">
-                                    <i class="bi bi-arrow-90deg-left bi-lg"></i>
-                                    <span class="font-weight-bold">Volver</span>
-                                </a>
+
+        <div class="modal" tabindex="-1" id="modalBaja" aria-labelledby="modalBajaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/ausencia/baja/}" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Eliminar ausencia</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>ADVERTENCIA:</strong> Si presiona en "Eliminar", la ausencia se eliminará de forma PERMANENTE.
                             </div>
                             <div class="mb-3">
-                                <label class="fw-semibold" for="id">ID contrato:</label>
-                                <p><span name="id" th:text="${licencia.idLicenciaTomada}"class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="fw-semibold" for="nombreyapellido">Empleado:</label>
-                                <p><span name="nombreyapellido" th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}" class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="fw-semibold" for="nrolegajo">NRO legajo:</label>
-                                <p><span name="nrolegajo" th:text="${licencia.empleado.nroLegajo}" class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                             <div class="mb-3">
-                                <label class="fw-semibold" for="fechadesde">Fecha de inicio de la licencia:</label>
-                                <p><span name="fechadesde" th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="fw-semibold" for="fechaHasta">Fecha de finalizacion de la licencia:</label>
-                                <p><span name="fechaHasta" th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                             <div class="mb-3">
-                                <label class="fw-semibold" for="tipo">Tipo:</label>
-                                <p><span name="tipo" th:text="${licencia.tipoLicencia.nombre}" class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                             <div class="mb-3">
-                                <label class="fw-semibold" for="descripcion">Descripcion:</label>
-                                <p><span name="descripcion" th:text="${licencia.descripcion}" class="text-primary display-2 fs-3 fst-italic"></span></p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="fw-semibold" for="certificado">Certificado:</label>
-                                <p>
-                                    <span name="certificado" th:text="${licencia.certificado ? 'Si' : 'No'}" class="text-primary display-2 fs-3 fst-italic"></span>
-                                </p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="fw-semibold" for="estado">Estado:</label>
-                                 <p>
-                                    <span name="estado" th:text="${licencia.terminada ? 'Finalizada' : 'Vigente'}" class="text-primary display-2 fs-3 fst-italic"></span>
-                                </p>
+                                <input type="hidden" id="ausenciaId" name="id" value="">
                             </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Eliminar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+        <div class="container">
+            <br><br>
+            <!-- Formulario de Filtros -->
+            <div class="row">
+                <div class="col-12 col-md-4"> 
+                    <form class="form-inline" th:action="@{/ausencia/lista}">
+                        <div class="form-group mb-2">
+                            <input type="text" class="form-control" name="filtro" placeholder="Buscar" id="filtro" th:value="${filtro}">
+                        </div>
+                        <input type="submit" class="btn btn-primary mb2" value="Buscar">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+        <div class="container">
+            <div class="row">
+                <h1>Lista de ausencias:<h1>
+                        </div>
+                        <table class="table table-success table-striped table-bordered">
+                            <thead class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>NRO Legajo</th>
+                                    <th>Fecha</th>
+                                    <th>Motivo</th>
+                                    <th>Descripcion</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each = "ausencia : ${ausencias}" class="table-success">
+                                    <td th:text="${ausencia.id}">ID</td>
+                                    <td th:text="${ausencia.empleado.nombre + ' ' + ausencia.empleado.apellido}">Empleado</td>
+                                    <td th:text="${ausencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${#temporals.format(ausencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
+                                    <td th:text="${ausencia.motivo}">Motivo</td>
+                                    <td th:text="${ausencia.descripcion}">Descripcion</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${ausencia.id}">Eliminar</button>
+                                            &nbsp; &nbsp;
+                                            <a th:href="@{/inasistencia/nueva/{id}(id=${ausencia.id})}"><button class="btn btn-info px-2">Generar Inasistencia</button></a>
+                                            &nbsp; &nbsp;
+                                        </div>
+                                    </td>  
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <script>
+            $(document).on("click", "#btnBaja", function () {
+                const id = $(this).data("id");
+                const parsedId = parseInt(id);
+                console.log("ID de la ausencia " + parsedId); // Verifica si se muestra el ID correctamente
+                $("#ausenciaId").val(parsedId);
+
+            });
+
+        </script>
     </body>
 </html>

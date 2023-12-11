@@ -8,11 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name="carga_de_familia")
 public class CargaDeFamilia implements Serializable {
     @Id
@@ -35,17 +39,4 @@ public class CargaDeFamilia implements Serializable {
     @JoinColumn(name="id_empleado")
     private Empleado empleado;
 
-    public CargaDeFamilia(int id, String tipoDoc, int nroDoc, String nombre, String apellido, String vinculo, boolean baja, Empleado empleado) {
-        this.id = id;
-        this.tipoDoc = tipoDoc;
-        this.nroDoc = nroDoc;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.vinculo = vinculo;
-        this.empleado = empleado;
-        this.baja = baja;
-    }
-
-    public CargaDeFamilia() {
-    }
 }

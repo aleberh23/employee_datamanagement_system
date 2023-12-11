@@ -85,14 +85,13 @@
                             <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"
                                 class="nav-item p-3 py-md-1 bg-dark text-info" >Parte Diario:
                                 <ul class="navbar-nav fs-5">
-                                    <li><a href="#" class="nav-link">Generar</a></li>
-                                    <li><a href="#" class="nav-link">Vista</a></li>
+                                    <li><a th:href="@{/partediario}" class="nav-link">Vista</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item p-3 py-md-1 bg-dark text-info text-large">Inasistencias:
                                 <ul class="navbar-nav fs-5">
-                                    <li><a href="#" class="nav-link">Carga Ausencias</a></li>
-                                    <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"><a href="#" class="nav-link">Generar Inasistencia</a></li>
+                                    <li><a th:href="@{/ausencia/alta}" class="nav-link">Carga Ausencias</a></li>
+                                    <li th:if="${#authorization.expression('hasAuthority(''RRHH'')')}"><a th:href="@{/ausencia/lista}" class="nav-link">Generar Inasistencia</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -104,7 +103,6 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-
         <div class="container">
             <br><br>
             <!-- Formulario de Filtros -->

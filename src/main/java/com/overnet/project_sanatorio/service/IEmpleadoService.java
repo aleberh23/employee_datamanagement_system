@@ -10,4 +10,5 @@ public interface IEmpleadoService {
     public void bajaEmpleado(int id);
     public Empleado findEmpleado(int id);
     public void updateEmpleado(Empleado empleado);
+    public List<Empleado> getEmpleadosByNombreApellidoNroLeg(String filtro);
 }

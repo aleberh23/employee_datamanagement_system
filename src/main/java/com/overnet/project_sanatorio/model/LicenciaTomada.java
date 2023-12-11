@@ -12,12 +12,16 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name="licencia_tomada")
 public class LicenciaTomada implements Serializable {
     @Id
@@ -47,22 +51,4 @@ public class LicenciaTomada implements Serializable {
     @ManyToMany(mappedBy="licTomadas")
     private List<DetalleParteDiario>detallespd;
 
-    public LicenciaTomada(int idLicenciaTomada, LocalDate fechaDesde, LocalDate fechaHasta, String tipo, String descripcion, boolean certificado, boolean terminada, Empleado empleado, TipoLicencia tipoLicencia) {
-        this.idLicenciaTomada = idLicenciaTomada;
-        this.fechaDesde = fechaDesde;
-        this.fechaHasta = fechaHasta;
-        this.tipo = tipo;
-        this.descripcion = descripcion;
-        this.certificado = certificado;
-        this.terminada = terminada;
-        this.empleado = empleado;
-        this.tipoLicencia = tipoLicencia;
-        this.detallespd=new ArrayList();
-    }
-
-    public LicenciaTomada() {
-        this.detallespd=new ArrayList();
-    }
-
-    
 }

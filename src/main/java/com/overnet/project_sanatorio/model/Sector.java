@@ -9,11 +9,15 @@ import jakarta.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name="sector")
 public class Sector implements Serializable {
     @Id
@@ -24,15 +28,4 @@ public class Sector implements Serializable {
     private String nombre;
     @OneToMany(mappedBy="sector")
     private List<Empleado> empleados;
-
-    public Sector(int id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
-        this.empleados = new ArrayList();
-    }
-
-    public Sector() {
-    }
-
-    
 }
