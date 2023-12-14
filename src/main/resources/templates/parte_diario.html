@@ -7,24 +7,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-         <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -78,8 +78,8 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-        
-         <div class="container">
+
+        <div class="container">
             <br><br>
             <!-- Formulario de Fecha -->
             <div class="row">
@@ -93,36 +93,212 @@
                     </form>
                 </div>
             </div>
-            
+
             <br><br><br>
-            
-            <div th:if="${partediario != null}">
-                <p th:text="'Parte Diario existente para la fecha ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></p>
-                <div>
-                    <a th:href="@{/partediario/{id}/contratos(id=${partediario.id})}" class="btn btn-primary ml-3">Contratos que finalizan</a>
-                    &nbsp;&nbsp;&nbsp;
-                    <a th:href="@{/partediario/{id}/jubilaciones(id=${partediario.id})}" class="btn btn-primary ml-3">Jubilaciones</a>
-                    &nbsp;&nbsp;&nbsp;
-                    <a th:href="@{/partediario/{id}/inasistencias(id=${partediario.id})}" class="btn btn-primary ml-3">Inasistencias</a>
-                    &nbsp;&nbsp;&nbsp;
-                    <a th:href="@{/partediario/{id}/licencias(id=${partediario.id})}" class="btn btn-primary ml-3">Licencias que terminan</a>
+            <div class="container">
+                <div class="row">
+                    <div th:if="${encontrado == true}">
+                        <input type="hidden" id="input-fecha"/>
+                        <h2 th:text="'Parte Diario existente para la fecha ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></h2>                          
+                        <br>
+                        <h5>Licencias de larga duracion:</h5>
+                        <table th:if="${!dpdlicencias.licTomadas.isEmpty()}"class="table table-success table-striped table-bordered" id="tabla-licencias">
+                            <thead class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>Nro. Legajo</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Tipo Licencia</th>
+                                    <th>Certificado</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="licencia : ${dpdlicencias.licTomadas}" th:class="${licencia.terminada} ? 'table-danger' : 'table-success'">
+                                    <td th:text="${licencia.idLicenciaTomada}">ID</td>
+                                    <td th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}">Empleado</td>
+                                    <td th:text="${licencia.empleado.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Inicio</td>
+                                    <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Desde</td>
+                                    <td th:text="${licencia.tipoLicencia.nombre}">Tipo Licencia</td>
+                                    <td class="text-center">
+                                        <span th:if="${licencia.certificado}">
+                                            <i class="bi bi-check-circle text-success"></i>
+                                        </span>
+                                        <span th:unless="${licencia.certificado}">
+                                            <i class="bi bi-x-circle text-danger"></i>
+                                        </span>
+                                    </td>    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${dpdlicencias.licTomadas.isEmpty()}" class="alert alert-success">
+                            No hay empleados de licencia.
+                        </div>
+                        <br>
+                        <h5>Jubilaciones proximas:</h5>
+                        <table th:if="${!dpdjubilaciones.empleados.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-jubilaciones">
+                            <thead class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>Nro. Legajo</th>
+                                    <th>Fecha Nacimiento</th>
+                                    <th>Fecha Ingreso</th>
+                                    <th>Fecha De Jubilacion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="jubilacion : ${dpdjubilaciones.empleados}" th:class="${jubilacion.baja} ? 'table-danger' : 'table-success'">
+                                    <td th:text="${jubilacion.id}">ID</td>
+                                    <td th:text="${jubilacion.nombre + ' ' + jubilacion.apellido}">Empleado</td>
+                                    <td th:text="${jubilacion.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${#temporals.format(jubilacion.fechaNacimiento, 'dd/MM/YYYY')}">Fecha Nacimiento</td>
+                                    <td th:text="${#temporals.format(jubilacion.fechaIngreso, 'dd/MM/YYYY')}">Fecha De Ingreso</td> 
+                                    <td th:text="${#temporals.format(jubilacion.fechaJubilacion, 'dd/MM/YYYY')}">Fecha De Jubilacion</td>  
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${dpdjubilaciones.empleados.isEmpty()}" class="alert alert-success">
+                            No hay jubilaciones en lo que queda del año.
+                        </div>
+                        <br>
+                        <h5>Personal contratado:</h5>
+                        <table th:if="${!dpdcontratos.contratos.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-contratos">
+                            <thead class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>NRO Legajo</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Descripcion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each = "contrato : ${dpdcontratos.contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
+                                    <td th:text="${contrato.idContrato}">ID</td>
+                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
+                                    <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
+                                    <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}" class="font-weight-bold">Fecha Fin</td>
+                                    <td th:text="${contrato.descripcion}" class="font-weight-bold">Fecha Fin</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${dpdcontratos.contratos.isEmpty()}" class="alert alert-success">
+                            No hay personal contratado.
+                        </div>
+                        <br>
+                        <h5>Inasistencias de la fecha:</h5>
+                        <table th:if="${!dpdinasistencias.inasistencias.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-inasistencias">
+                            <thead class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>NRO Legajo</th>
+                                    <th>Fecha</th>
+                                    <th>Motivo</th>
+                                    <th>Descripcion</th>
+                                    <th>Certificado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each = "inasistencia : ${dpdinasistencias.inasistencias}" class="table-success">
+                                    <td th:text="${inasistencia.id}">ID</td>
+                                    <td th:text="${inasistencia.empleado.nombre + ' ' + inasistencia.empleado.apellido}">Empleado</td>
+                                    <td th:text="${inasistencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${#temporals.format(inasistencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
+                                    <td th:text="${inasistencia.tipoInasistencia.nombre}">Motivo</td>
+                                    <td th:text="${inasistencia.descripcion}">Descripcion</td>
+                                    <td class="text-center">
+                                        <span th:if="${inasistencia.certificado}">
+                                            <i class="bi bi-check-circle text-success"></i>
+                                        </span>
+                                        <span th:unless="${inasistencia.certificado}">
+                                            <i class="bi bi-x-circle text-danger"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${dpdinasistencias.inasistencias.isEmpty()}" class="alert alert-success">
+                            No hay inasistencias en la fecha.
+                        </div>
+                        <br><br><br>
+                        <div>
+                            <a th:href="@{/partediario/{id}/contratos(id=${partediario.id})}" class="btn btn-primary ml-3">Contratos que finalizan</a>
+                            &nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/partediario/{id}/jubilaciones(id=${partediario.id})}" class="btn btn-primary ml-3">Jubilaciones</a>
+                            &nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/partediario/{id}/inasistencias(id=${partediario.id})}" class="btn btn-primary ml-3">Inasistencias</a>
+                            &nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/partediario/{id}/licencias(id=${partediario.id})}" class="btn btn-primary ml-3">Licencias que terminan</a> 
+                            &nbsp;&nbsp;&nbsp;
+                            <button type ="button" onclick="generarPDF()" class="btn btn-info">Generar PDF</button>       
+                        </div>
+                    </div>
+
+                    <div th:if="${encontrado == false}">
+                        <form th:action="@{/partediario/generar}" method="post">
+                            <input type="hidden" name="fecha" th:value="${fecha}" />
+                            <h2 th:if="${fecha!=null}" th:text="'Parte Diario no existente para la fecha ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></h2>
+                            <br>
+                            <br>
+                            <button th:disabled="${fecha==null}" type="submit" class="btn btn-primary">Generar Parte Diario</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 
-            <div th:if="${partediario == null}">
-                <form th:action="@{/partediario/generar}" method="post">
-                    <input type="hidden" name="fecha" th:value="${fecha}" />
-                    <p th:text="'Parte Diario no existente para la fecha ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></p>
-                    <br>
-                    <button type="submit" class="btn btn-primary">Generar Parte Diario</button>
-                </form>
-            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+            <script>
+                function generarPDF() {
 
-        </div>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-       
+                    // Obtener fecha 
+                    var inputFecha = document.getElementById("input-fecha");
+                    var fechaString = inputFecha.value;
+
+                    // Crear PDF
+                    var doc = new jsPDF();
+
+                    // Agregar fecha
+                    doc.text(20, 20, "Parte Diario - " + fechaString);
+
+                    // Obtener tablas  
+                    var tablaLicencias = document.getElementById('tabla-licencias');
+                    var tablaJubilaciones = document.getElementById('tabla-jubilaciones');
+                    var tablaContratos = document.getElementById('tabla-contratos');
+                    var tablaInasistencias = document.getElementById('tabla-inasistencias');
+
+                    // Función para agregar tablas
+                    function addTableToPDF(table, yPos) {
+                        doc.autoTable(table.rows, {startY: yPos});
+                        return yPos + doc.lastAutoTable.finalY + 20;
+                    }
+
+                    // Agregar tablas
+                    var startPos = 50;
+                    startPos = addTableToPDF(tablaLicencias, startPos);
+                    startPos = addTableToPDF(tablaJubilaciones, startPos);
+                    startPos = addTableToPDF(tablaContratos, startPos);
+                    startPos = addTableToPDF(tablaInasistencias, startPos);
+
+                    // Pie de página  
+                    var pageHeight = doc.internal.pageSize.height;
+                    doc.text(20, pageHeight - 20, fechaString);
+
+                    // Guardar PDF 
+                    doc.save('parte_diario.pdf');
+
+                }
+
+            </script>
     </body>
 </html>

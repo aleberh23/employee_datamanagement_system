@@ -1,5 +1,6 @@
 package com.overnet.project_sanatorio.controller;
 
+import com.overnet.project_sanatorio.dto.EmpleadoRegistroDTO;
 import com.overnet.project_sanatorio.model.CargaDeFamilia;
 import com.overnet.project_sanatorio.model.Contrato;
 import com.overnet.project_sanatorio.model.Domicilio;
@@ -40,20 +41,41 @@ public class EmpleadoController {
     
    @GetMapping("/empleado/alta")
     public String mostrarFormAltaEmpleado(Model modelo){
-        Empleado emp = new Empleado();
-        Domicilio dom = new Domicilio();
+        EmpleadoRegistroDTO emp = new EmpleadoRegistroDTO();
+        emp.setNumero(null);
         List<Sector> sectores= sectorser.getSectores();
-        modelo.addAttribute("empleado", emp);
-        modelo.addAttribute("domicilio", dom);
+        modelo.addAttribute("empleadodto", emp);
         modelo.addAttribute("sectores", sectores);
         return "alta_empleado";
     }
     @PostMapping("/empleado/alta")
-    public String guardarEmpleado(@ModelAttribute("empleado")Empleado emp, @ModelAttribute("domicilio")Domicilio dom, @RequestParam("sectorId") int sectorId){
-    emp.setSector(sectorser.findSectorById(sectorId));
-    dom.setEmpleado(emp);
-    empleadoser.saveEmpleado(emp);
-    domicilioser.saveDomicilio(dom);
+    public String guardarEmpleado(@ModelAttribute("empleadodto")EmpleadoRegistroDTO emp, @RequestParam("sectorId") int sectorId){
+    //empleado    
+    Empleado empleado = new Empleado();
+    empleado.setSector(sectorser.findSectorById(sectorId));
+    empleado.setBaja(false);
+    empleado.setContratado(false);
+    empleado.setApellido(emp.getApellido());
+    empleado.setNombre(emp.getNombre());
+    empleado.setNroLegajo(emp.getNroLegajo());
+    empleado.setCorreoElectronico(emp.getCorreoElectronico());
+    empleado.setTipoDocumento(emp.getTipoDocumento());
+    empleado.setNroDocumento(emp.getNroDocumento());
+    empleado.setCuil(emp.getCuil());
+    empleado.setNroCelular(emp.getNroCelular());
+    empleado.setFechaIngreso(emp.getFechaIngreso());
+    empleado.setFechaNacimiento(emp.getFechaNacimiento());
+    empleadoser.saveEmpleado(empleado);
+    //domicilio
+    Domicilio domicilio = new Domicilio();
+    domicilio.setBaja(false);
+    domicilio.setEmpleado(empleado);
+    domicilio.setCalle(emp.getCalle());
+    domicilio.setAuditoriaMedica(emp.isAuditoriaMedica());
+    domicilio.setLocalidad(emp.getLocalidad());
+    domicilio.setNumero(emp.getNumero());
+    
+    domicilioser.saveDomicilio(domicilio);
     return "redirect:/empleado/alta";
     }
     @GetMapping("empleado/ver")
@@ -110,36 +132,28 @@ public class EmpleadoController {
     @GetMapping("empleado/domicilio/ver/{id}")
     public String domiciliosEmpleado(@PathVariable int id, Model modelo){
         Empleado emp=empleadoser.findEmpleado(id);
-        List<Domicilio> domicilios= emp.getDomicilios();
-        modelo.addAttribute("domicilios", domicilios);
-        modelo.addAttribute("idEmpleado", id);
+        modelo.addAttribute("empleado", emp);
         return "ver_domicilios_empleado";
     }
     
     @GetMapping("empleado/cargaDeFamilia/ver/{id}")
     public String cargasDeFamiliaEmpleado(@PathVariable int id, Model modelo){
         Empleado emp=empleadoser.findEmpleado(id);
-        List<CargaDeFamilia> cargasdefamilia= emp.getCargasDeFamilia();
-        modelo.addAttribute("cargasdefamilia", cargasdefamilia);
-        modelo.addAttribute("idEmpleado", id);
+        modelo.addAttribute("empleado", emp);
         return "ver_cargasdefamilia_empleado";
     }
     
     @GetMapping("empleado/contrato/ver/{id}")
     public String contratosEmpleado(@PathVariable int id, Model modelo){
         Empleado emp=empleadoser.findEmpleado(id);
-        List<Contrato> contratos= emp.getContratos();
-        modelo.addAttribute("contratos", contratos);
-        modelo.addAttribute("idEmpleado", id);
+        modelo.addAttribute("empleado", emp);
         return "ver_contratos_empleado";
     }
     
     @GetMapping("empleado/licencia/ver/{id}")
     public String licenciasEmpleado(@PathVariable int id, Model modelo){
         Empleado emp=empleadoser.findEmpleado(id);
-        List<LicenciaTomada> licencias= emp.getLicenciasTomadas();
-        modelo.addAttribute("licencias", licencias);
-        modelo.addAttribute("idEmpleado", id);
+        modelo.addAttribute("empleado", emp);
         return "ver_licencias_empleado";
     }
     

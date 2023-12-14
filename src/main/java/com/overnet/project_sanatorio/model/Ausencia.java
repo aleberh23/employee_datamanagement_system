@@ -1,12 +1,9 @@
 package com.overnet.project_sanatorio.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -26,7 +23,9 @@ public class Ausencia {
     private int id;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fecha;
-    private String motivo;
+    @ManyToOne
+    @JoinColumn(name="id_tipo_inasistencia")
+    private TipoInasistencia tipoInasistencia;
     private String descripcion;
     @ManyToOne
     @JoinColumn(name = "id_empleado")

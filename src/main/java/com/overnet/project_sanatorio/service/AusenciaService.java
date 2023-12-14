@@ -1,7 +1,9 @@
 package com.overnet.project_sanatorio.service;
 
 import com.overnet.project_sanatorio.model.Ausencia;
+import com.overnet.project_sanatorio.model.TipoInasistencia;
 import com.overnet.project_sanatorio.repository.IAusenciaRepository;
+import com.overnet.project_sanatorio.repository.ITipoInasistenciaRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,8 @@ import org.springframework.stereotype.Service;
 public class AusenciaService implements IAusenciaService{
     @Autowired
     private IAusenciaRepository ausrep;
-
+    @Autowired
+    private ITipoInasistenciaRepository tipoinrep;
     @Override
     public List<Ausencia> getAusencias() {
         return ausrep.findAll();
@@ -31,7 +34,7 @@ public class AusenciaService implements IAusenciaService{
         Ausencia a = ausrep.findById(ausencia.getId()).orElse(null);
         a.setEmpleado(ausencia.getEmpleado());
         a.setDescripcion(ausencia.getDescripcion());
-        a.setMotivo(ausencia.getMotivo());
+        a.setTipoInasistencia(ausencia.getTipoInasistencia());
         ausrep.save(a);
     }
 
@@ -43,6 +46,16 @@ public class AusenciaService implements IAusenciaService{
     @Override
     public List<Ausencia> getAusenciasByFilter(String filter) {
         return ausrep.findByFilter(filter);
+    }
+
+    @Override
+    public List<TipoInasistencia> findAllTiposInasistencia() {
+        return tipoinrep.findAll();
+    }
+
+    @Override
+    public TipoInasistencia findTipoInasistenciaById(int idTipoInasistencia) {
+        return tipoinrep.findById(idTipoInasistencia).orElse(null);
     }
 
 }

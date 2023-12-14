@@ -26,7 +26,7 @@ public class CargaDeFamilia implements Serializable {
     @Column(name="tipo_documento")
     private String tipoDoc;
     @Column(name="nro_documento")
-    private int nroDoc;
+    private Integer nroDoc;
     @Column(name="nombre")
     private String nombre;
     @Column(name="apellido")

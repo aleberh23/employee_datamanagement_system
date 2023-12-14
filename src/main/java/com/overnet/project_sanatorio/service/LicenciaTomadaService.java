@@ -1,5 +1,6 @@
 package com.overnet.project_sanatorio.service;
 
+import com.overnet.project_sanatorio.dto.PeriodoDTO;
 import com.overnet.project_sanatorio.dto.TipoLicenciaDTO;
 import com.overnet.project_sanatorio.model.LicenciaOrdinaria;
 import com.overnet.project_sanatorio.model.LicenciaTomada;
@@ -56,61 +57,32 @@ public class LicenciaTomadaService implements ILicenciaTomadaService {
     }
 
     @Override
-    public List<TipoLicenciaDTO> armarTipoLicenciaDTO(int idEmpleado) {
+    public List<TipoLicenciaDTO> armarTipoLicenciaDTO(int idEmpleado, Integer anio) {
         List<TipoLicenciaDTO> dtos = new ArrayList<TipoLicenciaDTO>();
-        LocalDate fechaActual = LocalDate.now();
-        int anio = fechaActual.getYear();
+        PeriodoDTO periodo = new PeriodoDTO(anio);
         List<TipoLicencia> tipos = tipolicrep.findAll();
         tipos.forEach(t -> {
-            if (!t.getNombre().equals("Vacaciones")) {
+            if (!t.getNombre().equals("Ordinaria")) {
                 TipoLicenciaDTO tdto = new TipoLicenciaDTO();
                 tdto.setIdTipo(t.getId());
                 tdto.setNombre(t.getNombre());
                 tdto.setDiasTotales(t.getCantidadDias());
-                tdto.setDiasTomados(sumatoriaDiasPorTipo(t.getId(), idEmpleado));
+                tdto.setDiasTomados(sumatoriaDiasPorTipoYPeriodo(t.getId(), idEmpleado, periodo));
                 if(tdto.getDiasTotales()!=null){
                         tdto.setDiasRestantes(tdto.getDiasTotales()-tdto.getDiasTomados());
                     }else{
                         tdto.setDiasRestantes(null);
                     }
                 dtos.add(tdto);
-                /*System.out.println("DTO ID TIPO: " + tdto.getIdTipo()
-                        + "\nNOMBRE: " + tdto.getNombre()
-                        + "\nDIAS TOTALES " + tdto.getDiasTotales()
-                        + "\nDIAS TOMADOS: " + tdto.getDiasTomados()
-                        + "\nDIAS RESTANTES: " + tdto.getDiasRestantes());
-                System.out.println("---------------------------");*/
-            } else {
-                LicenciaOrdinaria licord = licordrep.findByEmpleadoAndAnio(idEmpleado, anio);
-                if (licord != null) {
-                    TipoLicenciaDTO tdto = new TipoLicenciaDTO();
-                    TipoLicencia tipolic = tipolicrep.findByNombre("Vacaciones");
-                    tdto.setIdTipo(tipolic.getId());
-                    tdto.setNombre(tipolic.getNombre());
-                    tdto.setDiasTotales(licord.getCantidadDeDias());
-                    tdto.setDiasTomados(sumatoriaDiasPorTipo(t.getId(), idEmpleado));
-                    if(tdto.getDiasTotales()!=null){
-                        tdto.setDiasRestantes(tdto.getDiasTotales()-tdto.getDiasTomados());
-                    }else{
-                        tdto.setDiasRestantes(null);
-                    }
-                    dtos.add(tdto);
-                    /*System.out.println("DTO ID TIPO: " + tdto.getIdTipo()
-                            + "\nNOMBRE: " + tdto.getNombre()
-                            + "\nDIAS TOTALES " + tdto.getDiasTotales()
-                            + "\nDIAS TOMADOS: " + tdto.getDiasTomados()
-                            + "\nDIAS RESTANTES: " + tdto.getDiasRestantes());
-                    System.out.println("---------------------------");*/
-                }
             }
         });
         return dtos;
     }
 
     @Override
-    public int sumatoriaDiasPorTipo(int idTipo, int idEmpleado) {
+    public int sumatoriaDiasPorTipoYPeriodo(int idTipo, int idEmpleado, PeriodoDTO periodo) {
         int sum = 0;
-        List<LicenciaTomada> licencias = lictomrep.findByEmpleado_IdAndTipoLicencia_Id(idEmpleado, idTipo);
+        List<LicenciaTomada> licencias = lictomrep.findByTipoEmpleadoYRangoFechas(idTipo, idEmpleado, periodo.getFechaDesde(), periodo.getFechaHasta());
         for (LicenciaTomada l : licencias) {
             int dias = (int) ChronoUnit.DAYS.between(l.getFechaDesde(), l.getFechaHasta());
             sum += dias;
@@ -148,6 +120,43 @@ public class LicenciaTomadaService implements ILicenciaTomadaService {
     @Override
     public void eliminarLicencia(int idLicencia) {
         lictomrep.deleteById(idLicencia);
+    }
+
+    @Override
+    public List<LicenciaOrdinaria> obtenerLicenciasOrdinarias(int idEmpleado, Integer anio) {
+        List<LicenciaOrdinaria> licords= new ArrayList<>();
+        if(licordrep.findByEmpleadoAndAnio(idEmpleado, anio)!=null){
+            LicenciaOrdinaria l = licordrep.findByEmpleadoAndAnio(idEmpleado, anio);
+            if(l.getDiasRestanes()>0){
+                licords.add(l);
+            }
+            if(licordrep.findByEmpleadoAndAnio(idEmpleado, anio-1)!=null){
+                LicenciaOrdinaria l2 = licordrep.findByEmpleadoAndAnio(idEmpleado, anio-1);
+                if(l2.getDiasRestanes()>0){
+                    licords.add(l2);
+                }
+            }
+        }
+        return licords;
+    }
+
+    @Override
+    public TipoLicencia findTipoLicenciaByNombre(String nombre) {
+        return tipolicrep.findByNombre(nombre);
+    }
+
+    @Override
+    public List<LicenciaOrdinaria> obtenerLicenciasOrdinariasParaEditar(int idEmpleado, Integer anio) {
+        List<LicenciaOrdinaria> licords= new ArrayList<>();
+        if(licordrep.findByEmpleadoAndAnio(idEmpleado, anio)!=null){
+            LicenciaOrdinaria l = licordrep.findByEmpleadoAndAnio(idEmpleado, anio);
+            licords.add(l);
+            if(licordrep.findByEmpleadoAndAnio(idEmpleado, anio-1)!=null){
+                LicenciaOrdinaria l2 = licordrep.findByEmpleadoAndAnio(idEmpleado, anio-1);
+                licords.add(l2);
+            }
+        }
+        return licords;
     }
 
 }

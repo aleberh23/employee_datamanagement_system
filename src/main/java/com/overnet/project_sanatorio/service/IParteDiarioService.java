@@ -13,4 +13,5 @@ public interface IParteDiarioService {
     public void generate(ParteDiario pdiario);
     public ParteDiario findById(int id);
     public DetalleParteDiario findByIdParteDiarioAndNombreSector(int idPd, String nombreSec);
+    public void updateParteDiario(int idParteDIario);
 }

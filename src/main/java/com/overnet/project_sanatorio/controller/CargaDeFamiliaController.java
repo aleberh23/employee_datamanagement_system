@@ -1,6 +1,7 @@
 package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.model.CargaDeFamilia;
+import com.overnet.project_sanatorio.model.Empleado;
 import com.overnet.project_sanatorio.service.EmpleadoService;
 import com.overnet.project_sanatorio.service.ICargaDeFamiliaService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,8 +23,12 @@ public class CargaDeFamiliaController {
     
     @GetMapping("/empleado/cargaDeFamilia/alta/{idEmpleado}")
     public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado){
+        Empleado e = empleadoser.findEmpleado(idEmpleado);
         CargaDeFamilia c = new CargaDeFamilia();
+        c.setBaja(false);
+        c.setNroDoc(null);
         modelo.addAttribute("cargadefamilia", c);
+        modelo.addAttribute("empleado", e);
         return "alta_cargasdefamilia_emp";
     }
     @PostMapping("/empleado/cargaDeFamilia/alta/")
@@ -50,15 +55,14 @@ public class CargaDeFamiliaController {
     }
         
     @GetMapping("/cargaDeFamilia/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam int idEmpleado){
+    public String mostrarFormEditar(@PathVariable int id, Model modelo){
         CargaDeFamilia car = cargaser.findCargaDeFamila(id);
         modelo.addAttribute("cargadefamilia", car);
-        modelo.addAttribute("idEmpleado", idEmpleado);
         return "editar_cargadefamilia_emp";
     }
     
    @PostMapping("/cargaDeFamilia/editar/{id}")
-    public String editarCargaDeFamilia(@PathVariable int id, @ModelAttribute("cargadefamilia")CargaDeFamilia car, @ModelAttribute("idEmpleado")int idEmpleado, Model modelo){
+    public String editarCargaDeFamilia(@PathVariable int id, @ModelAttribute("cargadefamilia")CargaDeFamilia car, Model modelo){
         System.out.println("Entro");
         CargaDeFamilia c = cargaser.findCargaDeFamila(id);
         c.setId(car.getId());
@@ -67,9 +71,8 @@ public class CargaDeFamiliaController {
         c.setVinculo(car.getVinculo());
         c.setTipoDoc(car.getTipoDoc());
         c.setNroDoc(car.getNroDoc());
-        c.setBaja(car.isBaja());
         cargaser.updateCargaDeFamilia(c);
-        return"redirect:/empleado/cargaDeFamilia/ver/"+idEmpleado;
+        return"redirect:/empleado/cargaDeFamilia/ver/"+c.getEmpleado().getId();
        
     }
     

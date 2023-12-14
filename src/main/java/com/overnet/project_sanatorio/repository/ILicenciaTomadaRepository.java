@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface ILicenciaTomadaRepository extends JpaRepository<LicenciaTomada, Integer> {
    
     public List<LicenciaTomada> findByEmpleado_IdAndTipoLicencia_Id(Integer idEmpleado, Integer idTipoLicencia);
+    @Query("SELECT lt FROM licencia_tomada lt WHERE lt.tipoLicencia.id = ?1 AND lt.empleado.id = ?2 AND lt.fechaDesde >= ?3 AND lt.fechaHasta <= ?4")  
+    public List<LicenciaTomada> findByTipoEmpleadoYRangoFechas(Integer idTipoLicencia, Integer idEmpleado, LocalDate inicioPeriodo, LocalDate finPeriodo);
     @Query("SELECT l FROM licencia_tomada l WHERE l.terminada = false")
     public List<LicenciaTomada> findAllVigentes();
     @Query("SELECT lt FROM licencia_tomada lt JOIN lt.empleado empl JOIN lt.tipoLicencia tl " +  
@@ -20,5 +22,9 @@ public interface ILicenciaTomadaRepository extends JpaRepository<LicenciaTomada,
     public List<LicenciaTomada> buscar(String palabra, boolean terminada);
     @Query("SELECT lt FROM licencia_tomada lt WHERE lt.fechaHasta = ?1")
     public List<LicenciaTomada> findByFechaHasta(LocalDate fechaHasta);
+    @Query("DELETE FROM licencia_tomada")
+    void deleteAllLicenciasTomadas();
+    @Query("SELECT lt FROM licencia_tomada lt WHERE ?1 BETWEEN lt.fechaDesde AND lt.fechaHasta")
+    public List<LicenciaTomada> findVigentesEnFecha(LocalDate fecha);
     
 }

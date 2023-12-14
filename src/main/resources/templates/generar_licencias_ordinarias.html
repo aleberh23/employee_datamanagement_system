@@ -6,25 +6,25 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-       <nav class="navbar navbar-dark bg-dark">
+    <body onload="establecerRangoAnio()">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -78,56 +78,110 @@
                 <!--off canvas main container end -->
             </div>
         </nav>
-        <form th:action="@{/licenciasOrdinarias/generar/}" method="post">
-         <br><br>
         <div class="container">
+            <br><br>
             <div class="row">
-                <h1>Licencias ordinarias a generar:<h1>
-                        </div>  
-                        <table class="table table-success table-striped table-bordered">
-                            <thead class="table">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
-                                    <th>ID empleado</th>
-                                    <th>Año</th>
-                                    <th>Cantidad De Dias</th>
-                                    <th>Seleccion</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each = "ldto : ${ldtos.values()}" class="table-success">
-                                    <td th:text="${ldto.id}">ID</td>
-                                    <td th:text="${ldto.nombreEmp + ' ' + ldto.apellidoEmp}">Empleado</td>
-                                    <td th:text="${ldto.idEmp}">ID empleado</td>
-                                    <td th:text="${ldto.anio}">Año</td>
-                                    <td th:text="${ldto.cantDias}">Cantidad De Dias</td>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" th:id="${'checkbox_' + ldto.id}" th:name="seleccionados" th:value="${ldto.id}">
-                                            <label class="custom-control-label" th:for="${'checkbox_' + ldto.id}"></label>
-                                        </div>
-                                    </td>  
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div th:if="${param.exito}" class="alert alert-success" role="alert">
-                            Licencias ordinarias generadas con exito.
+                <div class="col-12 col-md-4"> 
+                    <form class="form-inline" method="get" th:action="@{/licenciasOrdinaria/generar}">
+                        <div class="form-group">
+                            <label for="anio">Selecciona el año:</label>
+                            <input type="number" id="anio" name="anio" class="form-control" th:value="${anio}" required>
                         </div>
-                         <br><br>
-                         <div class="d-flex justify-content-end">
-                             <button type="submit" class="btn btn-primary" id="generarButton" disabled>Generar Licencias</button>
-                         </div>
-                        </div>
-         
-         </form>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-        <script>
-        $('input[type="checkbox"]').change(function () {
-            $('#generarButton').prop('disabled', !$('input[type="checkbox"]:checked').length > 0);
-        });
-    </script>
-    </body>
+                        <br>
+                        <button type="submit" class="btn btn-primary mb2">Buscar licencias</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/licenciasOrdinarias/generar/(anio=${anio})}" method="post">
+            <br><br>
+            <div class="container">
+                <div class="row">
+                    <h1>Licencias ordinarias a generar:<h1>
+                            </div>  
+                            <table th:if="${!ldtos.isEmpty()}"class="table table-success table-striped table-bordered">
+                                <thead class="table">
+                                    <tr>
+                                        <th> </th>
+                                        <th>Empleado</th>
+                                        <th>Nro Legajo</th>
+                                        <th>Año</th>
+                                        <th>Cantidad De Dias</th>
+                                        <th>Seleccion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each = "ldto : ${ldtos.values()}" class="table-success">
+                                        <td th:text="${ldto.id}"> </td>
+                                        <td th:text="${ldto.nombreEmp + ' ' + ldto.apellidoEmp}">Empleado</td>
+                                        <td th:text="${ldto.nroLegajo}">Nro Legajo</td>
+                                        <td th:text="${ldto.anio}">Año</td>
+                                        <td th:text="${ldto.cantDias}">Cantidad De Dias</td>
+                                        <td>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" th:id="${'checkbox_' + ldto.id}" th:name="seleccionados" th:value="${ldto.id}">
+                                                <label class="custom-control-label" th:for="${'checkbox_' + ldto.id}"></label>
+                                            </div>
+                                        </td>  
+                                    </tr>
+                                </tbody>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="seleccionarTodos">
+                                    <label class="custom-control-label" for="seleccionarTodos">Seleccionar Todos</label>
+                                </div>
+                                <br>
+                            </table>
+                            
+                            <div th:if="${param.exito}" class="alert alert-success" role="alert">
+                                Licencias ordinarias generadas con exito.
+                            </div>
+                            <br>
+                            <div th:if="${ldtos.isEmpty()}" class="alert alert-success" role="alert">
+                                No hay licencias ordinarias a generar para ese año.
+                            </div>
+
+                            <br><br>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-danger" th:href="@{/licenciasOrdinaria/eliminar}">Eliminar todas<a>
+                                &nbsp;&nbsp;
+                                <a class="btn btn-danger" th:href="@{/licenciasOrdinaria/eliminar(anio=${anio})}">Eliminar del año<a>
+                                &nbsp;&nbsp;
+                                <button type="submit" class="btn btn-primary" id="generarButton" disabled>Generar Licencias</button> 
+                                </form>   
+                            </div>
+                    </div>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+            <script>
+            $('input[type="checkbox"]').change(function () {
+                $('#generarButton').prop('disabled', !$('input[type="checkbox"]:checked').length > 0);
+            });
+            </script>
+
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                 $(document).ready(function () {
+                    $('#seleccionarTodos').change(function () {
+                        $('input[name="seleccionados"]').prop('checked', $(this).prop('checked'));
+                        $('#generarButton').prop('disabled', !$('input[type="checkbox"]:checked').length > 0);
+                    });
+
+                    $('input[name="seleccionados"]').change(function () {
+                        // Habilita/deshabilita el botón de generación en función de si hay algún checkbox seleccionado
+                        $('#generarButton').prop('disabled', !$('input[type="checkbox"]:checked').length > 0);
+                    });
+                });
+                function establecerRangoAnio() {
+                    var inputAnio = document.getElementById("anio");
+                    var añoActual = new Date().getFullYear();
+                    inputAnio.min = añoActual - 1;
+                    inputAnio.max = añoActual + 1;
+                }
+                /*]]>*/
+            </script>
+        </body>
 </html>

@@ -14,6 +14,7 @@ import com.overnet.project_sanatorio.repository.ILicenciaTomadaRepository;
 import com.overnet.project_sanatorio.repository.IParteDiarioRepository;
 import com.overnet.project_sanatorio.repository.ISectorDetalleParteDiarioRepository;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,25 +60,26 @@ public class ParteDiarioService implements IParteDiarioService {
     public void generate(ParteDiario pdiario) {
         pdiariorep.save(pdiario);
         //jubilaciones
-        List<Empleado> jubilaciones = emprep.findByFechaJubilacion(pdiario.getFechaEmision());
+        LocalDate fechaFinAño = LocalDate.of(pdiario.getFechaEmision().getYear(), Month.DECEMBER, 31);
+        List<Empleado> jubilaciones = emprep.findByRangoFechaJubilacion(pdiario.getFechaEmision(), fechaFinAño);
         DetalleParteDiario dpjub = new DetalleParteDiario();
         dpjub.setSector(sectorpdrep.findByNombre("Jubilaciones"));
         dpjub.setParteDiario(pdiario);
         dpjub.setEmpleados(jubilaciones);
         detpdrep.save(dpjub);
         
-        //licencias que terminan
-        List<LicenciaTomada>lic = lictomrep.findByFechaHasta(pdiario.getFechaEmision());
+        //licencias
+        List<LicenciaTomada>lic = lictomrep.findVigentesEnFecha(pdiario.getFechaEmision());
         DetalleParteDiario dplic = new DetalleParteDiario();
-        dplic.setSector(sectorpdrep.findByNombre("Finalizaciones de licencias"));
+        dplic.setSector(sectorpdrep.findByNombre("Licencias"));
         dplic.setParteDiario(pdiario);
         dplic.setLicTomadas(lic);
         detpdrep.save(dplic);
         
-        //contratos que finalizan
-        List<Contrato>con = conrep.findByFechaFin(pdiario.getFechaEmision());
+        //contratos
+        List<Contrato>con = conrep.findVigentesEnFecha(pdiario.getFechaEmision());
         DetalleParteDiario dpcon = new DetalleParteDiario();
-        dpcon.setSector(sectorpdrep.findByNombre("Finalizaciones de contratos"));
+        dpcon.setSector(sectorpdrep.findByNombre("Contratos"));
         dpcon.setParteDiario(pdiario);
         dpcon.setContratos(con);
         detpdrep.save(dpcon);
@@ -99,6 +101,33 @@ public class ParteDiarioService implements IParteDiarioService {
     @Override
     public DetalleParteDiario findByIdParteDiarioAndNombreSector(int idPd, String nombreSec) {
         return detpdrep.findByParteDiarioAndSector(idPd, nombreSec);
+    }
+
+    @Override
+    public void updateParteDiario(int idParteDiario) {
+        ParteDiario pd = pdiariorep.findById(idParteDiario).orElse(null);
+        List<DetalleParteDiario> dpds = detpdrep.findByParteDiarioId(idParteDiario);
+        for (DetalleParteDiario dpd : dpds){
+            if(dpd.getSector().getNombre().equals("Jubilaciones")){
+                LocalDate fechaFinAño = LocalDate.of(pd.getFechaEmision().getYear(), Month.DECEMBER, 31);
+                List<Empleado> jubilaciones = emprep.findByRangoFechaJubilacion(pd.getFechaEmision(), fechaFinAño);
+                dpd.setEmpleados(jubilaciones);
+                detpdrep.save(dpd);
+            }else if(dpd.getSector().getNombre().equals("Licencias")){
+                List<LicenciaTomada>licencias = lictomrep.findVigentesEnFecha(pd.getFechaEmision());
+                dpd.setLicTomadas(licencias);
+                detpdrep.save(dpd);
+            }else if(dpd.getSector().getNombre().equals("Contratos")){
+                List<Contrato>contratos=conrep.findVigentesEnFecha(pd.getFechaEmision());
+                dpd.setContratos(contratos);
+                detpdrep.save(dpd);
+            }else if(dpd.getSector().getNombre().equals("Inasistencias")){
+                List<Inasistencia>inasistencias=inarep.findByFecha(pd.getFechaEmision());
+                dpd.setInasistencias(inasistencias);
+                detpdrep.save(dpd);
+            }
+        }
+        
     }
     
 }

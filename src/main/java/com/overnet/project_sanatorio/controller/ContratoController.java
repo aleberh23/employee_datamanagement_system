@@ -1,6 +1,7 @@
 package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.model.Contrato;
+import com.overnet.project_sanatorio.model.Empleado;
 import com.overnet.project_sanatorio.service.IContratoService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,10 @@ public class ContratoController {
     @GetMapping("/empleado/contrato/alta/{idEmpleado}")
     public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado){
         Contrato con = new Contrato();
+        con.setBaja(false);
+        Empleado emp = empleadoser.findEmpleado(idEmpleado);
         modelo.addAttribute("contrato", con);
+        modelo.addAttribute("empleado", emp);
         return "alta_contratos_emp";
     }
     
@@ -53,25 +57,21 @@ public class ContratoController {
     }
     
     @GetMapping("/contrato/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam int idEmpleado){
-        Contrato con = contratoser.findContrato(id);
-        System.out.println("FECHA INICIO: "+con.getFechaInicio());
-        System.out.println("FECHA FIN: "+con.getFechaFin());
+    public String mostrarFormEditar(@PathVariable int id, Model modelo){
+        Contrato con = contratoser.findContrato(id);;
         modelo.addAttribute("contrato", con);
-        modelo.addAttribute("idEmpleado", idEmpleado);
         return "editar_contrato_emp";
     }
     
     @PostMapping("/contrato/editar/{id}")
-    public String editarContrato(@PathVariable int id, @ModelAttribute("contrato")Contrato con, @ModelAttribute("idEmpleado")int idEmpleado, Model modelo){
+    public String editarContrato(@PathVariable int id, @ModelAttribute("contrato")Contrato con, Model modelo){
         Contrato c = contratoser.findContrato(id);
         c.setIdContrato(id);
         c.setFechaInicio(con.getFechaInicio());
         c.setFechaFin(con.getFechaFin());
         c.setDescripcion(con.getDescripcion());
-        c.setBaja(con.isBaja());
         contratoser.updateContrato(c);
-        return "redirect:/empleado/contrato/ver/"+idEmpleado;
+        return "redirect:/empleado/contrato/ver/"+c.getEmpleado().getId();
     }
     
     @GetMapping("/contrato/lista")

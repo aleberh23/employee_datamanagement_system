@@ -99,13 +99,23 @@
                 </div>
             </div>
         </div>
-
+        <br><br>
         <div class="container">
             <div class="row">
-                <h1>Lista de contratos: </h1>
+                <div class="card">
+                    <div class="card-header">
+                        Detalles del Empleado
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${empleado.nombre + ' ' + empleado.apellido}"></h5>
+                        <p class="card-text" th:text="'Nro. Legajo: ' + ${empleado.nroLegajo}"></p>
+                    </div>
+                </div>
 
             </div>
-            <table class="table table-success table-striped table-bordered">
+            <br><br><br>
+            <h1>Lista de contratos: </h1>
+            <table th:if="${!empleado.contratos.isEmpty()}" class="table table-success table-striped table-bordered">
                 <thead class="table">
                     <tr>
                         <th>ID</th>
@@ -115,13 +125,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each = "contrato : ${contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
+                    <tr th:each = "contrato : ${empleado.contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
                         <td th:text="${contrato.idContrato}">ID</td>
                         <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
                         <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}">Fecha Fin</td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a th:href="@{/contrato/editar/{id}(id=${contrato.idContrato}, idEmpleado=${idEmpleado})}"><button class="btn btn-primary px-2">Editar</button></a>
+                                <a th:href="@{/contrato/editar/{id}(id=${contrato.idContrato})}"><button class="btn btn-primary px-2">Editar</button></a>
                                 &nbsp;&nbsp;
                                 <a th:href="@{/empleado/contrato/ver/detalle/{id}(id=${contrato.idContrato})}"><button class="btn btn-primary px-2">Detalle</button></a>
                                 &nbsp;&nbsp;
@@ -132,13 +142,15 @@
                     </tr>
                 </tbody>
             </table>
-
-            <a th:href="@{/empleado/detalle/{id}(id=${idEmpleado})}" class="btn btn-danger float-end m-2">
+            <div th:if="${empleado.contratos.isEmpty()}" class="alert alert-success">
+            Este empleado no tiene contratos.
+            </div>
+            <a th:href="@{/empleado/detalle/{id}(id=${empleado.id})}" class="btn btn-danger float-end m-2">
                 <i class="bi bi-arrow-90deg-left bi-lg"></i>
                 <span class="font-weight-bold">Volver</span>
             </a>
             &nbsp;&nbsp;
-            <a th:href="@{/empleado/contrato/alta/{idEmpleado}(idEmpleado=${idEmpleado})}"><button class="btn btn-primary float-end m-2">Agregar</button></a>
+            <a th:href="@{/empleado/contrato/alta/{idEmpleado}(idEmpleado=${empleado.id})}"><button class="btn btn-primary float-end m-2">Nuevo</button></a>
 
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

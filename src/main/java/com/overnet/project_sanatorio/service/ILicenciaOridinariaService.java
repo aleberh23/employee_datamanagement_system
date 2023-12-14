@@ -11,5 +11,7 @@ public interface ILicenciaOridinariaService {
     public List<LicenciaOrdinaria>findAll();
     public void guardarLicOrd(LicenciaOrdinariaDTO licord);
     public void editarLicOrd(LicenciaOrdinaria licord);
-    public HashMap<Integer, LicenciaOrdinariaDTO> crearDtos();
+    public HashMap<Integer,LicenciaOrdinariaDTO> crearDtos(Integer año);
+    public void eliminarLicenciasOrdinarias(Integer anio);
+    
 }

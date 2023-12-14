@@ -84,25 +84,38 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <h2 class="card-title">Nuevo contrato: </h2>
+                            <br>
+                            <div class="card">
+                                <div class="card-header">
+                                    Detalles del Empleado
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${empleado.nombre + ' ' + empleado.apellido}"></h5>
+                                    <p class="card-text" th:text="'Nro. Legajo: ' + ${empleado.nroLegajo}"></p>
+                                </div>
+                            </div>
+                            <br>
                             <form th:action="@{/empleado/contrato/alta/}" th:object="${contrato}" method="POST">
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="fechaInicio">Fecha de inicio:</label>
-                                    <input type="date" class="form-control" name="fechaInicio" placeholder="Fecha de inicio" th:field="*{fechaInicio}" required>
+                                    <label class="form-check-label"  for="fechaInicio">Fecha de inicio:</label>
+                                    <input type="date" id="fecha_inicio" class="form-control" name="fechaInicio" placeholder="Fecha de inicio" th:field="*{fechaInicio}" required>
+                                    <div class="invalid-feedback" id="fechaInicioError"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-check-label" for="fechaFin">Fecha de fin:</label>
-                                    <input type="date" class="form-control" name="fechaFin" placeholder="Fecha de fin" th:field="*{fechaFin}" required>
+                                    <input type="date" id="fecha_fin" class="form-control" name="fechaFin" placeholder="Fecha de fin" th:field="*{fechaFin}" required>
+                                    <div class="invalid-feedback" id="fechaFinError"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required>
+                                    <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required maxlength="50">
                                     <input type="hidden" name="idEmpleado" th:value="${idEmpleado}">
                                 </div>
                         </div>
 
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary m-3">Guardar Contrato</button>
+                            <button type="submit" id="btn_submit" class="btn btn-primary m-3">Guardar Contrato</button>
                             </form>
-                            <a th:href="@{/empleado/contrato/alta/cancelar/{id}(id=${idEmpleado})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
+                            <a th:href="@{/empleado/contrato/alta/cancelar/{id}(id=${empleado.id})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
                         </div>
 
                     </div>
@@ -110,6 +123,52 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+            $("#fecha_inicio, #fecha_fin").on("change", function () {
+                validarFechas();
+            });
+        });
+
+        function validarFechas() {
+           var fechaInicio = new Date($("#fecha_inicio").val());
+           var fechaFin = new Date($("#fecha_fin").val());
+           var fechaLimite = new Date();
+           fechaLimite.setFullYear(fechaLimite.getFullYear()+30);
+           var fechaInicioLimite = new Date();
+           fechaInicioLimite.setFullYear(fechaInicioLimite.getFullYear()-1)
+           
+           if(fechaFin<fechaInicio ){
+               $("#fechaFinError").text("La fecha de fin no puede ser menor a la fecha de inicio")
+               $("#fecha_fin").addClass("is-invalid");
+               $("#btn_submit").prop("disabled", true);
+           }else{
+               if (fechaFin>fechaLimite){
+                    $("#fechaFinError").text("La fecha de fin supera la fecha limite establecida.")
+                    $("#fecha_fin").addClass("is-invalid");
+                    $("#btn_submit").prop("disabled", true);
+               }else{
+                   if(fechaInicio<fechaInicioLimite){
+                        $("#fechaInicioError").text("La fecha de inicio esta por debajo de la fecha limite establecida.")
+                        $("#fecha_inicio").addClass("is-invalid");
+                        $("#btn_submit").prop("disabled", true);
+                    }else{
+                        $("#fechaInicioError").text("")
+                        $("#fecha_inicio").removeClass("is-invalid");
+                        $("#btn_submit").prop("disabled", false);
+                        $("#fechaFinError").text("")
+                        $("#fecha_fin").removeClass("is-invalid");
+                    }
+               }
+               
+           }
+      
+        }
+
+    </script>                
 </body>
 </html>

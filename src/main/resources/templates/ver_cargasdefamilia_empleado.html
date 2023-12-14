@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Domicilios empleado</title>
+        <title>Cargas de familia empleado</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -99,13 +99,23 @@
                 </div>
             </div>
         </div>
-
+        <br><br>
         <div class="container">
             <div class="row">
-                <h1>Lista de cargas de familia:</h1>
-
+                
+                <div class="card">
+                    <div class="card-header">
+                        Detalles del Empleado
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${empleado.nombre + ' ' + empleado.apellido}"></h5>
+                        <p class="card-text" th:text="'Nro. Legajo: ' + ${empleado.nroLegajo}"></p>
+                    </div>
+                </div>
             </div>
-            <table class="table table-success table-striped table-bordered">
+             <br><br><br>
+                <h1>Lista de cargas de familia:</h1>
+            <table th:if="${!empleado.cargasDeFamilia.isEmpty()}" class="table table-success table-striped table-bordered">
                 <thead class="table">
                     <tr>
                         <th>ID</th>
@@ -118,7 +128,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each = "cargadefamilia : ${cargasdefamilia}" th:class="${cargadefamilia.baja} ? 'table-danger' : 'table-success'">
+                    <tr th:each = "cargadefamilia : ${empleado.cargasDeFamilia}" th:class="${cargadefamilia.baja} ? 'table-danger' : 'table-success'">
                         <td th:text="${cargadefamilia.id}">ID</td>
                         <td th:text="${cargadefamilia.nombre}">Nombre</td>
                         <td th:text="${cargadefamilia.apellido}">Apellido</td>
@@ -127,7 +137,7 @@
                         <td th:text="${cargadefamilia.nroDoc}">Nro. Documento</td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a th:href="@{/cargaDeFamilia/editar/{id}(id=${cargadefamilia.id}, idEmpleado=${idEmpleado})}"><button class="btn btn-primary px-2">Editar</button></a>
+                                <a th:href="@{/cargaDeFamilia/editar/{id}(id=${cargadefamilia.id})}"><button class="btn btn-primary px-2">Editar</button></a>
                                 &nbsp;&nbsp;
                                 <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${cargadefamilia.id}" th:if="${!cargadefamilia.baja}">Baja</button>
                                 &nbsp; &nbsp;
@@ -136,13 +146,16 @@
                     </tr>
                 </tbody>
             </table>
+            <div th:if="${empleado.cargasDeFamilia.isEmpty()}" class="alert alert-success">
+            Este empleado no tiene cargas de familia.
+            </div>
 
-            <a th:href="@{/empleado/detalle/{id}(id=${idEmpleado})}" class="btn btn-danger float-end m-2">
+            <a th:href="@{/empleado/detalle/{id}(id=${empleado.id})}" class="btn btn-danger float-end m-2">
                 <i class="bi bi-arrow-90deg-left bi-lg"></i>
                 <span class="font-weight-bold">Volver</span>
             </a>
             &nbsp;&nbsp;
-            <a th:href="@{/empleado/cargaDeFamilia/alta/{idEmpleado}(idEmpleado=${idEmpleado})}"><button class="btn btn-primary float-end m-2">Agregar</button></a>
+            <a th:href="@{/empleado/cargaDeFamilia/alta/{idEmpleado}(idEmpleado=${empleado.id})}"><button class="btn btn-primary float-end m-2">Agregar</button></a>
 
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

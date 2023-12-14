@@ -124,7 +124,7 @@
             <div class="row">
                 <h1>Lista de ausencias:<h1>
                         </div>
-                        <table class="table table-success table-striped table-bordered">
+                        <table th:if="${!ausencias.isEmpty()}"class="table table-success table-striped table-bordered">
                             <thead class="table">
                                 <tr>
                                     <th>ID</th>
@@ -142,7 +142,7 @@
                                     <td th:text="${ausencia.empleado.nombre + ' ' + ausencia.empleado.apellido}">Empleado</td>
                                     <td th:text="${ausencia.empleado.nroLegajo}">NRO Legajo</td>
                                     <td th:text="${#temporals.format(ausencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
-                                    <td th:text="${ausencia.motivo}">Motivo</td>
+                                    <td th:text="${ausencia.tipoInasistencia.nombre}">Motivo</td>
                                     <td th:text="${ausencia.descripcion}">Descripcion</td>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -155,7 +155,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div th:if="${ausencias.isEmpty()}" class="alert alert-success">
+                            No se encuentran ausencias.
                         </div>
+                        </div>
+        
+
+                        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>

@@ -26,7 +26,7 @@ public class Domicilio implements Serializable {
     @Column(name="calle")
     private String calle;
     @Column(name="numero")
-    private int numero;
+    private Integer numero;
     @Column(name="localidad")
     private String localidad;
     @Column(name="auditoria_medica")

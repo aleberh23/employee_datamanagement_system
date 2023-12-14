@@ -7,24 +7,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-       <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -87,10 +87,10 @@
                             <br>
                             <form th:action="@{/ausencia/alta}" th:object="${ausencia}" method="POST">
                                 <div th:if="${empleado == null}" class="mb-3">
-                                   
+
                                     <a class="btn btn-outline-primary" th:href="@{/ausencia/alta/empleado}" role="button">Seleccionar Empleado</a>
                                 </div>
-                               <div th:if="${empleado != null}">
+                                <div th:if="${empleado != null}">
                                     <div class="card">
                                         <div class="card-header">
                                             Detalles del Empleado
@@ -112,17 +112,22 @@
                                 <div class="mb-3">
                                     <label class="form-check-label" for="fecha">Fecha:</label>
                                     <input type="date" class="form-control" id="fecha" name="fecha" th:field="*{fecha}" required>
+                                    <div class="invalid-feedback" id="fechaError"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="motivo" placeholder="Motivo" th:field="*{motivo}" required>
+                                    <label for="tipoInasistencia">Seleccione un motivo:</label>
+                                    <select class="form-select" name="tipoInasistencia" id="tipoInasistencia" th:field="*{tipoInasistencia.id}" required>
+                                        <option th:each="tipo : ${tiposinasistencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+                                    </select>
                                 </div>
+
                                 <div class="mb-3">
                                     <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required>
                                 </div>
                         </div>
                         <div class="mb-3">
-                            
-                            <button type="submit" id="botonGuardar" class="btn btn-primary m-3">Guardar Ausencia</button>
+                            <input type="hidden" name="tipoInasistenciaId" id="tipoInasistenciaId">
+                            <button type="submit" id="btn_submit" class="btn btn-primary m-3" onclick="agregarTipoInasistenciaId()">Guardar Ausencia</button>
                             </form>
                         </div>
 
@@ -131,6 +136,46 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>       
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>         
-    </body>
+    
+    <script th:inline="javascript">
+        $(document).ready(function (){
+            
+            $("#fecha").on("change", function (){
+                validarFecha();
+            });
+        });
+        function agregarTipoInasistenciaId() {
+            var tipoId = $("#tipoInasistencia").val();
+            $("#tipoInasistenciaId").val(tipoId);
+        }
+        
+        function validarFecha(){
+            var fecha = new Date($("#fecha").val());
+            var fechaActual = new Date();
+            fechaActual.setDate(fechaActual.getDate() - 1);
+            var fechaLimite = new Date(fechaActual);
+            fechaLimite.setDate(fechaLimite.getDate()+4);
+            if(fecha<=fechaActual){
+                $("#fechaError").text("La fecha de la ausencia no puede ser menor a la fecha actual.");
+                $("#fecha").addClass("is-invalid");
+                $("#btn_submit").prop("disabled", true);
+            }else{
+                if(fecha>=fechaLimite){
+                $("#fechaError").text("No puede cargar ausencias con tanta antelacion.");
+                $("#fecha").addClass("is-invalid");
+                $("#btn_submit").prop("disabled", true);
+            }else{
+                $("#fechaError").text("");
+                $("#fecha").removeClass("is-invalid");
+                $("#btn_submit").prop("disabled", false);
+            }
+            }
+   
+        }
+
+    </script>
+</body>
 </html>

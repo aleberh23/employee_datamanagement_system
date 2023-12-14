@@ -27,6 +27,8 @@ public class LicenciaOrdinaria implements Serializable {
     private int anio;
     @Column(name="cantidad_dias")
     private int cantidadDeDias;
+    @Column(name="dias_restantes")
+    private int diasRestanes;
     @ManyToOne
     @JoinColumn(name="id_empleado")
     private Empleado empleado;

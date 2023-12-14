@@ -2,6 +2,7 @@ package com.overnet.project_sanatorio.service;
 
 import com.overnet.project_sanatorio.model.Inasistencia;
 import com.overnet.project_sanatorio.repository.IInasistenciaRepository;
+import com.overnet.project_sanatorio.repository.ITipoInasistenciaRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Service;
 public class InasistenciaService implements IInasistenciaService{
     @Autowired
     private IInasistenciaRepository inasirep;
-
+    @Autowired
+    private ITipoInasistenciaRepository tipoinrep;
     @Override
     public List<Inasistencia> getInasistencias() {
         return inasirep.findAll();
@@ -31,7 +33,7 @@ public class InasistenciaService implements IInasistenciaService{
         Inasistencia i = inasirep.findById(inasistencia.getId()).orElse(null);
         i.setDescripcion(inasistencia.getDescripcion());
         i.setEmpleado(inasistencia.getEmpleado());
-        i.setMotivo(inasistencia.getMotivo());
+        i.setTipoInasistencia(inasistencia.getTipoInasistencia());
         i.setCertificado(inasistencia.isCertificado());
         inasirep.save(i);
     }

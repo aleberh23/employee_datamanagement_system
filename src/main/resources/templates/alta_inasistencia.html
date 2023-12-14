@@ -108,9 +108,13 @@
                                 <div class="mb-3">
                                     <label class="form-check-label" for="fecha">Fecha:</label>
                                     <input type="date" class="form-control" id="fecha" name="fecha" th:field="*{fecha}" required>
+                                    <div class="invalid-feedback" id="fechaError"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="motivo" placeholder="Motivo" th:field="*{motivo}" required>
+                                    <label for="tipoInasistencia">Seleccione un motivo:</label>
+                                    <select class="form-select" name="tipoInasistencia" id="tipoInasistencia" th:field="*{tipoInasistencia.id}" required>
+                                        <option th:each="tipo : ${tiposinasistencia}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required>

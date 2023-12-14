@@ -28,7 +28,9 @@ public class Inasistencia{
     private int id;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fecha;
-    private String motivo;
+    @ManyToOne
+    @JoinColumn(name="id_tipo_inasistencia")
+    private TipoInasistencia tipoInasistencia;
     private String descripcion;
     @ManyToOne
     @JoinColumn(name = "id_empleado")

@@ -7,24 +7,24 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     </head>
     <body>
-<nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -84,73 +84,81 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <h2 class="card-title">Registro de Empleado</h2>
-                            <form id="empleadoForm" th:action="@{/empleado/alta}" th:object="${empleado}" method="POST">
+                            <form id="empleadoForm" th:action="@{/empleado/alta}" th:object="${empleadodto}" method="POST">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" th:field="*{nombre}" required>
+                                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" th:field="*{nombre}" required maxlength="25">
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="apellido" placeholder="Apellido" th:field="*{apellido}" required>
+                                    <input type="text" class="form-control" name="apellido" placeholder="Apellido" th:field="*{apellido}" required maxlength="25">
                                 </div>
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" name="email" placeholder="Correo Electrónico" th:field="*{correoElectronico}" required>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="Correo Electrónico" th:field="*{correoElectronico}" required maxlength="50">
+                                    <div class="invalid-feedback" id="emailError"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="tel" class="form-control" name="telefono" placeholder="Nro de Teléfono" th:field="*{nroCelular}" required>
+                                    <input type="tel" class="form-control" name="telefono" id="telefono" placeholder="Nro de Teléfono" th:field="*{nroCelular}" required maxlength="10">
+                                    <div class="invalid-feedback" id="telefonoError"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="tipo_documento">Tipo de documento:</label>
-                                    <select class="form-select" name="tipo_documento" th:field="*{tipoDocumento}">
+                                    <select class="form-select" name="tipo_documento" id="tipo_documento" th:field="*{tipoDocumento}">
                                         <option value="DNI">DNI</option>
                                         <option value="PASAPORTE">Pasaporte</option>
                                         <option value="OTRO">Otro</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="nro_documento" placeholder="Nro de Documento" th:field="*{nroDocumento}" required>
+                                    <input type="text" class="form-control" name="nro_documento" id="nro_documento" placeholder="Nro de Documento" th:field="*{nroDocumento}" required maxlength="8">
+                                    <div class="invalid-feedback" id="documentoError"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="nro_legajo" placeholder="Nro de Legajo" th:field="*{nroLegajo}" required>
+                                    <input type="text" class="form-control" name="nro_legajo" id="nro_legajo" placeholder="Nro de Legajo" th:field="*{nroLegajo}" required maxlength="5">
+                                    <div class="invalid-feedback" id="legajoError"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="nro_cuil" placeholder="Nro de CUIL" th:field="*{cuil}" required>
+                                    <input type="text" class="form-control" name="nro_cuil" id="nro_cuil" placeholder="Nro de CUIL" th:field="*{cuil}" required maxlength="11">
+                                    <div class="invalid-feedback" id="cuilError"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                                    <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" placeholder="Fecha de Nacimiento" th:field="*{fechaNacimiento}" required>
+                                    <div class="invalid-feedback" id="fechaNacimientoError"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="fecha_ingreso">Fecha de ingreso:</label>
-                                    <input type="date" class="form-control" name="fecha_ingreso" placeholder="Fecha de Ingreso" th:field="*{fechaIngreso}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Fecha de nacimiento: ">Fecha de nacimiento:</label>
-                                    <input type="date" class="form-control" name="fecha_nacimiento" placeholder="Fecha de Nacimiento" th:field="*{fechaNacimiento}" required>
+                                    <input type="date" class="form-control" id="fecha_ingreso" name="fecha_ingreso" placeholder="Fecha de Ingreso" th:field="*{fechaIngreso}" required>
+                                    <div class="invalid-feedback" id="fechaIngresoError"></div>
                                 </div>
                                 <br>
                                 <div class="mb-3">
                                     <p>Selecciona un sector:</p>
-                                    <select id="sector" name="sectorId" th:field="*{sector.id}" required>
+                                    <select class="form-select" id="sector" name="sectorId" th:field="*{sector.id}" required>
                                         <option th:each="sector : ${sectores}" th:value="${sector.id}" th:text="${sector.nombre}"></option>
                                     </select>
                                 </div>
                                 <br><br>
                                 <div class="container border border-secondary p-3">
                                     <h3 class="card-title">Domicilio incial: </h3>
-                                    <form th:action="@{/empleado/alta}" th:object="${domicilio}" method="POST">
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="calle" placeholder="Calle" th:field="*{calle}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="numero" placeholder="Numero" th:field="*{numero}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="localidad" placeholder="Localidad" th:field="*{localidad}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <input type="checkbox" class="form-check-input" id="auditoriaMedica" name="auditoriaMedica" th:field="*{auditoriaMedica}">
-                                            <label class="form-check-label" for="auditoriaMedica">Auditoria Médica</label>
-                                        </div>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" name="calle" placeholder="Calle" th:field="*{calle}" required maxlength="25">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" th:field="*{numero}" required maxlength="5">
+                                        <div class="invalid-feedback" id="numeroError"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" name="localidad" placeholder="Localidad" th:field="*{localidad}" required maxlength="30">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" class="form-check-input" id="auditoriaMedica" name="auditoriaMedica" th:field="*{auditoriaMedica}">
+                                        <label class="form-check-label" for="auditoriaMedica">Auditoria Médica</label>
+                                    </div>
                                 </div>
                                 <br><br>
 
                                 <div class="mb-3">
-                                    <button type="button" onclick="submitForm()" class="btn btn-primary">Guardar Empleado</button>
+                                    <input type="hidden" name="sectorId" id="sectorId">
+                                    <button type="submit" id="btn_submit" class="btn btn-primary" onclick="agregarSectorId()">Guardar Empleado</button>
                                 </div>
                             </form>
                         </div>
@@ -163,12 +171,192 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
         <script th:inline="javascript">
                                         /*<![CDATA[*/
-                                        function submitForm() {
-                                            var sectorId = $("#sector").val();
-                                            var form = $("#empleadoForm");
-                                            form.attr("action", form.attr("action") + "?sectorId=" + sectorId);
-                                            form.submit();
+                                        $(document).ready(function () {
+                                            // Deshabilitar el botón de submit al cargar la página
+                                            $("#guardarBtn").prop("disabled", true);
+
+                                            // Agregar evento de cambio a los campos de fecha
+                                            $("#fecha_nacimiento, #fecha_ingreso").on("change", function () {
+                                                validarFechas();
+
+                                            });
+                                            //validacion de email    
+                                            $("#email").on("input", function () {
+                                                var correo = $(this).val();
+                                                validarCorreo(correo);
+                                            });
+                                            //validacion de telefono
+                                            $("#telefono").on("input", function () {
+                                                var telefono = $(this).val();
+                                                validarTelefono(telefono);
+                                            });
+                                            //validacion de nro de documento
+                                            $("#nro_documento").on("input", function () {
+                                                var documento = $(this).val();
+                                                validarDocumento(documento);
+                                            });
+                                            //validacion de nroLegaho
+                                            $("#nro_legajo").on("input", function () {
+                                                var legajo = $(this).val();
+                                                validarLegajo(legajo);
+                                            });
+                                            //validacion de cuil
+                                            $("#nro_cuil").on("input", function () {
+                                                var cuil = $(this).val();
+                                                validarCUIL(cuil);
+                                            });
+                                            //validacion de numero domicilio
+                                            $("#numero").on("input", function () {
+                                                var numero = $(this).val();
+                                                validarNumero(numero);
+                                            });
+
+
+
+                                        });
+
+
+                                        function validarFechas() {
+                                            var fechaNacimiento = new Date($("#fecha_nacimiento").val());
+                                            var fechaIngreso = new Date($("#fecha_ingreso").val());
+                                            var fechaActual = new Date();
+                                            // Establecer la fecha mínima de nacimiento permitida (1953)
+                                            var fechaMinimaNacimiento = new Date("1953-01-01");
+                                            var fechaMinimaIngreso = new Date("1971-01-01")
+                                            var fechaEdadMinima = new Date(fechaNacimiento);
+                                            fechaEdadMinima.setFullYear(fechaEdadMinima.getFullYear() + 18);
+
+                                            // Verificar si la fecha de ingreso es al menos 18 años después de la fecha de nacimiento
+                                            if (fechaIngreso < fechaEdadMinima) {
+                                                console.log("fechaIngreso es menor que fechaNacimiento+18");
+                                                $("#fechaIngresoError").text("La fecha de ingreso debe ser como minimo 18 años mayor que la de nacimiento..");
+                                                $("#fecha_ingreso").addClass("is-invalid");
+                                            } else {
+                                                console.log("fechaIngreso es mayor que fechaNacimiento+18");
+                                                // Validar la fecha de ingreso
+                                                if (fechaIngreso > fechaActual) {
+                                                    $("#fechaIngresoError").text("La fecha de ingreso no puede ser mayor que la fecha actual.");
+                                                    $("#fecha_ingreso").addClass("is-invalid");
+                                                } else {
+                                                    if (fechaIngreso < fechaMinimaIngreso) {
+                                                        $("#fechaIngresoError").text("La fecha de ingreso no puede ser anterior a 1971.");
+                                                        $("#fecha_ingreso").addClass("is-invalid");
+                                                    } else {
+                                                        $("#fechaIngresoError").text("");
+                                                        $("#fecha_ingreso").removeClass("is-invalid");
+                                                    }
+                                                }
+                                            }
+
+                                            // Validar la fecha de nacimiento
+                                            if (fechaNacimiento > fechaActual) {
+                                                console.log(fechaNacimiento+">"+fechaActual);
+                                                $("#fechaNacimientoError").text("La fecha de nacimiento no puede ser mayor que la fecha actual.");
+                                                $("#fecha_nacimiento").addClass("is-invalid");
+                                            } else {
+                                                if (fechaNacimiento < fechaMinimaNacimiento) {
+                                                    $("#fechaNacimientoError").text("La fecha de nacimiento no puede ser anterior a 1953.");
+                                                    $("#fecha_nacimiento").addClass("is-invalid");
+                                                } else {
+                                                    $("#fechaNacimientoError").text("");
+                                                    $("#fecha_nacimiento").removeClass("is-invalid");
+                                                }
+                                            }
+                                            // Habilitar o deshabilitar el botón de submit según las validaciones
+                                            if ($("#fecha_nacimiento").hasClass("is-invalid") || $("#fecha_ingreso").hasClass("is-invalid")) {
+                                                $("#btn_submit").prop("disabled", true);
+                                            } else {
+                                                $("#btn_submit").prop("disabled", false);
+                                            }
+
+
+
                                         }
+                                        function agregarSectorId() {
+                                            var sectorId = $("#sector").val();
+                                            $("#sectorId").val(sectorId);
+                                        }
+
+                                        function validarCorreo(correo) {
+                                            var expReg = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+                                            var esValido = expReg.test(correo);
+                                            if (esValido == true) {
+                                                $("#btn_submit").prop("disabled", false);
+                                                $("#emailError").text("");
+                                                $("#email").removeClass("is-invalid");
+                                            } else {
+                                                $("#emailError").text("Ingrese un formato valido de email.");
+                                                $("#email").addClass("is-invalid");
+                                                $("#btn_submit").prop("disabled", true);
+                                            }
+                                        }
+
+                                        function validarTelefono(telefono) {
+                                            var esNumero = /^[0-9]+$/.test(telefono);
+                                            if (esNumero) {
+                                                $("#btn_submit").prop("disabled", false);
+                                                $("#telefonoError").text("");
+                                                $("#telefono").removeClass("is-invalid");
+                                            } else {
+                                                $("#telefonoError").text("Ingrese solo números.");
+                                                $("#telefono").addClass("is-invalid");
+                                                $("#btn_submit").prop("disabled", true);
+                                            }
+                                        }
+
+                                        function validarDocumento(documento) {
+                                            var esNumero = /^[0-9]+$/.test(documento);
+                                            if (esNumero) {
+                                                $("#btn_submit").prop("disabled", false);
+                                                $("#documentoError").text("");
+                                                $("#nro_documento").removeClass("is-invalid");
+                                            } else {
+                                                $("#documentoError").text("Ingrese solo números.");
+                                                $("#nro_documento").addClass("is-invalid");
+                                                $("#btn_submit").prop("disabled", true);
+                                            }
+                                        }
+
+                                        function validarLegajo(legajo) {
+                                            var esNumero = /^[0-9]+$/.test(legajo);
+                                            if (esNumero) {
+                                                $("#btn_submit").prop("disabled", false);
+                                                $("#legajoError").text("");
+                                                $("#nro_legajo").removeClass("is-invalid");
+                                            } else {
+                                                $("#legajoError").text("Ingrese solo números.");
+                                                $("#nro_legajo").addClass("is-invalid");
+                                                $("#btn_submit").prop("disabled", true);
+                                            }
+                                        }
+
+                                        function validarCUIL(cuil) {
+                                            var esNumero = /^[0-9]+$/.test(cuil);
+                                            if (esNumero) {
+                                                $("#btn_submit").prop("disabled", false);
+                                                $("#cuilError").text("");
+                                                $("#nro_cuil").removeClass("is-invalid");
+                                            } else {
+                                                $("#cuilError").text("Ingrese solo números.");
+                                                $("#nro_cuil").addClass("is-invalid");
+                                                $("#btn_submit").prop("disabled", true);
+                                            }
+                                        }
+                                        
+                                        function validarNumero(numero) {
+                                            var esNumero = /^[0-9]+$/.test(numero);
+                                            if (esNumero) {
+                                                $("#btn_submit").prop("disabled", false);
+                                                $("#numeroError").text("");
+                                                $("#numero").removeClass("is-invalid");
+                                            } else {
+                                                $("#numeroError").text("Ingrese solo números.");
+                                                $("#numero").addClass("is-invalid");
+                                                $("#btn_submit").prop("disabled", true);
+                                            }
+                                        }
+
+
                                         /*]]>*/
         </script>
     </body>

@@ -3,6 +3,7 @@ package com.overnet.project_sanatorio.controller;
 import com.overnet.project_sanatorio.model.Ausencia;
 import com.overnet.project_sanatorio.model.Empleado;
 import com.overnet.project_sanatorio.model.Inasistencia;
+import com.overnet.project_sanatorio.model.TipoInasistencia;
 import com.overnet.project_sanatorio.service.IAusenciaService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import com.overnet.project_sanatorio.service.IInasistenciaService;
@@ -31,10 +32,11 @@ public class InasistenciaController {
     public String mostrarFormAlta(@PathVariable int id, @RequestParam(value = "idEmpleado", required = false) Integer idEmpleado, Model modelo){
         Ausencia aus = auser.findAusenciaById(id);
         Inasistencia ina = new Inasistencia();
+        List<TipoInasistencia>tiposinasistencia = auser.findAllTiposInasistencia();
         ina.setEmpleado(aus.getEmpleado());
         ina.setDescripcion(aus.getDescripcion());
         ina.setFecha(aus.getFecha());
-        ina.setMotivo(aus.getMotivo());
+        ina.setTipoInasistencia(aus.getTipoInasistencia());
         if(idEmpleado!=null){
             Empleado emp = empser.findEmpleado(idEmpleado);
             ina.setEmpleado(emp);
@@ -42,6 +44,7 @@ public class InasistenciaController {
         }
         modelo.addAttribute("inasistencia", ina);
         modelo.addAttribute("id", id);
+        modelo.addAttribute("tiposinasistencia", tiposinasistencia);
         
         return "alta_inasistencia";
     }

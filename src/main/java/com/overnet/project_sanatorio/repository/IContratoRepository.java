@@ -24,5 +24,7 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer>{
     public List<Contrato> findAll(String palabra, boolean deBaja);
     @Query("SELECT c FROM contrato c WHERE c.fechaFin = ?1")
     public List<Contrato> findByFechaFin(LocalDate fechaFin);
+    @Query("SELECT c FROM contrato c WHERE ?1 BETWEEN c.fechaInicio AND c.fechaFin")
+    public List<Contrato> findVigentesEnFecha(LocalDate fecha);
 
 }

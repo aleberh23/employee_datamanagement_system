@@ -86,11 +86,11 @@ public class Empleado implements Serializable {
     private List<DetalleParteDiario>detallespd;
     
     
-      public int calcularDiasDeLicencia() {
-        LocalDate fechaActual = LocalDate.now();
+      public Integer calcularDiasDeLicencia(int anio) {
+        LocalDate fechaCalculo = LocalDate.of(anio, 8, 1);
         LocalDate fechaIngreso = this.fechaIngreso; 
 
-        long semanasTrabajo = ChronoUnit.WEEKS.between(fechaIngreso, fechaActual);
+        long semanasTrabajo = ChronoUnit.WEEKS.between(fechaIngreso, fechaCalculo);
 
         if (semanasTrabajo >= 4 && semanasTrabajo <= 7) {
             return 1;
@@ -111,7 +111,7 @@ public class Empleado implements Serializable {
         } else if (semanasTrabajo > 1040) { 
             return 35;
         } else {
-            return 0; 
+            return null; 
         }
     }
     

@@ -17,28 +17,58 @@ public class ParteDiarioController {
     private IParteDiarioService pdser;
     
     @GetMapping("/partediario")
-    public String mostrarParteDiario(@RequestParam(name = "fecha", required = false) LocalDate fecha, Model modelo){
-        if(fecha!=null){    
-            ParteDiario pdiario = pdser.findByDate(fecha);
-            modelo.addAttribute("partediario", pdiario);
+    public String mostrarParteDiario(@RequestParam(name = "fecha", required = false) LocalDate fecha, Model modelo) {
+        ParteDiario pdiario = pdser.findByDate(fecha);
+
+        if (pdiario == null) {
+            modelo.addAttribute("encontrado", false);
             modelo.addAttribute("fecha", fecha);
+        } else {
+            pdser.updateParteDiario(pdiario.getId());
+
+            // Buscar los detalles del parte diario
+            DetalleParteDiario dpdcontratos = pdser.findByIdParteDiarioAndNombreSector(pdiario.getId(), "Contratos");
+            DetalleParteDiario dpdlicencias = pdser.findByIdParteDiarioAndNombreSector(pdiario.getId(), "Licencias");
+            DetalleParteDiario dpdjubilaciones = pdser.findByIdParteDiarioAndNombreSector(pdiario.getId(), "Jubilaciones");
+            DetalleParteDiario dpdinasistencias = pdser.findByIdParteDiarioAndNombreSector(pdiario.getId(), "Inasistencias");
+
+            // Agregar los detalles al modelo
+            modelo.addAttribute("dpdlicencias", dpdlicencias);
+            modelo.addAttribute("dpdcontratos", dpdcontratos);
+            modelo.addAttribute("dpdjubilaciones", dpdjubilaciones);
+            modelo.addAttribute("dpdinasistencias", dpdinasistencias);
+            
+           //agregar fecha al modelo
+           modelo.addAttribute("fecha", fecha);
+           modelo.addAttribute("encontrado", true);
         }
+
+        // Agregar el parte diario al modelo
+        modelo.addAttribute("partediario", pdiario);
         return "parte_diario";
     }
     
     @PostMapping("/partediario/generar")
-    public String generarParteDiario(@RequestParam("fecha") LocalDate fecha){
-        ParteDiario pd = new ParteDiario();
-        pd.setFechaEmision(fecha);
-        pdser.generate(pd);
-        
+    public String generarParteDiario(@RequestParam("fecha") LocalDate fecha) {
+        ParteDiario pdiario = pdser.findByDate(fecha);
+
+        if (pdiario == null) {
+            // Si el parte diario no existe, generarlo
+            pdiario = new ParteDiario();
+            pdiario.setFechaEmision(fecha);
+            pdser.generate(pdiario);
+        } else {
+            // Si el parte diario existe, actualizar si es necesario
+            pdser.updateParteDiario(pdiario.getId());
+        }
+
         return "redirect:/partediario?fecha=" + fecha;
     }
     
     @GetMapping("/partediario/{id}/contratos")
     public String mostrarContratos(@PathVariable("id")int id, Model modelo){
         ParteDiario pd = pdser.findById(id);
-        DetalleParteDiario dpd = pdser.findByIdParteDiarioAndNombreSector(id, "Finalizaciones de contratos");
+        DetalleParteDiario dpd = pdser.findByIdParteDiarioAndNombreSector(id, "Contratos");
         modelo.addAttribute("contratos", dpd.getContratos());
         modelo.addAttribute("partediario", pd);
         return "parte_diario_contratos";
@@ -46,7 +76,7 @@ public class ParteDiarioController {
     @GetMapping("/partediario/{id}/licencias")
     public String mostrarLicencias(@PathVariable("id")int id, Model modelo){
         ParteDiario pd = pdser.findById(id);
-        DetalleParteDiario dpd = pdser.findByIdParteDiarioAndNombreSector(id, "Finalizaciones de licencias");
+        DetalleParteDiario dpd = pdser.findByIdParteDiarioAndNombreSector(id, "Licencias");
         modelo.addAttribute("licencias", dpd.getLicTomadas());
         modelo.addAttribute("partediario", pd);
         return "parte_diario_licencias";
@@ -66,5 +96,12 @@ public class ParteDiarioController {
         modelo.addAttribute("inasistencias", dpd.getInasistencias());
         modelo.addAttribute("partediario", pd);
         return "parte_diario_inasistencias";
+    }
+    
+    @PostMapping("/partediario/{id}/actualizar")
+    public String actualizarParteDiario(@PathVariable("id")int id, Model modelo){
+        ParteDiario pd = pdser.findById(id);
+        pdser.updateParteDiario(id);
+        return "redirect:/partediario?fecha="+pd.getFechaEmision();
     }
 }

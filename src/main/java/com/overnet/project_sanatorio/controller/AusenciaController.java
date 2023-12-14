@@ -2,6 +2,7 @@ package com.overnet.project_sanatorio.controller;
 
 import com.overnet.project_sanatorio.model.Ausencia;
 import com.overnet.project_sanatorio.model.Empleado;
+import com.overnet.project_sanatorio.model.TipoInasistencia;
 import com.overnet.project_sanatorio.service.IAusenciaService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import com.overnet.project_sanatorio.service.IInasistenciaService;
@@ -39,7 +40,9 @@ public class AusenciaController {
     @GetMapping("/ausencia/alta")
     public String mostrarFormAlta(@RequestParam(value = "idEmpleado", required = false) Integer idEmpleado, Model modelo){
      Ausencia a = new Ausencia();
+     List<TipoInasistencia>tiposinasistencia = auser.findAllTiposInasistencia();
      modelo.addAttribute("ausencia", a);
+     modelo.addAttribute("tiposinasistencia", tiposinasistencia);
      if (idEmpleado == null) {
             modelo.addAttribute("empleado", null);
             System.out.println("ID EMPLEADO IS NULL");
@@ -53,10 +56,12 @@ public class AusenciaController {
     }
 
     @PostMapping("/ausencia/alta")
-    public String procesarFormAlta(@ModelAttribute("ausencia") Ausencia ausencia,@RequestParam("empleadoId") int empleadoId, Model modelo) {
+    public String procesarFormAlta(@ModelAttribute("ausencia") Ausencia ausencia,@RequestParam("empleadoId") int empleadoId, @RequestParam("tipoInasistenciaId")int tipoInasistenciaId, Model modelo) {
         Empleado empleado = empser.findEmpleado(empleadoId);
+        TipoInasistencia t = auser.findTipoInasistenciaById(tipoInasistenciaId);
         System.out.println(empleado.getNombre()+" "+empleado.getApellido());
         ausencia.setEmpleado(empleado);
+        ausencia.setTipoInasistencia(t);
         auser.saveAusencia(ausencia);
         return "redirect:/ausencia/alta";
     }

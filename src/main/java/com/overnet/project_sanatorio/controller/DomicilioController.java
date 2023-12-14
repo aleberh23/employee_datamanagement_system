@@ -25,7 +25,11 @@ public class DomicilioController {
     @GetMapping("/empleado/domicilio/alta/{idEmpleado}")
     public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado){
         Domicilio dom = new Domicilio();
+        dom.setBaja(false);
+        dom.setNumero(null);
+        Empleado emp = empleadoser.findEmpleado(idEmpleado);
         modelo.addAttribute("domicilio", dom);
+        modelo.addAttribute("empleado", emp);
         return "alta_domicilios_emp";
     }
     @PostMapping("/empleado/domicilio/alta/")
@@ -52,16 +56,15 @@ public class DomicilioController {
     }
         
     @GetMapping("domicilio/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam int idEmpleado){
+    public String mostrarFormEditar(@PathVariable int id, Model modelo){
         Domicilio domicilio = domicilioser.findDocimicilio(id);
         modelo.addAttribute("domicilio", domicilio);
-        modelo.addAttribute("idEmpleado", idEmpleado);
         
         return "editar_domicilio_emp";
     }
     
    @PostMapping("domicilio/editar/{id}")
-    public String editarDomicilio(@PathVariable int id, @ModelAttribute("domicilio")Domicilio domicilio, @ModelAttribute("idEmpleado")int idEmpleado, Model modelo){
+    public String editarDomicilio(@PathVariable int id, @ModelAttribute("domicilio")Domicilio domicilio, Model modelo){
         System.out.println("Entro");
         Domicilio dom = domicilioser.findDocimicilio(id);
         dom.setId(domicilio.getId());
@@ -69,9 +72,8 @@ public class DomicilioController {
         dom.setNumero(domicilio.getNumero());
         dom.setLocalidad(domicilio.getLocalidad());
         dom.setAuditoriaMedica(domicilio.isAuditoriaMedica());
-        dom.setBaja(domicilio.isBaja());
         domicilioser.updateDomicilio(dom);
-        return"redirect:/empleado/domicilio/ver/"+idEmpleado;
+        return"redirect:/empleado/domicilio/ver/"+dom.getEmpleado().getId();
        
     }
 }
