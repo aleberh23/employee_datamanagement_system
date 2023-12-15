@@ -136,7 +136,7 @@
                         <td th:text="${licencia.tipoLicencia.nombre}">Tipo</td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a th:href="@{/licencia/editar/{id}(id=${licencia.idLicenciaTomada}, idEmpleado=${empleado.id})}"><button class="btn btn-primary px-2">Editar</button></a>
+                                <a th:href="@{/licencia/editar/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-primary px-2">Editar</button></a>
                                 &nbsp;&nbsp;
                                 <a th:href="@{/empleado/licencia/ver/detalle/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-primary px-2">Detalle</button></a>
                                 &nbsp;&nbsp;

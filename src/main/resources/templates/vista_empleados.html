@@ -31,6 +31,30 @@
                 </div>
             </div>
         </div>
+        
+        <div class="modal" tabindex="-1" id="modalJubilacion" aria-labelledby="modalJubilacionLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/empleado/jubilacion/{id}(id=${empleadoIdJubilacion})}" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Jubilación empleado</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <input type="hidden" id="empleadoIdJubilacion" name="id">
+                                <label for="fecha_jubilacion">Fecha de jubilación:</label>
+                                <input type="date" class="form-control" name="fechaJubilacion" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Jubilar</button> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
@@ -161,9 +185,11 @@
                                                 <a th:href="@{/empleado/editar/{id}(id=${empleado.id})}"><button class="btn btn-primary px-2">Editar</button></a>
                                                 &nbsp;&nbsp;
                                                 <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${empleado.id}" th:if="${!empleado.baja}">Baja</button>
+                                                <a class="btn btn-success px-2" th:href="@{/empleado/dardealta/{id}(id=${empleado.id})}" th:if="${empleado.baja}">Alta</a>                                                
                                                 &nbsp; &nbsp;
                                                 <a th:href="@{/empleado/detalle/{id}(id=${empleado.id})}"><button class="btn btn-info px-2">Detalles</button></a>
                                                 &nbsp; &nbsp;
+                                                <button class="btn btn-danger px-2" data-bs-toggle="modal" id="btnJubilacion" data-bs-target="#modalJubilacion" th:data-id="${empleado.id}" th:if="${empleado.fechaJubilacion == null}">Jubilacion</button>
                                             </div>
                                         </td>  
                                     </tr>
@@ -174,7 +200,7 @@
                             </div>
                             </div>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-            <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
             <script>
                 $(document).on("click", "#btnBaja", function () {
@@ -182,6 +208,13 @@
 
                     $("#empleadoId").val(id);
                 });
+                
+                $("#btnJubilacion").click(function() {
+                    var id = $(this).data("id");
+                    $("#empleadoIdJubilacion").val(id);  
+                });
+                
+               
 
             </script>
 

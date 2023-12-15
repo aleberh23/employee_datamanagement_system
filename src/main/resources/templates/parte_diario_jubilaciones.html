@@ -10,21 +10,21 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -81,30 +81,38 @@
         <br><br>
         <div class="container">
             <div class="row">
-                <h1 th:text="'Jubilaciones en la fecha: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
+                <h1 th:text="'Jubilaciones proximas a ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
                         </div>
-                        <table class="table table-success table-striped table-bordered">
+                        <br>
+                        <table th:if="${!jubilaciones.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-jubilaciones">
                             <thead class="table">
                                 <tr>
                                     <th>ID</th>
                                     <th>Empleado</th>
-                                    <th>NRO Legajo</th>
+                                    <th>Nro. Legajo</th>
+                                    <th>Sector</th>
+                                    <th>Fecha Nacimiento</th>
                                     <th>Fecha Ingreso</th>
                                     <th>Fecha De Jubilacion</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each = "empleado : ${empleados}" th:class="${empleado.baja} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${empleado.id}">ID</td>
-                                    <td th:text="${empleado.nombre + ' ' + empleado.apellido}">Empleado</td>
-                                    <td th:text="${empleado.nroLegajo}">NRO Legajo</td>
-                                    <td th:text="${#temporals.format(empleado.fechaIngreso, 'dd/MM/YYYY')}">Fecha Ingreso</td>
-                                    <td th:text="${#temporals.format(empleado.fecgaJubilacion, 'dd/MM/YYYY')}" class="font-weight-bold">Fecha Jubiliacion</td>
+                                <tr th:each="jubilacion : ${jubilaciones}" th:class="${jubilacion.baja} ? 'table-danger' : 'table-success'">
+                                    <td th:text="${jubilacion.id}">ID</td>
+                                    <td th:text="${jubilacion.nombre + ' ' + jubilacion.apellido}">Empleado</td>
+                                    <td th:text="${jubilacion.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${jubilacion.sector.nombre}">Sector</td>
+                                    <td th:text="${#temporals.format(jubilacion.fechaNacimiento, 'dd/MM/YYYY')}">Fecha Nacimiento</td>
+                                    <td th:text="${#temporals.format(jubilacion.fechaIngreso, 'dd/MM/YYYY')}">Fecha De Ingreso</td> 
+                                    <td th:text="${#temporals.format(jubilacion.fechaJubilacion, 'dd/MM/YYYY')}">Fecha De Jubilacion</td>  
                                 </tr>
                             </tbody>
                         </table>
-                         <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
+                        <div th:if="${jubilaciones.isEmpty()}" class="alert alert-success">
+                            No hay jubilaciones en lo que queda del año.
+                        </div>
+                        <br>
+                        <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
                             <i class="bi bi-arrow-90deg-left bi-lg"></i>
                             <span class="font-weight-bold">Volver</span>
                         </a>

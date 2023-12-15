@@ -12,4 +12,6 @@ public interface IContratoService {
     public List<Contrato> findBySearch(String palabra, boolean deBaja);
     public void verificarContratos();
     public void verificarContratosInicio();
+    public Contrato findContratoSupepuesto(int idEmpleado, Contrato nuevoContrato);
+    public Contrato findContratoSupepuestoExcluyendose(int idEmpleado, Contrato contrtatoEditado);
 }

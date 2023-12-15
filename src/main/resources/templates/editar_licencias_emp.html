@@ -6,25 +6,25 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     </head>
-    <body onload="actualizarDiasRestantes()">
+    <body>
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -85,88 +85,155 @@
                         <div class="card-body">
                             <h2 class="card-title">Editar licencia: </h2>
                             <form th:action="@{/licencia/editar/{id}(id=${licencia.idLicenciaTomada})}" th:object="${licencia}" method="POST">
+
+                                <br>
+                                <div class="card">
+                                    <div class="card-header">
+                                        Detalles del Empleado
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}"></h5>
+                                        <p class="card-text" th:text="'Nro. Legajo: ' + ${licencia.empleado.nroLegajo}"></p>
+                                    </div>
+                                </div>
+                                <br>
+
                                 <div class="mb-3">
                                     <label class="form-check-label" for="tipo">Tipo: </label>
-                                    <select class="form-control" id="tipo" name="idTipo" required onchange="actualizarDiasRestantes()">
+                                    <select class="form-control" id="tipo" name="idTipo" required onchange="actualizarDiasRestantes()" disabled>
                                         <option th:each="dto : ${dtos}" th:value="${dto.idTipo}" th:text="${dto.nombre}" th:attr="data-diasRestantes=${dto.diasRestantes}" th:selected="${dto.idTipo == licencia.tipoLicencia.id}"></option>
                                     </select>
                                     <p id="diasRestantesParrafo">
                                         Días restantes:
-                                        <span id="diasRestantesSpan"></span>
+                                        <span th:text="${diasrestantes != null ? diasrestantes : 'no tiene límite'}" id="diasRestantesSpan"></span>
+                                        <input type="hidden" id="diasConsumidos" th:value="${diasconsumidos}">
+                                        <input type="hidden" id="diasRestantes" th:value="${diasrestantes}">
+                                        <input type="hidden" id="anio" th:value="${anio}">
                                     </p>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-check-label" for="fechaDesde">Fecha Desde</label>
-                                    <input type="date" class="form-control" id="fechaDesde" name="fechaDesde" th:field="*{fechaDesde}" required onchange="validarFechas()">
+                                    <input type="date" class="form-control" id="fechaDesde" name="fechaDesde" th:field="*{fechaDesde}" required>
+                                    <div class="invalid-feedback" id="fechaDesdeError"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-check-label" for="fechaHasta">Fecha Hasta:</label>
-                                    <input type="date" class="form-control" id= "fechaHasta" name="fechaHasta" th:field="*{fechaHasta}" required onchange="validarFechas()">
+                                    <input type="date" class="form-control" id= "fechaHasta" name="fechaHasta" th:field="*{fechaHasta}" required>
+                                    <div class="invalid-feedback" id="fechaHastaError"></div>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="certificado" name="certificado" th:field="*{certificado}" required th:value="${licencia.certificado}">
+                                        <input type="checkbox" class="form-check-input" id="certificado" name="certificado" th:field="*{certificado}">
                                         <label class="form-check-label" for="certificado">Certificado</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required th:value="${licencia.descripcion}">
-                                    <input type="hidden" name="idEmpleado" th:value="${idEmpleado}">
+                                    <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required>
+                                    <input type="hidden" name="idEmpleado" th:value="${empleado.id}">
                                 </div>
                         </div>
-                        <div class="alert alert-danger mt-3" role="alert" id="mensajeError" style="display: none;">
-                            
+                        <div th:if="${superpuesta != null}" class="alert alert-danger mx-3">
+                            <strong th:text="|Error al cargar la licencia: |"> </strong>
+                            <span th:text="|se superpone a la licencia desde ${#temporals.format(superpuesta.fechaDesde, 'dd/MM/YYYY')} hasta ${#temporals.format(superpuesta.fechaHasta, 'dd/MM/YYYY')}|"></span>
                         </div>
-                        <div class="mb-3">
-                            <button type="submit" id="botonGuardar" class="btn btn-primary m-3">Guardar Licencia</button>
-                            </form>
-                            <a th:href="@{/empleado/licencia/alta/cancelar/{id}(id=${idEmpleado})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
-                        </div>
-
                     </div>
+                    <div class="mb-3">
+                        <button type="submit" id="btn_submit" class="btn btn-primary m-3">Guardar Licencia</button>
+                        </form>
+                        <a th:href="@{/empleado/licencia/ver/{id}(id=${licencia.empleado.id})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>        
-    <script>
-    function actualizarDiasRestantes() {
-        var selectElement = document.getElementById("tipo");
-        var diasRestantes = selectElement.options[selectElement.selectedIndex].getAttribute("data-diasRestantes");
-        var diasRestantesSpan = document.getElementById("diasRestantesSpan");
-        if (diasRestantes !== null) {
-            diasRestantesSpan.innerText = diasRestantes;
-        } else {
-            diasRestantesSpan.innerText = 'No hay limite establecido.'; 
-        }
-        validarFechas(); 
-        }
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>        
+<script th:inline="javascript">
+                                    $(document).ready(function () {
+                                        $("#fechaDesde, #fechaHasta").on("change", function () {
+                                            validarFechas();
+                                        });
 
-        function validarFechas() {
-            var fechaDesde = new Date(document.getElementById("fechaDesde").value);
-            var fechaHasta = new Date(document.getElementById("fechaHasta").value);
+                   
+                                    });
 
-            var diferenciaEnDias = (fechaHasta - fechaDesde) / (1000 * 60 * 60 * 24);
 
-            var diasRestantes = parseInt(document.getElementById("diasRestantesSpan").innerText);
+                                    function validarFechas() {
+                                        var fechaDesde = new Date($("#fechaDesde").val());
+                                        var fechaHasta = new Date($("#fechaHasta").val());
+                                        var anio = parseInt(document.getElementById("anio").value);
+                                        var dias = parseInt(document.getElementById("diasRestantes").value);
+                                        var diasConsumidos = parseInt(document.getElementById("diasConsumidos").value);
+                                        var fechaLimiteInferior = new Date(anio, 9, 1); // 1 de octubre del año ingresado
+                                        var fechaLimiteSuperior = new Date(anio + 1, 8, 30); // 30 de septiembre del próximo año
 
-            var botonGuardar = document.getElementById("botonGuardar");
-            var mensajeError = document.getElementById("mensajeError");
 
-            
-        if (fechaHasta < fechaDesde) {
-            botonGuardar.disabled = true;
-            mensajeError.innerText = "La fecha de fin de licencia es menor a la fecha de inicio.";
-            mensajeError.style.display = 'block';
-        } else if (diasRestantes !== null && diferenciaEnDias > diasRestantes) {
-                botonGuardar.disabled = true;
-                mensajeError.innerText = "Se superan los días restantes.";
-                mensajeError.style.display = 'block';
-            } else {
-                botonGuardar.disabled = false;
-                mensajeError.style.display = 'none';
-            }
-        }
-    </script>
+
+                                        console.log("------------------");
+                                        console.log("ANIO: " + anio);
+                                        console.log("DIAS TOTALES: " + dias);
+                                        console.log("FECHA DESDE: " + formatearFecha(fechaDesde));
+                                        console.log("FECHA LIMITE INFERIOR: " + formatearFecha(fechaLimiteInferior));
+                                        console.log("FECHA HASTA: " + formatearFecha(fechaHasta));
+                                        console.log("FECHA LIMITE SUPERIOR: " + formatearFecha(fechaLimiteSuperior));
+                                        console.log("DIAS DE PERIODO SELECCIONADO: " + (Math.floor((Date.UTC(fechaHasta.getFullYear(), fechaHasta.getMonth(), fechaHasta.getDate()) - Date.UTC(fechaDesde.getFullYear(), fechaDesde.getMonth(), fechaDesde.getDate())) / (1000 * 60 * 60 * 24))));
+                                        console.log("------------------");
+
+                                        // Restablecer estado inicial
+                                        $("#btn_submit").prop("disabled", true);
+                                        $("#fechaInicioError, #fechaHastaError").text("");
+                                        $("#fechaDesde, #fechaHasta").removeClass("is-invalid");
+
+                                        // Validación de fechas
+                                        switch (true) {
+                                            case fechaHasta <= fechaDesde:
+                                                $("#fechaHastaError").text("La fecha de fin no puede ser menor a la fecha de inicio");
+                                                $("#fechaHasta").addClass("is-invalid");
+                                                break;
+
+                                            case fechaDesde <= fechaLimiteInferior:
+                                                $("#fechaDesdeError").text("La fecha de inicio está por debajo de la fecha límite establecida.");
+                                                $("#fechaDesde").addClass("is-invalid");
+                                                break;
+
+                                            case fechaHasta >= fechaLimiteSuperior:
+                                                $("#fechaHastaError").text("La fecha de fin supera la fecha límite establecida.");
+                                                $("#fechaHasta").addClass("is-invalid");
+                                                break;
+
+
+                                             case (Math.floor((Date.UTC(fechaHasta.getFullYear(), fechaHasta.getMonth(), fechaHasta.getDate()) - Date.UTC(fechaDesde.getFullYear(), fechaDesde.getMonth(), fechaDesde.getDate())) / (1000 * 60 * 60 * 24))) > (dias + diasConsumidos):
+                                                // Se superan los días disponibles
+                                                $("#fechaHastaError").text("Se superan los días que tiene disponibles.");
+                                                $("#fechaHasta").addClass("is-invalid");
+                                                $("#fechaDesde").addClass("is-invalid");
+                                                break;
+
+                                            default:
+                                                // Habilitar el botón si no hay errores
+                                                $("#btn_submit").prop("disabled", false);
+                                                break;
+                                        }
+                                    }
+
+                                    function formatearFecha(fecha) {
+                                        var dia = fecha.getDate();
+                                        var mes = fecha.getMonth() + 1; // ¡Ojo! getMonth devuelve de 0 a 11
+                                        var anio = fecha.getFullYear();
+
+                                        // Asegurarse de que el día y el mes tengan dos dígitos
+                                        if (dia < 10) {
+                                            dia = '0' + dia;
+                                        }
+                                        if (mes < 10) {
+                                            mes = '0' + mes;
+                                        }
+
+                                        return dia + '/' + mes + '/' + anio;
+                                    }
+</script>
 </body>
 </html>

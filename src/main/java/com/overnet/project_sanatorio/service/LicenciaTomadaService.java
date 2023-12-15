@@ -159,4 +159,21 @@ public class LicenciaTomadaService implements ILicenciaTomadaService {
         return licords;
     }
 
+    @Override
+    public LicenciaTomada findLicenciaTomadaSupepuesta(int idEmpleado, LicenciaTomada nuevaLicencia) {
+        List<LicenciaTomada>superpuestas=lictomrep.findSuperpuesta(idEmpleado, nuevaLicencia.getFechaDesde(), nuevaLicencia.getFechaHasta());
+        LicenciaTomada licenciaSuperpuesta = superpuestas.stream().findFirst().orElse(null);
+        return licenciaSuperpuesta;
+    }
+
+    @Override
+    public LicenciaTomada findLicenciaTomadaSupepuestaExcluyendose(int idEmpleado, LicenciaTomada licenciaEditada) {
+        System.out.println("ID licencia tomada: "+ licenciaEditada.getIdLicenciaTomada());
+        System.out.println("fecha desde: "+ licenciaEditada.getFechaDesde());
+        System.out.println("fecha hasta: "+licenciaEditada.getFechaHasta());
+        List<LicenciaTomada>superpuestas=lictomrep.findSuperpuestaEditar(idEmpleado, licenciaEditada.getFechaDesde(), licenciaEditada.getFechaHasta(), licenciaEditada.getIdLicenciaTomada());
+        LicenciaTomada licenciaSuperpuesta = superpuestas.stream().findFirst().orElse(null);
+        return licenciaSuperpuesta;
+    }
+
 }

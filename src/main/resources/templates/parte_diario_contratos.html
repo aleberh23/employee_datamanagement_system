@@ -10,21 +10,21 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -81,16 +81,20 @@
         <br><br>
         <div class="container">
             <div class="row">
-                <h1 th:text="'Contratos que vencen en la fecha: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
+                <h1 th:text="'Personal contratado el: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
+
                         </div>
-                        <table class="table table-success table-striped table-bordered">
+                        <br>
+                        <table th:if="${!contratos.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-contratos">
                             <thead class="table">
                                 <tr>
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Sector</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
+                                    <th>Descripcion</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,12 +102,20 @@
                                     <td th:text="${contrato.idContrato}">ID</td>
                                     <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
                                     <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${contrato.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
                                     <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}" class="font-weight-bold">Fecha Fin</td>
+                                    <td th:text="${contrato.descripcion}" class="font-weight-bold">Fecha Fin</td>
                                 </tr>
                             </tbody>
                         </table>
-                         <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
+
+                        <div th:if="${contratos.isEmpty()}" class="alert alert-success">
+                            No hay personal contratado.
+                        </div>
+                        <br>
+
+                        <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
                             <i class="bi bi-arrow-90deg-left bi-lg"></i>
                             <span class="font-weight-bold">Volver</span>
                         </a>

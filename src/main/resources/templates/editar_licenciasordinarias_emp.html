@@ -83,7 +83,7 @@
                 <div class="col-12">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h2 class="card-title" th:text="@{'Nueva licencia ordinaria para el periodo: ' + ${anio}}"></h2>
+                            <h2 class="card-title" th:text="@{'Editar licencia ordinaria:}"></h2>
                             <input type="hidden" id="anio" th:value="${anio}">
                             <div class="mb-3">
                                 <br>
@@ -141,13 +141,17 @@
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="certificado" name="certificado" th:field="*{certificado}" required th:disabled="${licords.isEmpty()}">
+                                        <input type="checkbox" class="form-check-input" id="certificado" name="certificado" th:field="*{certificado}" th:disabled="${licords.isEmpty()}">
                                         <label class="form-check-label" for="certificado">Certificado</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <input type="text" class="form-control" name="descripcion" placeholder="Descripcion" th:field="*{descripcion}" required th:disabled="${licords.isEmpty()}">
                                 </div>
+                        </div>
+                        <div th:if="${superpuesta != null}" class="alert alert-danger mx-3">
+                            <strong th:text="|Error al cargar la licencia: |"> </strong>
+                            <span th:text="|se superpone a la licencia desde ${#temporals.format(superpuesta.fechaDesde, 'dd/MM/YYYY')} hasta ${#temporals.format(superpuesta.fechaHasta, 'dd/MM/YYYY')}|"></span>
                         </div>
                         <div class="mb-3">
                             <button type="submit" id="btn_submit" class="btn btn-primary m-3" th:disabled="${licords.isEmpty()}">Guardar Licencia</button>

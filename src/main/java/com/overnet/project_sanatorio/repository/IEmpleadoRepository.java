@@ -15,6 +15,11 @@ public interface IEmpleadoRepository extends JpaRepository<Empleado, Integer>{
     @Query("UPDATE Empleado e SET e.baja = true WHERE e.id = ?1")
     public void darDeBaja(int empleadoId);
     
+    @Modifying
+    @Transactional
+    @Query("UPDATE Empleado e SET e.baja = false WHERE e.id = ?1")
+    public void darDeAlta (int empleadoId);
+    
     @Query("SELECT e FROM Empleado e JOIN e.sector s " +  
        "WHERE LOWER(CONCAT(TO_CHAR(e.fechaNacimiento, 'DD/MM/YYYY'), ' ', TO_CHAR(e.fechaIngreso, 'DD/MM/YYYY'), ' ', e.nombre, ' ', e.apellido, ' ', e.nroLegajo, ' ', e.nroDocumento, ' ', s.nombre)) LIKE %?1% AND e.baja = ?2")
     public List<Empleado> findAll(String palabra, boolean deBaja);

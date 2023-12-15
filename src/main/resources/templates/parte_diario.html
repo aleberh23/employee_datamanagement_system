@@ -99,7 +99,7 @@
                 <div class="row">
                     <div th:if="${encontrado == true}">
                         <input type="hidden" id="input-fecha"/>
-                        <h2 th:text="'Parte Diario existente para la fecha ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></h2>                          
+                        <h2 th:text="'Parte Diario del ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></h2>                          
                         <br>
                         <h5>Licencias de larga duracion:</h5>
                         <table th:if="${!dpdlicencias.licTomadas.isEmpty()}"class="table table-success table-striped table-bordered" id="tabla-licencias">
@@ -108,6 +108,7 @@
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>Nro. Legajo</th>
+                                    <th>Sector</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
                                     <th>Tipo Licencia</th>
@@ -120,6 +121,7 @@
                                     <td th:text="${licencia.idLicenciaTomada}">ID</td>
                                     <td th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}">Empleado</td>
                                     <td th:text="${licencia.empleado.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${licencia.empleado.sector.nombre}">Nro. Legajo</td>
                                     <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Inicio</td>
                                     <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Desde</td>
                                     <td th:text="${licencia.tipoLicencia.nombre}">Tipo Licencia</td>
@@ -145,6 +147,7 @@
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>Nro. Legajo</th>
+                                    <th>Sector</th>
                                     <th>Fecha Nacimiento</th>
                                     <th>Fecha Ingreso</th>
                                     <th>Fecha De Jubilacion</th>
@@ -155,6 +158,7 @@
                                     <td th:text="${jubilacion.id}">ID</td>
                                     <td th:text="${jubilacion.nombre + ' ' + jubilacion.apellido}">Empleado</td>
                                     <td th:text="${jubilacion.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${jubilacion.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(jubilacion.fechaNacimiento, 'dd/MM/YYYY')}">Fecha Nacimiento</td>
                                     <td th:text="${#temporals.format(jubilacion.fechaIngreso, 'dd/MM/YYYY')}">Fecha De Ingreso</td> 
                                     <td th:text="${#temporals.format(jubilacion.fechaJubilacion, 'dd/MM/YYYY')}">Fecha De Jubilacion</td>  
@@ -172,6 +176,7 @@
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Sector</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
                                     <th>Descripcion</th>
@@ -182,6 +187,7 @@
                                     <td th:text="${contrato.idContrato}">ID</td>
                                     <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
                                     <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${contrato.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
                                     <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}" class="font-weight-bold">Fecha Fin</td>
                                     <td th:text="${contrato.descripcion}" class="font-weight-bold">Fecha Fin</td>
@@ -199,6 +205,7 @@
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Sector</th>
                                     <th>Fecha</th>
                                     <th>Motivo</th>
                                     <th>Descripcion</th>
@@ -210,6 +217,7 @@
                                     <td th:text="${inasistencia.id}">ID</td>
                                     <td th:text="${inasistencia.empleado.nombre + ' ' + inasistencia.empleado.apellido}">Empleado</td>
                                     <td th:text="${inasistencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${inasistencia.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(inasistencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
                                     <td th:text="${inasistencia.tipoInasistencia.nombre}">Motivo</td>
                                     <td th:text="${inasistencia.descripcion}">Descripcion</td>
@@ -228,14 +236,14 @@
                             No hay inasistencias en la fecha.
                         </div>
                         <br><br><br>
-                        <div>
-                            <a th:href="@{/partediario/{id}/contratos(id=${partediario.id})}" class="btn btn-primary ml-3">Contratos que finalizan</a>
+                        <div class="text-right">
+                            <a th:href="@{/partediario/{id}/contratos(id=${partediario.id})}" class="btn btn-primary">Contratos vigentes</a>
                             &nbsp;&nbsp;&nbsp;
-                            <a th:href="@{/partediario/{id}/jubilaciones(id=${partediario.id})}" class="btn btn-primary ml-3">Jubilaciones</a>
+                            <a th:href="@{/partediario/{id}/jubilaciones(id=${partediario.id})}" class="btn btn-primary">Jubilaciones</a>
                             &nbsp;&nbsp;&nbsp;
-                            <a th:href="@{/partediario/{id}/inasistencias(id=${partediario.id})}" class="btn btn-primary ml-3">Inasistencias</a>
+                            <a th:href="@{/partediario/{id}/inasistencias(id=${partediario.id})}" class="btn btn-primary">Inasistencias</a>
                             &nbsp;&nbsp;&nbsp;
-                            <a th:href="@{/partediario/{id}/licencias(id=${partediario.id})}" class="btn btn-primary ml-3">Licencias que terminan</a> 
+                            <a th:href="@{/partediario/{id}/licencias(id=${partediario.id})}" class="btn btn-primary">Licencias de larga duracion</a> 
                             &nbsp;&nbsp;&nbsp;
                             <button type ="button" onclick="generarPDF()" class="btn btn-info">Generar PDF</button>       
                         </div>
@@ -244,7 +252,7 @@
                     <div th:if="${encontrado == false}">
                         <form th:action="@{/partediario/generar}" method="post">
                             <input type="hidden" name="fecha" th:value="${fecha}" />
-                            <h2 th:if="${fecha!=null}" th:text="'Parte Diario no existente para la fecha ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></h2>
+                            <h2 th:if="${fecha!=null}" th:text="'No se encuentra Parte Diario del ' + ${#temporals.format(fecha, 'dd/MM/YYYY')}"></h2>
                             <br>
                             <br>
                             <button th:disabled="${fecha==null}" type="submit" class="btn btn-primary">Generar Parte Diario</button>

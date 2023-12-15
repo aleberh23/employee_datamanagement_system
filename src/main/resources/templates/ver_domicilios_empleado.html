@@ -139,6 +139,7 @@
                                 <a th:href="@{/domicilio/editar/{id}(id=${domicilio.id})}"><button class="btn btn-primary px-2">Editar</button></a>
                                 &nbsp;&nbsp;
                                 <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${domicilio.id}" th:if="${!domicilio.baja}">Baja</button>
+                                <a class="btn btn-success px-2" th:href="@{/domicilio/dardealta/{id} (id=${domicilio.id})}" th:if="${domicilio.baja}">Alta</a>
                                 &nbsp; &nbsp;
                             </div>
                         </td>  

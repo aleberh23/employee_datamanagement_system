@@ -9,4 +9,5 @@ public interface ICargaDeFamiliaService {
     public void updateCargaDeFamilia(CargaDeFamilia cargaDeFamilia);
     public void bajaCargaDeFamilia(int idCargaFamilia);
     public void saveCargaDeFamilia(CargaDeFamilia cargaDeFamilia);
+    public void darDeAltaCargaDeFamilia(int idCargaFamilia);
 }

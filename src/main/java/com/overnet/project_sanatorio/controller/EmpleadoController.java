@@ -118,7 +118,26 @@ public class EmpleadoController {
         System.out.println(id+" "+fechaBaja);
         Empleado emp = empleadoser.findEmpleado(id);
         emp.setFechaBaja(fechaBaja);
-        empleadoser.bajaEmpleado(id);
+        emp.setBaja(true);
+        empleadoser.updateEmpleado(emp);
+    return "redirect:/empleado/ver";
+    }
+    
+    @PostMapping("empleado/jubilacion/")
+    public String jubilacionEmpleado(@RequestParam int id, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaJubilacion){
+        System.out.println(id+" "+fechaJubilacion);
+        Empleado emp = empleadoser.findEmpleado(id);
+        emp.setFechaJubilacion(fechaJubilacion);
+        empleadoser.updateEmpleado(emp);
+    return "redirect:/empleado/ver";
+    }
+    
+    @GetMapping("empleado/dardealta/{id}")
+    public String darDeAltaEmpleado(@PathVariable int id){
+        Empleado emp = empleadoser.findEmpleado(id);
+        emp.setFechaBaja(null);
+        emp.setBaja(false);
+        empleadoser.updateEmpleado(emp);
     return "redirect:/empleado/ver";
     }
     

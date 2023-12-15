@@ -49,6 +49,19 @@ public class CargaDeFamiliaController {
         return "redirect:/empleado/ver"; 
     }
     }
+    
+    @GetMapping("/cargaDeFamilia/dardealta/{id}")
+    public String darDeAltaCargaDeFamilia(@PathVariable int id, HttpServletRequest request){
+        cargaser.darDeAltaCargaDeFamilia(id);
+        
+        String paginaAnterior = request.getHeader("Referer"); // Obtiene la URL de la página anterior desde la cabecera Referer
+        if (paginaAnterior != null && !paginaAnterior.isEmpty()) {
+            return "redirect:" + paginaAnterior;
+        } else {
+            return "redirect:/empleado/ver"; 
+        }
+    }
+    
     @GetMapping("/empleado/cargaDeFamilia/alta/cancelar/{id}")
     public String volverAListaCargasDeFamilia(@PathVariable int id) {
         return "redirect:/empleado/cargaDeFamilia/ver/"+id;

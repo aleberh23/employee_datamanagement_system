@@ -24,20 +24,29 @@ public class ContratoController {
     private IEmpleadoService empleadoser;
     
     @GetMapping("/empleado/contrato/alta/{idEmpleado}")
-    public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado){
+    public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado, @RequestParam(required = false)Integer idSuperpuesto){
         Contrato con = new Contrato();
         con.setBaja(false);
         Empleado emp = empleadoser.findEmpleado(idEmpleado);
         modelo.addAttribute("contrato", con);
         modelo.addAttribute("empleado", emp);
+        if(idSuperpuesto!=null){
+            Contrato superpuesto = contratoser.findContrato(idSuperpuesto);
+            modelo.addAttribute("superpuesto", superpuesto);
+        }
         return "alta_contratos_emp";
     }
     
     @PostMapping("/empleado/contrato/alta/")
     public String altaContratoDesdeEmpleado(@ModelAttribute("contrato")Contrato con, @RequestParam("idEmpleado") int idEmpleado){
-        con.setEmpleado(empleadoser.findEmpleado(idEmpleado));
-        contratoser.saveContrato(con);
-        return "redirect:/empleado/contrato/ver/"+idEmpleado; 
+        if(contratoser.findContratoSupepuesto(idEmpleado, con)==null){   
+            con.setEmpleado(empleadoser.findEmpleado(idEmpleado));
+            contratoser.saveContrato(con);
+            return "redirect:/empleado/contrato/ver/"+idEmpleado; 
+        }else{
+            Contrato superpuesto = contratoser.findContratoSupepuesto(idEmpleado, con);
+            return "redirect:/empleado/contrato/alta/"+idEmpleado+"?idSuperpuesto="+superpuesto.getIdContrato();
+        }
     }
     
     @PostMapping("/contrato/baja/")
@@ -57,9 +66,15 @@ public class ContratoController {
     }
     
     @GetMapping("/contrato/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo){
+    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam(required = false)Integer idSuperpuesto){
         Contrato con = contratoser.findContrato(id);;
+        System.out.println("con id="+con.getIdContrato());
         modelo.addAttribute("contrato", con);
+        if(idSuperpuesto!=null){
+            Contrato superpuesto = contratoser.findContrato(idSuperpuesto);
+            System.out.println("superpuesto id: "+superpuesto.getIdContrato());
+            modelo.addAttribute("superpuesto", superpuesto);
+        }
         return "editar_contrato_emp";
     }
     
@@ -70,8 +85,13 @@ public class ContratoController {
         c.setFechaInicio(con.getFechaInicio());
         c.setFechaFin(con.getFechaFin());
         c.setDescripcion(con.getDescripcion());
-        contratoser.updateContrato(c);
-        return "redirect:/empleado/contrato/ver/"+c.getEmpleado().getId();
+        if(contratoser.findContratoSupepuestoExcluyendose(c.getEmpleado().getId(), c)==null){                            
+            contratoser.updateContrato(c);
+            return "redirect:/empleado/contrato/ver/"+c.getEmpleado().getId();
+        }else{
+            Contrato superpuesto=contratoser.findContratoSupepuestoExcluyendose(c.getEmpleado().getId(), c);
+            return "redirect:/contrato/editar/"+c.getIdContrato()+"?idSuperpuesto="+superpuesto.getIdContrato();
+        }
     }
     
     @GetMapping("/contrato/lista")

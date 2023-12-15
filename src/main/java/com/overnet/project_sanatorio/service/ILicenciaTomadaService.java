@@ -22,5 +22,7 @@ public interface ILicenciaTomadaService {
     public void eliminarLicencia(int idLicencia);
     public List<LicenciaOrdinaria> obtenerLicenciasOrdinarias(int idEmpleado, Integer año);
     public List<LicenciaOrdinaria> obtenerLicenciasOrdinariasParaEditar(int idEmpleado, Integer año);
+    public LicenciaTomada findLicenciaTomadaSupepuesta(int idEmpleado, LicenciaTomada nuevaLicencia);
+    public LicenciaTomada findLicenciaTomadaSupepuestaExcluyendose(int idEmpleado, LicenciaTomada licenciaEditada);
     
 }

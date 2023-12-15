@@ -12,6 +12,10 @@ public interface IDomicilioRepository extends JpaRepository<Domicilio, Integer>{
     @Transactional
     @Query("UPDATE domicilio d SET d.baja = true WHERE d.id = ?1")
     public void darDeBaja(int domicilioId);
+    @Transactional
+    @Modifying
+    @Query("UPDATE domicilio d SET d.baja = false WHERE d.id = ?1")
+    public void darDeAlta(int domicilioId);
     @Query("SELECT d FROM domicilio d WHERE d.baja = TRUE")
     public List<Domicilio> findAllActivos();
 }

@@ -111,7 +111,10 @@
                                     <input type="hidden" name="idEmpleado" th:value="${idEmpleado}">
                                 </div>
                         </div>
-
+                        <div th:if="${superpuesto != null}" class="alert alert-danger mx-3">
+                            <strong th:text="|Error al cargar el contrato |"> </strong>
+                            <span th:text="|se superpone al contrato desde ${#temporals.format(superpuesto.fechaInicio, 'dd/MM/YYYY')} hasta ${#temporals.format(superpuesto.fechaFin, 'dd/MM/YYYY')}|"></span>
+                        </div>
                         <div class="mb-3">
                             <button type="submit" id="btn_submit" class="btn btn-primary m-3">Guardar Contrato</button>
                             </form>

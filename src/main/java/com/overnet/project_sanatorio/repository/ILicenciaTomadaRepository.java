@@ -26,5 +26,8 @@ public interface ILicenciaTomadaRepository extends JpaRepository<LicenciaTomada,
     void deleteAllLicenciasTomadas();
     @Query("SELECT lt FROM licencia_tomada lt WHERE ?1 BETWEEN lt.fechaDesde AND lt.fechaHasta")
     public List<LicenciaTomada> findVigentesEnFecha(LocalDate fecha);
-    
+    @Query("SELECT lt FROM licencia_tomada lt WHERE lt.empleado.id = ?1 AND ((lt.fechaDesde BETWEEN ?2 AND ?3) OR (lt.fechaHasta BETWEEN ?2 AND ?3))")
+    public List<LicenciaTomada>findSuperpuesta(Integer idEmpleado, LocalDate fechaDesde, LocalDate fechaHasta);
+    @Query("SELECT lt FROM licencia_tomada lt WHERE lt.empleado.id = ?1 AND ((lt.fechaDesde BETWEEN ?2 AND ?3) OR (lt.fechaHasta BETWEEN ?2 AND ?3)) AND lt.idLicenciaTomada <> ?4")
+    public List<LicenciaTomada> findSuperpuestaEditar(Integer idEmpleado, LocalDate fechaDesde, LocalDate fechaHasta, Integer idExcluir);
 }

@@ -35,5 +35,10 @@ public class CargaDeFamiliaService implements ICargaDeFamiliaService {
     public void saveCargaDeFamilia(CargaDeFamilia cargaDeFamilia) {
         cargarep.save(cargaDeFamilia);
     }
+
+    @Override
+    public void darDeAltaCargaDeFamilia(int idCargaFamilia) {
+        cargarep.darDeAlta(idCargaFamilia);
+    }
     
 }

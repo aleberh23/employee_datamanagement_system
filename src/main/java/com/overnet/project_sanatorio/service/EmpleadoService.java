@@ -23,6 +23,11 @@ public class EmpleadoService implements IEmpleadoService {
     public void bajaEmpleado(int id) {
         empleadorep.darDeBaja(id);
     }
+    
+     @Override
+    public void altaEmpleado(int id) {
+        empleadorep.darDeAlta(id);
+    }
 
     @Override
     public Empleado findEmpleado(int id) {

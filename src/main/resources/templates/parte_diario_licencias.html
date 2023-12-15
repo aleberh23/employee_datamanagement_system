@@ -81,33 +81,47 @@
         <br><br>
         <div class="container">
             <div class="row">
-                 <h1 th:text="'Licencias que terminan en la fecha: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
+                 <h1 th:text="'Licencias de larga duracion vigentes en: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
                         </div>
-                        <table class="table table-success table-striped table-bordered">
+                        <br>
+                        <table th:if="${!licencias.isEmpty()}"class="table table-success table-striped table-bordered" id="tabla-licencias">
                             <thead class="table">
                                 <tr>
                                     <th>ID</th>
                                     <th>Empleado</th>
-                                    <th>NRO Legajo</th>
-                                    <th>Fecha Desde</th>
-                                    <th>Fecha Hasta</th>
-                                    <th>Tipo</th>
-                                    <th>Descripcion</th>
+                                    <th>Nro. Legajo</th>
+                                    <th>Sector</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Tipo Licencia</th>
+                                    <th>Certificado</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each = "licencia : ${licencias}" th:class="${licencia.terminada} ? 'table-danger' : 'table-success'">
+                                <tr th:each="licencia : ${licencias}" th:class="${licencia.terminada} ? 'table-danger' : 'table-success'">
                                     <td th:text="${licencia.idLicenciaTomada}">ID</td>
                                     <td th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}">Empleado</td>
-                                    <td th:text="${licencia.empleado.nroLegajo}">NRO Legajo</td>
-                                    <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Desde</td>
-                                    <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Hasta</td>
-                                    <td th:text="${licencia.tipoLicencia.nombre}">Tipo</td>
-                                    <td th:text="${licencia.descripcion}">Descripcion</td>
-                                     
+                                    <td th:text="${licencia.empleado.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${licencia.empleado.sector.nombre}">Nro. Legajo</td>
+                                    <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Inicio</td>
+                                    <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Desde</td>
+                                    <td th:text="${licencia.tipoLicencia.nombre}">Tipo Licencia</td>
+                                    <td class="text-center">
+                                        <span th:if="${licencia.certificado}">
+                                            <i class="bi bi-check-circle text-success"></i>
+                                        </span>
+                                        <span th:unless="${licencia.certificado}">
+                                            <i class="bi bi-x-circle text-danger"></i>
+                                        </span>
+                                    </td>    
                                 </tr>
                             </tbody>
                         </table>
+                        <div th:if="${licencias.isEmpty()}" class="alert alert-success">
+                            No hay empleados de licencia.
+                        </div>
+                        <br>
                         <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
                             <i class="bi bi-arrow-90deg-left bi-lg"></i>
                             <span class="font-weight-bold">Volver</span>

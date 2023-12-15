@@ -26,5 +26,8 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer>{
     public List<Contrato> findByFechaFin(LocalDate fechaFin);
     @Query("SELECT c FROM contrato c WHERE ?1 BETWEEN c.fechaInicio AND c.fechaFin")
     public List<Contrato> findVigentesEnFecha(LocalDate fecha);
-
+    @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3))")
+    public List<Contrato>findSuperpuesto(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin);
+    @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3)) AND c.idContrato <> ?4")
+    public List<Contrato> findSuperpuestoEditar(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin, Integer idExcluir);
 }

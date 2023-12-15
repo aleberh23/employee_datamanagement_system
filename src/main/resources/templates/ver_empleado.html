@@ -91,6 +91,11 @@
                                     <span class="font-weight-bold">Volver</span>
                                 </a>
                             </div>
+                            <!-- Campo de Activo (no editable) -->
+                            <div class="mb-3">
+                                <label class="fw-semibold" for="activo">Activo:</label>
+                                <p><span th:text="${empleado.baja ? 'No' : 'Sí'}" class="text-primary display-2 fs-3 fst-italic"></span></p>
+                            </div>
                             <!-- Campo de ID (no editable) -->
                             <div class="mb-3">
                                 <label class="fw-semibold" for="id">ID:</label>
@@ -145,6 +150,16 @@
                             <div class="mb-3">
                                 <label class="fw-semibold" for="fechaNacimiento">Fecha de Nacimiento:</label>
                                 <p><span name="fechaNacimiento" th:text="${#temporals.format(empleado.fechaNacimiento, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
+                            </div>
+                            <!-- Campo de Fecha de Jubilación (no editable, se muestra si fechaJubilacion != null) -->
+                            <div th:if="${empleado.fechaJubilacion != null}" class="mb-3">
+                                <label class="fw-semibold" for="fechaJubilacion">Fecha de Jubilación:</label>
+                                <p><span th:text="${#temporals.format(empleado.fechaJubilacion, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
+                            </div>
+                            <!-- Campo de Fecha de Baja (no editable, se muestra si fechaBaja != null) -->
+                            <div th:if="${empleado.fechaBaja != null}" class="mb-3">
+                                <label class="fw-semibold" for="fechaBaja">Fecha de Baja:</label>
+                                <p><span th:text="${#temporals.format(empleado.fechaBaja, 'dd/MM/YYYY')}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                             </div>
                             <!-- Campo de Sector (no editable) -->
                             <div class="mb-3">

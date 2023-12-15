@@ -37,5 +37,10 @@ public class DomicilioService implements IDomicilioService {
     public void bajaDomicilio(int id) {
        domiciliorep.darDeBaja(id);
     }
+
+    @Override
+    public void darDeAltaDomicilio(int id) {
+        domiciliorep.darDeAlta(id);
+    }
     
 }

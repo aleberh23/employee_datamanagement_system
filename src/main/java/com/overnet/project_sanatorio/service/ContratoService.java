@@ -85,5 +85,19 @@ public class ContratoService implements IContratoService {
     public List<Contrato> findBySearch(String palabra, boolean deBaja) {
         return contratorep.findAll(palabra, deBaja);
     }
+
+    @Override
+    public Contrato findContratoSupepuesto(int idEmpleado, Contrato nuevoContrato) {
+        List<Contrato>superpuestos=contratorep.findSuperpuesto(idEmpleado, nuevoContrato.getFechaInicio(), nuevoContrato.getFechaFin());
+        Contrato contratosuperpuesto = superpuestos.stream().findFirst().orElse(null);
+        return contratosuperpuesto;
+    }
+
+    @Override
+    public Contrato findContratoSupepuestoExcluyendose(int idEmpleado, Contrato contrtatoEditado) {
+        List<Contrato>superpuestos=contratorep.findSuperpuestoEditar(idEmpleado, contrtatoEditado.getFechaInicio(), contrtatoEditado.getFechaFin(), contrtatoEditado.getIdContrato());
+        Contrato contratosuperpuesto = superpuestos.stream().findFirst().orElse(null);
+        return contratosuperpuesto;
+    }
     
 }

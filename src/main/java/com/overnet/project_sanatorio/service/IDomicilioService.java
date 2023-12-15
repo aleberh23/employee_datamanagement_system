@@ -9,4 +9,5 @@ public interface IDomicilioService {
     public void saveDomicilio(Domicilio domicilio);
     public void updateDomicilio(Domicilio domicilio);
     public void bajaDomicilio(int id);
+    public void darDeAltaDomicilio(int id);
 }

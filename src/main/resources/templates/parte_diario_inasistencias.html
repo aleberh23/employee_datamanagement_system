@@ -7,24 +7,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-       <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -82,14 +82,16 @@
         <br><br>
         <div class="container">
             <div class="row">
-                 <h1 th:text="'Inasistencias en la fecha: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
+                <h1 th:text="'Inasistencias de la fecha: ' + ${#temporals.format(partediario.fechaEmision, 'dd/MM/YYYY')}"><h1>
                         </div>
-                        <table class="table table-success table-striped table-bordered">
+                        <br>
+                        <table th:if="${!inasistencias.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-inasistencias">
                             <thead class="table">
                                 <tr>
                                     <th>ID</th>
                                     <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Sector</th>
                                     <th>Fecha</th>
                                     <th>Motivo</th>
                                     <th>Descripcion</th>
@@ -101,8 +103,9 @@
                                     <td th:text="${inasistencia.id}">ID</td>
                                     <td th:text="${inasistencia.empleado.nombre + ' ' + inasistencia.empleado.apellido}">Empleado</td>
                                     <td th:text="${inasistencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${inasistencia.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(inasistencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
-                                    <td th:text="${inasistencia.motivo}">Motivo</td>
+                                    <td th:text="${inasistencia.tipoInasistencia.nombre}">Motivo</td>
                                     <td th:text="${inasistencia.descripcion}">Descripcion</td>
                                     <td class="text-center">
                                         <span th:if="${inasistencia.certificado}">
@@ -115,14 +118,18 @@
                                 </tr>
                             </tbody>
                         </table>
-                         <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
+                        <div th:if="${inasistencias.isEmpty()}" class="alert alert-success">
+                            No hay inasistencias en la fecha.
+                        </div>
+                        <br>
+                        <a th:href="@{/partediario(fecha=${#temporals.format(partediario.fechaEmision, 'yyyy-MM-dd')})}" class="btn btn-danger float-end m-2">
                             <i class="bi bi-arrow-90deg-left bi-lg"></i>
                             <span class="font-weight-bold">Volver</span>
                         </a>
-                        </div>
+        </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-      
+
     </body>
 </html>

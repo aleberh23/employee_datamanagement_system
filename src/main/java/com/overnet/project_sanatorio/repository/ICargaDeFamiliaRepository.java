@@ -14,6 +14,10 @@ public interface ICargaDeFamiliaRepository extends JpaRepository<CargaDeFamilia,
     @Transactional
     @Query("UPDATE carga_de_familia c SET c.baja = true WHERE c.id = ?1")
     public void darDeBaja(int cargaDeFamiliaID);
+    @Modifying
+    @Transactional
+    @Query("UPDATE carga_de_familia c SET c.baja = false WHERE c.id = ?1")
+    public void darDeAlta(int cargaDeFamiliaID);
     @Query("SELECT c FROM carga_de_familia c WHERE c.baja = TRUE")
     public List<CargaDeFamilia> findAllActivas();
 }

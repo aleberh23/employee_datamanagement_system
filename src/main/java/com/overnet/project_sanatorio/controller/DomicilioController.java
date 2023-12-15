@@ -50,6 +50,17 @@ public class DomicilioController {
         return "redirect:/empleado/ver"; 
     }
     }
+    
+    @GetMapping("/domicilio/dardealta/{id}")
+    public String darDeAltaDomicilio(@PathVariable int id, HttpServletRequest request) {
+        domicilioser.darDeAltaDomicilio(id);
+        String paginaAnterior = request.getHeader("Referer"); // Obtiene la URL de la página anterior desde la cabecera Referer
+        if (paginaAnterior != null && !paginaAnterior.isEmpty()) {
+            return "redirect:" + paginaAnterior;
+        } else {
+            return "redirect:/empleado/ver";
+        }
+    }
     @GetMapping("/empleado/domicilio/alta/cancelar/{id}")
     public String volverAListaDomicilios(@PathVariable int id) {
         return "redirect:/empleado/domicilio/ver/"+id;
