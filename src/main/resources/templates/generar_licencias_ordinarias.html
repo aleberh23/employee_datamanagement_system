@@ -103,7 +103,6 @@
                             <table th:if="${!ldtos.isEmpty()}"class="table table-success table-striped table-bordered">
                                 <thead class="table">
                                     <tr>
-                                        <th> </th>
                                         <th>Empleado</th>
                                         <th>Nro Legajo</th>
                                         <th>Año</th>
@@ -113,7 +112,6 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each = "ldto : ${ldtos.values()}" class="table-success">
-                                        <td th:text="${ldto.id}"> </td>
                                         <td th:text="${ldto.nombreEmp + ' ' + ldto.apellidoEmp}">Empleado</td>
                                         <td th:text="${ldto.nroLegajo}">Nro Legajo</td>
                                         <td th:text="${ldto.anio}">Año</td>
@@ -143,11 +141,11 @@
 
                             <br><br>
                             <div class="d-flex justify-content-end">
-                                <a class="btn btn-danger" th:href="@{/licenciasOrdinaria/eliminar}">Eliminar todas<a>
+                                <a class="btn btn-danger rounded" th:href="@{/licenciasOrdinaria/eliminar}">Eliminar todas<a>
                                 &nbsp;&nbsp;
-                                <a class="btn btn-danger" th:href="@{/licenciasOrdinaria/eliminar(anio=${anio})}">Eliminar del año<a>
+                                <a class="btn btn-danger rounded" th:href="@{/licenciasOrdinaria/eliminar(anio=${anio})}">Eliminar del año<a>
                                 &nbsp;&nbsp;
-                                <button type="submit" class="btn btn-primary" id="generarButton" disabled>Generar Licencias</button> 
+                                <button type="submit" class="btn btn-primary rounded" id="generarButton" disabled>Generar Licencias</button> 
                                 </form>   
                             </div>
                     </div>
@@ -178,8 +176,8 @@
                 function establecerRangoAnio() {
                     var inputAnio = document.getElementById("anio");
                     var añoActual = new Date().getFullYear();
-                    inputAnio.min = añoActual - 1;
-                    inputAnio.max = añoActual + 1;
+                    inputAnio.min = añoActual - 2;
+                    inputAnio.max = añoActual + 2;
                 }
                 /*]]>*/
             </script>

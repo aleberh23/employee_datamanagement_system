@@ -112,6 +112,7 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${empleado.nombre + ' ' + empleado.apellido}"></h5>
                         <p class="card-text" th:text="'Nro. Legajo: ' + ${empleado.nroLegajo}"></p>
+                        <p class="card-text" th:text="'Sector: ' + ${empleado.sector.nombre}"></p>
                     </div>
                 </div>
        
@@ -121,26 +122,32 @@
             <table class="table table-success table-striped table-bordered">
                 <thead class="table">
                     <tr>
-                        <th>ID</th>
                         <th>Fecha Desde</th>
-                        <th>Fecha Hasta</th>
+                        <th>Fecha de Reincorporacion</th>
                         <th>Tipo</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:if="${!empleado.licenciasTomadas.isEmpty()}" th:each = "licencia : ${empleado.licenciasTomadas}" th:class="${licencia.terminada} ? 'table-danger' : 'table-success'">
-                        <td th:text="${licencia.idLicenciaTomada}">ID</td>
                         <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Desde</td>
-                        <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Hasta</td>
+                        <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha de Reincorporacion</td>
                         <td th:text="${licencia.tipoLicencia.nombre}">Tipo</td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a th:href="@{/licencia/editar/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-primary px-2">Editar</button></a>
+                                <a th:href="@{/licencia/editar/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-outline-primary px-2 rounded">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                    </button>
+                                </a>
                                 &nbsp;&nbsp;
-                                <a th:href="@{/empleado/licencia/ver/detalle/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-primary px-2">Detalle</button></a>
+                                <a th:href="@{/empleado/licencia/ver/detalle/{id}(id=${licencia.idLicenciaTomada})}"><button class="btn btn-outline-primary px-2 rounded">
+                                    <i class="bi bi-clipboard-data"></i> Detalles
+                                    </button>
+                                </a>
                                 &nbsp;&nbsp;
-                                 <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${licencia.idLicenciaTomada}">Eliminar</button>
+                                 <button class="btn btn-outline-danger px-2 rounded" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${licencia.idLicenciaTomada}">
+                                     <i class="bi bi-trash3"></i> Eliminar
+                                 </button>
                             </div>
                         </td>  
                     </tr>
@@ -154,8 +161,14 @@
                 <span class="font-weight-bold">Volver</span>
             </a>
             &nbsp;&nbsp;
-            <a th:href="@{/empleado/licencia/alta/{idEmpleado}(idEmpleado=${empleado.id})}"><button class="btn btn-primary float-end m-2">Nueva</button></a>
-            <a th:href="@{/empleado/licencia/ordinaria/alta/{idEmpleado}(idEmpleado=${empleado.id})}"><button class="btn btn-primary float-end m-2">Nueva Ordinaria</button></a>
+            <a th:href="@{/empleado/licencia/alta/{idEmpleado}(idEmpleado=${empleado.id})}"><button class="btn btn-primary float-end m-2 rounded">
+                   <i class="bi bi-plus-square"></i> Nueva
+                </button>
+            </a>
+            <a th:href="@{/empleado/licencia/ordinaria/alta/{idEmpleado}(idEmpleado=${empleado.id})}"><button class="btn btn-primary float-end m-2 rounded">
+                  <i class="bi bi-plus-square"></i> Nueva Ordinaria
+                </button>
+            </a>
 
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

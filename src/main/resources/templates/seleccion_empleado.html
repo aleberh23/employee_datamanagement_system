@@ -100,7 +100,10 @@
                             <h5 class="card-title" th:text="${'Nro Legajo: ' + empleado.nroLegajo}"></h5>
                             <p class="card-text" th:text="${'Nombre: ' + empleado.nombre}"></p>
                             <p class="card-text" th:text="${'Apellido: ' + empleado.apellido}"></p>
-                            <a th:href="@{/ausencia/alta(idEmpleado=${empleado.id})}" class="btn btn-primary">Seleccionar</a>
+                            <a th:href="@{${idAusencia} ? '/ausencia/editar/' + ${idAusencia} + '?idEmpleado=' + ${empleado.id} : '/ausencia/alta?idEmpleado=' + ${empleado.id}}" 
+                                class="btn btn-outline-primary rounded">
+                                 <i class="bi bi-check2"></i> Seleccionar
+                            </a>
                         </div>
                     </div>
                 </div>

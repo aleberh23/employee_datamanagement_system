@@ -7,6 +7,7 @@ import com.overnet.project_sanatorio.repository.IEmpleadoRepository;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
+import javax.xml.transform.dom.DOMResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,26 @@ public class ContratoService implements IContratoService {
         List<Contrato>superpuestos=contratorep.findSuperpuestoEditar(idEmpleado, contrtatoEditado.getFechaInicio(), contrtatoEditado.getFechaFin(), contrtatoEditado.getIdContrato());
         Contrato contratosuperpuesto = superpuestos.stream().findFirst().orElse(null);
         return contratosuperpuesto;
+    }
+
+    @Override
+    public LocalDate obtenerUltimaFechaFin(int idEmpleado) {
+        return contratorep.obtenerUltimaFechaFin(idEmpleado);
+    }
+
+    @Override
+    public LocalDate obtenerUltimaFechaFinExceptuando(int idEmpleado, int idContrato) {
+        System.out.println("ID CONTRATO: "+idContrato+" |ID EMPLEADO: "+idEmpleado);
+        System.out.println("----------------------------------------------");
+        Contrato c = contratorep.findById(idContrato).orElse(null);
+        System.out.println("FECHA FIN OBTENIDA: "+contratorep.obtenerUltimaFechaFinExceptoContrato(idEmpleado, idContrato)+" |FECHA FIN DE CONTRATO: "+c.getFechaFin());
+        System.out.println("EMPLEADO: "+c.getEmpleado().getNombre()+" "+c.getEmpleado().getApellido()+" "+c.getEmpleado().getId());
+        return contratorep.obtenerUltimaFechaFinExceptoContrato(idEmpleado, idContrato);
+    }
+
+    @Override
+    public int countContratosActivos() {
+        return contratorep.countContratosActivos();
     }
     
 }

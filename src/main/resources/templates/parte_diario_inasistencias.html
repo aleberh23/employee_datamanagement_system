@@ -88,9 +88,8 @@
                         <table th:if="${!inasistencias.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-inasistencias">
                             <thead class="table">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Empleado</th>                                    
                                     <th>Sector</th>
                                     <th>Fecha</th>
                                     <th>Motivo</th>
@@ -100,19 +99,18 @@
                             </thead>
                             <tbody>
                                 <tr th:each = "inasistencia : ${inasistencias}" class="table-success">
-                                    <td th:text="${inasistencia.id}">ID</td>
-                                    <td th:text="${inasistencia.empleado.nombre + ' ' + inasistencia.empleado.apellido}">Empleado</td>
                                     <td th:text="${inasistencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${inasistencia.empleado.nombre + ' ' + inasistencia.empleado.apellido}">Empleado</td>                                    
                                     <td th:text="${inasistencia.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(inasistencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
                                     <td th:text="${inasistencia.tipoInasistencia.nombre}">Motivo</td>
                                     <td th:text="${inasistencia.descripcion}">Descripcion</td>
                                     <td class="text-center">
                                         <span th:if="${inasistencia.certificado}">
-                                            <i class="bi bi-check-circle text-success"></i>
+                                             <i class="bi bi-check-circle-fill text-success"></i>
                                         </span>
                                         <span th:unless="${inasistencia.certificado}">
-                                            <i class="bi bi-x-circle text-danger"></i>
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
                                         </span>
                                     </td>
                                 </tr>

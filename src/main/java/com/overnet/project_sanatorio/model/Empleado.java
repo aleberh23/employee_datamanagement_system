@@ -56,6 +56,8 @@ public class Empleado implements Serializable {
     private LocalDate fechaIngreso;
     @Column(name="baja")
     private boolean baja;
+    @Column(name="estudiante")
+    private boolean estudiante;
     @Column(name="fecha_baja")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate fechaBaja;
@@ -68,6 +70,9 @@ public class Empleado implements Serializable {
     @ManyToOne
     @JoinColumn(name="id_sector")
     private Sector sector;
+    @ManyToOne
+    @JoinColumn(name = "id_sexo") 
+    private Sexo sexo;
     @OneToMany(mappedBy = "empleado")
     private List<Ausencia> ausencias;
     @OneToMany(mappedBy = "empleado")

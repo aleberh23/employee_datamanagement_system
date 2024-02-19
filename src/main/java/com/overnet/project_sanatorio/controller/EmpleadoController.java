@@ -7,13 +7,19 @@ import com.overnet.project_sanatorio.model.Domicilio;
 import com.overnet.project_sanatorio.model.Empleado;
 import com.overnet.project_sanatorio.model.LicenciaTomada;
 import com.overnet.project_sanatorio.model.Sector;
+import com.overnet.project_sanatorio.model.Sexo;
+import com.overnet.project_sanatorio.repository.ISexoRepository;
 import com.overnet.project_sanatorio.service.IContratoService;
 import com.overnet.project_sanatorio.service.IDomicilioService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import com.overnet.project_sanatorio.service.ILicenciaTomadaService;
 import com.overnet.project_sanatorio.service.ISectorService;
+import com.overnet.project_sanatorio.service.ISexoService;
+import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -37,22 +43,37 @@ public class EmpleadoController {
     private IContratoService contratoser;
     @Autowired
     private ILicenciaTomadaService lictomser;
+    @Autowired
+    private ISexoService sexoser;
     
     
    @GetMapping("/empleado/alta")
-    public String mostrarFormAltaEmpleado(Model modelo){
+    public String mostrarFormAltaEmpleado(Model modelo, @RequestParam(required = false, value = "error")Integer error){
         EmpleadoRegistroDTO emp = new EmpleadoRegistroDTO();
         emp.setNumero(null);
         List<Sector> sectores= sectorser.getSectores();
+        List<Sexo> sexos = sexoser.findAl();
+        int nroLegajo = empleadoser.nextNroLegajo();
+        emp.setNroLegajo(BigInteger.valueOf(nroLegajo));
+        System.out.println("Nro Legajo: "+nroLegajo);
         modelo.addAttribute("empleadodto", emp);
         modelo.addAttribute("sectores", sectores);
+        modelo.addAttribute("sexos", sexos);
+        modelo.addAttribute("nroLegajo", nroLegajo);
+        if(error!=null){
+            modelo.addAttribute("error", error);
+        }
         return "alta_empleado";
     }
     @PostMapping("/empleado/alta")
-    public String guardarEmpleado(@ModelAttribute("empleadodto")EmpleadoRegistroDTO emp, @RequestParam("sectorId") int sectorId){
+    public String guardarEmpleado(@ModelAttribute("empleadodto")EmpleadoRegistroDTO emp, @RequestParam("sectorId") int sectorId, @RequestParam("sexoId") int sexoId){
+    if(empleadoser.existeNroLegajo(emp.getNroLegajo())){
+        return "redirect:/empleado/alta?error="+emp.getNroLegajo();
+    }
     //empleado    
     Empleado empleado = new Empleado();
     empleado.setSector(sectorser.findSectorById(sectorId));
+    empleado.setSexo(sexoser.findById(sexoId));
     empleado.setBaja(false);
     empleado.setContratado(false);
     empleado.setApellido(emp.getApellido());
@@ -86,7 +107,10 @@ public class EmpleadoController {
         }
         System.out.println(!deBaja);
         List<Empleado> empleados = empleadoser.getEmpleados(palabra, deBaja);
-        modelo.addAttribute("empleados", empleados);
+        List<Empleado> empleadosOrdenados = empleados.stream()
+        .sorted(Comparator.comparing(Empleado::getNroLegajo))
+        .collect(Collectors.toList());
+        modelo.addAttribute("empleados", empleadosOrdenados);
         modelo.addAttribute("palabra", palabra);
         modelo.addAttribute("deBaja", deBaja);
        
@@ -94,21 +118,34 @@ public class EmpleadoController {
     }
     
     @GetMapping("empleado/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo){
+    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam(required = false, value = "error")Integer error){
         Empleado empleado = empleadoser.findEmpleado(id);
         List<Sector> sectores = sectorser.getSectores();
+        List<Sexo> sexos = sexoser.findAl();
         modelo.addAttribute("sectores", sectores);
         modelo.addAttribute("empleado", empleado);
+        modelo.addAttribute("sexos", sexos);
+        modelo.addAttribute("nroLegajoOriginal", empleado.getNroLegajo().intValue());
+        if(error!=null){
+            modelo.addAttribute("error", error);
+        }
         
         return "editar_empleado";
     }
     
    @PostMapping("empleado/editar/{id}")
-    public String editarEmpleado(@PathVariable int id, @ModelAttribute("empleado")Empleado emp, Model modelo, @RequestParam("sectorId")int sectorId){
+    public String editarEmpleado(@PathVariable int id, @ModelAttribute("empleado")Empleado emp, @ModelAttribute("nroLegajoOriginal")Integer nroLegajoOriginal, Model modelo, @RequestParam("sectorId")int sectorId, @RequestParam("sexoId")int sexoId){
+        if(empleadoser.existeNroLegajoExceptoOriginal(emp.getNroLegajo(), BigInteger.valueOf(nroLegajoOriginal))){
+            System.out.println("Entro en condicional primero");
+            return "redirect:/empleado/editar/"+nroLegajoOriginal+"?error="+emp.getNroLegajo();            
+        }
         System.out.println(emp.getFechaIngreso());
         System.out.println(emp.getFechaNacimiento());
         Sector s = sectorser.findSectorById(sectorId);
+        Sexo sex = sexoser.findById(sexoId);
+        System.out.println("sexo: "+sex.getNombre());
         emp.setSector(s);
+        emp.setSexo(sex);
         empleadoser.updateEmpleado(emp);
         return "redirect:/empleado/ver";
 
@@ -119,7 +156,7 @@ public class EmpleadoController {
         Empleado emp = empleadoser.findEmpleado(id);
         emp.setFechaBaja(fechaBaja);
         emp.setBaja(true);
-        empleadoser.updateEmpleado(emp);
+        empleadoser.updateEmpleado(emp);      
     return "redirect:/empleado/ver";
     }
     

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,10 +28,12 @@ public class AusenciaController {
     private IEmpleadoService empser;
     
     @GetMapping("/ausencia/alta/empleado")
-    public String mostrarSeleccionEmpleado(Model modelo, @Param("filtro") String filtro){
+    public String mostrarSeleccionEmpleado(Model modelo,@RequestParam(value = "idAusencia", required = false) Integer idAusencia, @Param("filtro") String filtro){
         if (filtro == null) {
            filtro = ""; 
         }
+        // Agregar idAusencia al modelo
+        modelo.addAttribute("idAusencia", idAusencia);
         
         List<Empleado>emp = empser.getEmpleadosByNombreApellidoNroLeg(filtro);
         modelo.addAttribute("empleados", emp);
@@ -76,6 +79,36 @@ public class AusenciaController {
         modelo.addAttribute("filtro", filtro);
          
         return "lista_ausencias";
+    }
+    
+    @GetMapping("/ausencia/editar/{id}")
+    public String mostrarFormEditar(@PathVariable int id, @RequestParam(value = "idEmpleado", required = false) Integer idEmpleado, Model modelo){
+        Ausencia ausencia = auser.findAusenciaById(id);
+        List<TipoInasistencia>tiposinasistencia = auser.findAllTiposInasistencia();
+        modelo.addAttribute("ausencia", ausencia);
+        modelo.addAttribute("tiposinasistencia", tiposinasistencia);
+         if (idEmpleado == null) {
+            modelo.addAttribute("empleado", null);
+            System.out.println("ID EMPLEADO IS NULL");
+        } else {
+            Empleado emp = empser.findEmpleado(idEmpleado);
+            System.out.println("ID EMPLADO IS: "+idEmpleado);
+            System.out.println(emp.toString());
+            modelo.addAttribute("empleado", emp);
+        }
+        
+        return "editar_ausencia";
+    }
+    
+    @PostMapping("/ausencia/editar/{id}")
+    public String procesarFormEditar(@PathVariable int id, @ModelAttribute("ausencia")Ausencia aus, @RequestParam("empleadoId") int empleadoId, @RequestParam("tipoInasistenciaId")int tipoInasistenciaId, Model modelo){
+        Empleado empleado = empser.findEmpleado(empleadoId);
+        TipoInasistencia t = auser.findTipoInasistenciaById(tipoInasistenciaId);
+        aus.setEmpleado(empleado);
+        aus.setTipoInasistencia(t);
+        auser.updateAusencia(aus);
+        
+        return "redirect:/ausencia/lista"; 
     }
     
     @PostMapping("/ausencia/baja/")

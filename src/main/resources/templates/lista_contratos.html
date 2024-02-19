@@ -129,26 +129,33 @@
                         <table th:if="${!contratos.isEmpty()}" class="table table-success table-striped table-bordered">
                             <thead class="table">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Empleado</th>
+                                    <th>Sector</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
+                                    <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each = "contrato : ${contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${contrato.idContrato}">ID</td>
-                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
                                     <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
+                                    <td th:text="${contrato.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
                                     <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}">Fecha Fin</td>
+                                    <td th:text="${contrato.estado}">Estado</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${contrato.idContrato}" th:if="${!contrato.baja}">Baja</button>
+                                            <button class="btn btn-outline-danger rounded px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${contrato.idContrato}" th:if="${!contrato.baja}">
+                                               <i class="bi bi-arrow-down-square"></i> Baja
+                                            </button>
                                             &nbsp; &nbsp;
-                                            <a th:href="@{/contrato/detalle/{id}(id=${contrato.idContrato})}"><button class="btn btn-info px-2">Detalles</button></a>
+                                            <a th:href="@{/contrato/detalle/{id}(id=${contrato.idContrato})}"><button class="btn btn-outline-primary rounded px-2">
+                                                   <i class="bi bi-clipboard-data"></i> Detalles
+                                                </button>
+                                            </a>
                                             &nbsp; &nbsp;
                                         </div>
                                     </td>  

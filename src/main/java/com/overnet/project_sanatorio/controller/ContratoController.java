@@ -5,6 +5,7 @@ import com.overnet.project_sanatorio.model.Empleado;
 import com.overnet.project_sanatorio.service.IContratoService;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -28,8 +29,21 @@ public class ContratoController {
         Contrato con = new Contrato();
         con.setBaja(false);
         Empleado emp = empleadoser.findEmpleado(idEmpleado);
+        LocalDate ultimaFechaFin = contratoser.obtenerUltimaFechaFin(idEmpleado); 
+        if(emp.getContratos().isEmpty()){
+            con.setFechaInicio(emp.getFechaIngreso());
+        } else{
+            con.setFechaInicio(ultimaFechaFin.plusDays(1));
+        }
+        
+               
         modelo.addAttribute("contrato", con);
         modelo.addAttribute("empleado", emp);
+        if (!emp.getContratos().isEmpty()){
+            modelo.addAttribute("ultimaFechaFin", ultimaFechaFin);
+        }else{
+            modelo.addAttribute("ultimaFechaFin", ultimaFechaFin);
+        }
         if(idSuperpuesto!=null){
             Contrato superpuesto = contratoser.findContrato(idSuperpuesto);
             modelo.addAttribute("superpuesto", superpuesto);
@@ -69,7 +83,9 @@ public class ContratoController {
     public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam(required = false)Integer idSuperpuesto){
         Contrato con = contratoser.findContrato(id);;
         System.out.println("con id="+con.getIdContrato());
+        LocalDate ultimaFechaFin = contratoser.obtenerUltimaFechaFinExceptuando(con.getEmpleado().getId(), con.getIdContrato());
         modelo.addAttribute("contrato", con);
+        modelo.addAttribute("ultimaFechaFin", ultimaFechaFin);
         if(idSuperpuesto!=null){
             Contrato superpuesto = contratoser.findContrato(idSuperpuesto);
             System.out.println("superpuesto id: "+superpuesto.getIdContrato());

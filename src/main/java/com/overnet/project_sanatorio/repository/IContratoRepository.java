@@ -26,8 +26,18 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer>{
     public List<Contrato> findByFechaFin(LocalDate fechaFin);
     @Query("SELECT c FROM contrato c WHERE ?1 BETWEEN c.fechaInicio AND c.fechaFin")
     public List<Contrato> findVigentesEnFecha(LocalDate fecha);
-    @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3))")
-    public List<Contrato>findSuperpuesto(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin);
-    @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3)) AND c.idContrato <> ?4")
+    /*@Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3))")
+    public List<Contrato>findSuperpuesto(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin);*/
+    @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3) OR (?2 BETWEEN c.fechaInicio AND c.fechaFin) OR (?3 BETWEEN c.fechaInicio AND c.fechaFin))")
+    public List<Contrato> findSuperpuesto(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin);
+    /*@Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3)) AND c.idContrato <> ?4")
+    public List<Contrato> findSuperpuestoEditar(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin, Integer idExcluir);*/
+    @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3) OR (?2 BETWEEN c.fechaInicio AND c.fechaFin) OR (?3 BETWEEN c.fechaInicio AND c.fechaFin)) AND c.idContrato <> ?4")
     public List<Contrato> findSuperpuestoEditar(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin, Integer idExcluir);
+    @Query("SELECT MAX(c.fechaFin) from contrato c WHERE c.empleado.id = ?1")
+    public LocalDate obtenerUltimaFechaFin(Integer idEmpleado);
+    @Query("SELECT MAX(c.fechaFin) FROM contrato c WHERE c.empleado.id = ?1 AND c.id <> ?2")
+    public LocalDate obtenerUltimaFechaFinExceptoContrato(Integer idEmpleado, Integer idContrato);
+    @Query("SELECT COUNT(c) FROM contrato c WHERE c.baja=false")
+    public int countContratosActivos();
 }

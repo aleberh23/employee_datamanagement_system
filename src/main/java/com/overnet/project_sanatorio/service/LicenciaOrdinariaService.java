@@ -20,6 +20,7 @@ public class LicenciaOrdinariaService implements ILicenciaOridinariaService {
     private IEmpleadoRepository empleadorep;
     @Autowired
     private ILicenciaTomadaRepository lictomrep;
+    
     @Override
     public List<LicenciaOrdinaria> findAll() {
         return licordrep.findAll();

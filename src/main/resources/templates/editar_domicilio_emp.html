@@ -10,21 +10,21 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a th:href="@{/}" class="navbar-brand text-info fw-semibold fs-3">Sanatorio Mayo</a>
-                
-                 <div class="ms-auto d-flex align-items-center">
+
+                <div class="ms-auto d-flex align-items-center">
                     <div>
                         <i class="bi bi-person-fill navbar-brand text-info fw-semibold fs-4"></i>
                         <span th:text="${#authentication.name}" class="navbar-brand text-info fw-semibold fs-4"></span>
                     </div>
                     <a th:href="@{/logout}" class="navbar-brand text-info fw-semibold fs-4"><i class="bi bi-box-arrow-right navbar-brand text-info fw-semibold fs-4"></i></a>
                 </div>
-                
+
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                 
+
                 <!--off canvas main container start -->
                 <section class="offcanvas offcanvas-start bg-dark"
                          id="menuLateral" tabindex="-1">
@@ -80,29 +80,26 @@
         </nav>
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <!-- Columna "Editar Domicilio" -->
+                <div class="col-md-6">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h2 class="card-title">Editar domicilio</h2>
-                            <br>
-                            <div class="card">
-                                <div class="card-header">
-                                    Detalles del Empleado
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${domicilio.empleado.nombre + ' ' + domicilio.empleado.apellido}"></h5>
-                                    <p class="card-text" th:text="'Nro. Legajo: ' + ${domicilio.empleado.nroLegajo}"></p>
-                                </div>
+                            <div class="card-body d-flex justify-content-between">
+                                <h2 class="card-title">Editar domicilio: </h2>
                             </div>
-                            <br>
+                            <br>         
+                            <!-- Formulario de Edición de Domicilio -->
                             <form th:action="@{/domicilio/editar/{id}(id=${domicilio.id})}" th:object="${domicilio}" method="POST">
                                 <div class="mb-3">
+                                    <label class="form-check-label fw-bold fs-6" for="calle">Calle:</label>
                                     <input type="text" class="form-control" name="calle" placeholder="Calle" th:field="*{calle}" required maxlength="25">
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-check-label fw-bold fs-6" for="numero">Numero:</label>
                                     <input type="text" class="form-control" name="numero" placeholder="Numero" th:field="*{numero}" required maxlength="5">
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-check-label fw-bold fs-6" for="localidad">Localidad: </label>
                                     <input type="text" class="form-control" name="localidad" placeholder="Localidad" th:field="*{localidad}" required maxlength="30">
                                 </div>
                                 <div class="mb-3">
@@ -110,45 +107,77 @@
                                     <label class="form-check-label" for="auditoriaMedica">Auditoria Médica</label>
                                     <input type="hidden" name="idEmpleado" th:value="${domicilio.empleado.id}">
                                 </div>
-
-                        </div>
-
-                        <div class="mb-3">
-                            <button type="submit" id="btn_submit" class="btn btn-primary m-3">Guardar Domicilio</button>
+                                <div class="mb-3 d-flex justify-content-end">
+                                <button type="submit" id="btn_submit" class="btn btn-primary m-3 rounded">
+                                    <i class="bi bi-floppy"></i> Guardar Domicilio
+                                </button>
+                                
+                                <a th:href="@{/empleado/domicilio/ver/{id}(id=${domicilio.empleado.id})}">
+                                    <button type="button" class="btn btn-danger m-3 rounded">
+                                        <i class="bi bi-x-square"></i> Cancelar
+                                    </button>
+                                </a>
+                            </div>
                             </form>
-                            <a th:href="@{/empleado/domicilio/alta/cancelar/{id}(id=${domicilio.empleado.id})}"><button type="button" class="btn btn-danger m-3">Cancelar</button></a>
                         </div>
+                    </div>
+                </div>                   
 
+            <!-- Columna "Información Empleado" -->
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="card-body d-flex justify-content-between">
+                            <h2 class="card-title">Información Empleado:</h2>
+                        </div>
+                        <br>
+                        <div class="mb-3">
+                            <label class="form-check-label fw-bold fs-6" for="nrolegajo">NRO legajo:</label>
+                            <p><span name="nrolegajo" th:text="${domicilio.empleado.nroLegajo}" class="text-muted fs-5"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label fw-bold fs-6" for="nombreyapellido">Empleado:</label>
+                            <p><span name="nombreyapellido" th:text="${domicilio.empleado.nombre + ' ' + domicilio.empleado.apellido}" class="text-muted fs-5"></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label fw-bold fs-6" for="sector">Sector: </label>
+                            <p><span name="nombreyapellido" th:text="${domicilio.empleado.sector.nombre}" class="text-muted fs-5"></span></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <script th:inline="javascript">
+</div>
+</div>
+</div>
 
-        $(document).ready(function () {
-            $("#numero").on("input", function () {
-                var numero = $(this).val();
-                validarNumero(numero);
-            });
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        $("#numero").on("input", function () {
+            var numero = $(this).val();
+            validarNumero(numero);
         });
+    });
 
-        function validarNumero(numero) {
-            var esNumero = /^[0-9]+$/.test(numero);
-            if (esNumero) {
-                $("#btn_submit").prop("disabled", false);
-                $("#numeroError").text("");
-                $("#numero").removeClass("is-invalid");
-            } else {
-                $("#numeroError").text("Ingrese solo números.");
-                $("#numero").addClass("is-invalid");
-                $("#btn_submit").prop("disabled", true);
-            }
+    function validarNumero(numero) {
+        var esNumero = /^[0-9]+$/.test(numero);
+        if (esNumero) {
+            $("#btn_submit").prop("disabled", false);
+            $("#numeroError").text("");
+            $("#numero").removeClass("is-invalid");
+        } else {
+            $("#numeroError").text("Ingrese solo números.");
+            $("#numero").addClass("is-invalid");
+            $("#btn_submit").prop("disabled", true);
         }
+    }
 
-    </script>                
+</script>                
 </body>
 </html>

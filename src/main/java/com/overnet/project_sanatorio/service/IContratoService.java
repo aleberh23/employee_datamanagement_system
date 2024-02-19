@@ -1,6 +1,7 @@
 package com.overnet.project_sanatorio.service;
 
 import com.overnet.project_sanatorio.model.Contrato;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IContratoService {
@@ -14,4 +15,7 @@ public interface IContratoService {
     public void verificarContratosInicio();
     public Contrato findContratoSupepuesto(int idEmpleado, Contrato nuevoContrato);
     public Contrato findContratoSupepuestoExcluyendose(int idEmpleado, Contrato contrtatoEditado);
+    public LocalDate obtenerUltimaFechaFin(int idEmpleado);
+    public LocalDate obtenerUltimaFechaFinExceptuando(int idEmpleado, int idContrato);
+    public int countContratosActivos();
 }

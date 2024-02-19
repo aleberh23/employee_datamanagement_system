@@ -87,9 +87,8 @@
                         <table th:if="${!jubilaciones.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-jubilaciones">
                             <thead class="table">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
                                     <th>Nro. Legajo</th>
+                                    <th>Empleado</th>                                    
                                     <th>Sector</th>
                                     <th>Fecha Nacimiento</th>
                                     <th>Fecha Ingreso</th>
@@ -98,9 +97,8 @@
                             </thead>
                             <tbody>
                                 <tr th:each="jubilacion : ${jubilaciones}" th:class="${jubilacion.baja} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${jubilacion.id}">ID</td>
-                                    <td th:text="${jubilacion.nombre + ' ' + jubilacion.apellido}">Empleado</td>
                                     <td th:text="${jubilacion.nroLegajo}">Nro. Legajo</td>
+                                    <td th:text="${jubilacion.nombre + ' ' + jubilacion.apellido}">Empleado</td>                                    
                                     <td th:text="${jubilacion.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(jubilacion.fechaNacimiento, 'dd/MM/YYYY')}">Fecha Nacimiento</td>
                                     <td th:text="${#temporals.format(jubilacion.fechaIngreso, 'dd/MM/YYYY')}">Fecha De Ingreso</td> 

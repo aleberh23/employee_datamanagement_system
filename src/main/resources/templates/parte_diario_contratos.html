@@ -88,9 +88,8 @@
                         <table th:if="${!contratos.isEmpty()}" class="table table-success table-striped table-bordered" id="tabla-contratos">
                             <thead class="table">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Empleado</th>                                   
                                     <th>Sector</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Fin</th>
@@ -99,9 +98,8 @@
                             </thead>
                             <tbody>
                                 <tr th:each = "contrato : ${contratos}" th:class="${contrato.baja} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${contrato.idContrato}">ID</td>
-                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>
                                     <td th:text="${contrato.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${contrato.empleado.nombre + ' ' + contrato.empleado.apellido}">Empleado</td>                                    
                                     <td th:text="${contrato.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(contrato.fechaInicio, 'dd/MM/YYYY')}">Fecha Inicio</td>
                                     <td th:text="${#temporals.format(contrato.fechaFin, 'dd/MM/YYYY')}" class="font-weight-bold">Fecha Fin</td>

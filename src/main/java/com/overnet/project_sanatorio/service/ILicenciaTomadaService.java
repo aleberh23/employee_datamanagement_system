@@ -15,7 +15,7 @@ public interface ILicenciaTomadaService {
     public void updateLicenciaTomada(LicenciaTomada lictom);
     public void deleteLicenciaTomada(int idLicenciaTomada);
     public List<TipoLicenciaDTO> armarTipoLicenciaDTO(int idEmpleado, Integer anio);
-    public int sumatoriaDiasPorTipoYPeriodo(int idTipo, int idEmpleado, PeriodoDTO periodo);
+    public int sumatoriaDiasPorTipoYAnio(int idTipo, int idEmpleado, int anio);
     public TipoLicencia findById(int idTipo);
     public void verificarLicencias();
     public void verificarLicenciasInicio();
@@ -24,5 +24,6 @@ public interface ILicenciaTomadaService {
     public List<LicenciaOrdinaria> obtenerLicenciasOrdinariasParaEditar(int idEmpleado, Integer año);
     public LicenciaTomada findLicenciaTomadaSupepuesta(int idEmpleado, LicenciaTomada nuevaLicencia);
     public LicenciaTomada findLicenciaTomadaSupepuestaExcluyendose(int idEmpleado, LicenciaTomada licenciaEditada);
+    public int countLicenciasActivas();
     
 }

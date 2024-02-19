@@ -127,9 +127,9 @@
                         <table th:if="${!ausencias.isEmpty()}"class="table table-success table-striped table-bordered">
                             <thead class="table">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
                                     <th>NRO Legajo</th>
+                                    <th>Empleado</th>
+                                    <th>Sector</th>
                                     <th>Fecha</th>
                                     <th>Motivo</th>
                                     <th>Descripcion</th>
@@ -138,17 +138,27 @@
                             </thead>
                             <tbody>
                                 <tr th:each = "ausencia : ${ausencias}" class="table-success">
-                                    <td th:text="${ausencia.id}">ID</td>
-                                    <td th:text="${ausencia.empleado.nombre + ' ' + ausencia.empleado.apellido}">Empleado</td>
                                     <td th:text="${ausencia.empleado.nroLegajo}">NRO Legajo</td>
+                                    <td th:text="${ausencia.empleado.nombre + ' ' + ausencia.empleado.apellido}">Empleado</td>
+                                    <td th:text="${ausencia.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(ausencia.fecha, 'dd/MM/YYYY')}">Fecha</td>
                                     <td th:text="${ausencia.tipoInasistencia.nombre}">Motivo</td>
                                     <td th:text="${ausencia.descripcion}">Descripcion</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-danger px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${ausencia.id}">Eliminar</button>
+                                            <a th:href="@{/inasistencia/nueva/{id}(id=${ausencia.id})}"><button class="btn btn-outline-primary rounded px-2">
+                                                   <i class="bi bi-plus-square"></i> Generar Inasistencia
+                                                </button>
+                                            </a>
                                             &nbsp; &nbsp;
-                                            <a th:href="@{/inasistencia/nueva/{id}(id=${ausencia.id})}"><button class="btn btn-info px-2">Generar Inasistencia</button></a>
+                                            <a th:href="@{/ausencia/editar/{id}(id=${ausencia.id}, idEmpleado=${ausencia.empleado.id})}"><button class="btn btn-outline-primary rounded px-2">
+                                                   <i class="bi bi-pencil-square"></i> Editar Ausencia
+                                                </button>
+                                            </a>
+                                            &nbsp; &nbsp;
+                                            <button class="btn btn-outline-danger rounded px-2" data-bs-toggle="modal" data-bs-target="#modalBaja" id="btnBaja" th:data-id="${ausencia.id}">
+                                               <i class="bi bi-trash3"></i> Eliminar
+                                            </button>
                                             &nbsp; &nbsp;
                                         </div>
                                     </td>  

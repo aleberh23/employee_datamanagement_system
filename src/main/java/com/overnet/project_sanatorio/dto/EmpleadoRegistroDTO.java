@@ -1,6 +1,7 @@
 package com.overnet.project_sanatorio.dto;
 
 import com.overnet.project_sanatorio.model.Sector;
+import com.overnet.project_sanatorio.model.Sexo;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -24,9 +25,11 @@ public class EmpleadoRegistroDTO {
     private boolean contratado;
     private LocalDate fechaIngreso;
     private boolean baja;
+    private boolean estudiante;
     private LocalDate fechaBaja;
     private LocalDate fechaNacimiento;
     private Sector sector;
+    private Sexo sexo;
     //domicilio
     private String calle;
     private Integer numero;

@@ -3,9 +3,11 @@ package com.overnet.project_sanatorio.controller;
 import com.overnet.project_sanatorio.dto.TipoLicenciaDTO;
 import com.overnet.project_sanatorio.model.Contrato;
 import com.overnet.project_sanatorio.model.Empleado;
+import com.overnet.project_sanatorio.model.Inasistencia;
 import com.overnet.project_sanatorio.model.LicenciaOrdinaria;
 import com.overnet.project_sanatorio.model.LicenciaTomada;
 import com.overnet.project_sanatorio.service.IEmpleadoService;
+import com.overnet.project_sanatorio.service.IInasistenciaService;
 import com.overnet.project_sanatorio.service.ILicenciaOridinariaService;
 import com.overnet.project_sanatorio.service.ILicenciaTomadaService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,9 +34,13 @@ public class LicenciaTomadaController {
     private IEmpleadoService empleadoser;
     @Autowired
     private ILicenciaOridinariaService licordser;
+    @Autowired
+    private IInasistenciaService inasiser;
 
     @GetMapping("/empleado/licencia/alta/{idEmpleado}")
-    public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado, @RequestParam(required = false)Integer idSuperpuesta) {
+    public String mostrarFormAltaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado, 
+            @RequestParam(required = false)Integer idSuperpuesta,
+            @RequestParam(required = false)Integer idInasistenciaSup) {
         LocalDate fechaActal = LocalDate.now();
         int anio = fechaActal.getYear();
         List<TipoLicenciaDTO> dtos = lictomser.armarTipoLicenciaDTO(idEmpleado, anio);
@@ -46,9 +52,14 @@ public class LicenciaTomadaController {
         modelo.addAttribute("dtos", dtos);
         
         if (idSuperpuesta != null) {
-        // Si hay un ID de licencia superpuesta, busca la licencia y agrégala al modelo
-        LicenciaTomada superpuesta = lictomser.findLicenciaTomadaById(idSuperpuesta);
-        modelo.addAttribute("superpuesta", superpuesta);
+            // Si hay un ID de licencia superpuesta, busca la licencia y agrégala al modelo
+            LicenciaTomada superpuesta = lictomser.findLicenciaTomadaById(idSuperpuesta);
+            modelo.addAttribute("superpuesta", superpuesta);
+        }
+        
+        if (idInasistenciaSup != null) {
+            Inasistencia inasistenciasup = inasiser.findInasistenciaById(idInasistenciaSup);
+            modelo.addAttribute("inasistenciaSup", inasistenciasup);
         }
 
         return "alta_licencias_emp";
@@ -58,21 +69,26 @@ public class LicenciaTomadaController {
     public String altaLicenciaDesdeEmpleado(@ModelAttribute("licencia") LicenciaTomada licencia, @RequestParam("idEmpleado") int idEmpleado, @RequestParam("idTipo") int idTipo) {
         licencia.setEmpleado(empleadoser.findEmpleado(idEmpleado));
         licencia.setTipoLicencia(lictomser.findById(idTipo));
-        if(lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia)!=null){
+        if (lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia) != null) {
             LicenciaTomada superpuesta = lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia);
-            return "redirect:/empleado/licencia/alta/"+idEmpleado+"?idSuperpuesta="+superpuesta.getIdLicenciaTomada();
-                    
-        }else{
+            return "redirect:/empleado/licencia/alta/" + idEmpleado + "?idSuperpuesta=" + superpuesta.getIdLicenciaTomada();
+        } else if (inasiser.findSuperpuestaAltaLicencia(idEmpleado, licencia.getFechaDesde(), licencia.getFechaHasta()) != null) {
+            Inasistencia inasistencia = inasiser.findSuperpuestaAltaLicencia(idEmpleado, licencia.getFechaDesde(), licencia.getFechaHasta());
+            return "redirect:/empleado/licencia/alta/" + idEmpleado + "?idInasistenciaSup=" + inasistencia.getId();
+        } else {
             lictomser.saveLicenciaTomada(licencia);
             return "redirect:/empleado/licencia/ver/" + idEmpleado;
         }
     }
 
     @GetMapping("/empleado/licencia/ordinaria/alta/{idEmpleado}")
-    public String mostrarFormAltaOrdinariaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado, @RequestParam(required = false)Integer idSuperpuesta) {
+    public String mostrarFormAltaOrdinariaDesdeEmpleado(Model modelo, @PathVariable int idEmpleado,
+            @RequestParam(required = false)Integer idSuperpuesta,
+            @RequestParam(required = false)Integer idInasistenciaSup) {
         LocalDate fechaActual = LocalDate.now();
         int anioActual = fechaActual.getYear();
         int anioPeriodo = calcularPeriodo(anioActual);
+        System.out.println("AÑO PERIODO: "+anioPeriodo);
         List<LicenciaOrdinaria> licords = lictomser.obtenerLicenciasOrdinarias(idEmpleado, anioPeriodo);
         licords.sort(Comparator.comparingInt(LicenciaOrdinaria::getAnio));
         int diasTotales = 0;
@@ -80,6 +96,7 @@ public class LicenciaTomadaController {
             diasTotales += l.getDiasRestanes();
         }
         LicenciaTomada licencia = new LicenciaTomada();
+        licencia.setCertificado(false);
         Empleado emp = empleadoser.findEmpleado(idEmpleado);
         modelo.addAttribute("licencia", licencia);
         modelo.addAttribute("licords", licords);
@@ -87,17 +104,21 @@ public class LicenciaTomadaController {
         modelo.addAttribute("empleado", emp);
         modelo.addAttribute("dias", diasTotales);
         if (idSuperpuesta != null) {
-        // Si hay un ID de licencia superpuesta, busca la licencia y agrégala al modelo
-        LicenciaTomada superpuesta = lictomser.findLicenciaTomadaById(idSuperpuesta);
-        modelo.addAttribute("superpuesta", superpuesta);
+            // Si hay un ID de licencia superpuesta, busca la licencia y agrégala al modelo
+            LicenciaTomada superpuesta = lictomser.findLicenciaTomadaById(idSuperpuesta);
+            modelo.addAttribute("superpuesta", superpuesta);
         }
-
+        
+        if (idInasistenciaSup != null) {
+            Inasistencia inasistenciasup = inasiser.findInasistenciaById(idInasistenciaSup);
+            modelo.addAttribute("inasistenciaSup", inasistenciasup);
+        }
         return "alta_licenciasordinarias_emp";
     }
 
     @PostMapping("/empleado/licencia/ordinaria/alta/{idEmpleado}")
     public String altaLicenciaOrdinariaDesdeEmpleado(@PathVariable int idEmpleado, @ModelAttribute("licencia") LicenciaTomada licencia, @RequestParam("anio") int anio) {
-        if(lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia)==null){    
+        if(lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia)==null && inasiser.findSuperpuestaAltaLicencia(idEmpleado, licencia.getFechaDesde(), licencia.getFechaHasta()) == null){    
             licencia.setEmpleado(empleadoser.findEmpleado(idEmpleado));
             licencia.setTipoLicencia(lictomser.findTipoLicenciaByNombre("Ordinaria"));
             lictomser.saveLicenciaTomada(licencia);
@@ -119,10 +140,15 @@ public class LicenciaTomadaController {
                 licordser.editarLicOrd(l);
             });
             return "redirect:/empleado/licencia/ver/" + idEmpleado;
-        }else{
+        }else if(lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia)!=null){
             LicenciaTomada superpuesta = lictomser.findLicenciaTomadaSupepuesta(idEmpleado, licencia);
             return "redirect:/empleado/licencia/ordinaria/alta/"+idEmpleado+"?idSuperpuesta="+superpuesta.getIdLicenciaTomada();
+        }else if(inasiser.findSuperpuestaAltaLicencia(idEmpleado, licencia.getFechaDesde(), licencia.getFechaHasta())!=null){
+            //se encontro una inasistencia que se superpone
+            Inasistencia inasistencia = inasiser.findSuperpuestaAltaLicencia(idEmpleado, licencia.getFechaDesde(), licencia.getFechaHasta());
+            return "redirect:/empleado/licencia/ordinaria/alta/"+idEmpleado+"?idInasistenciaSup="+inasistencia.getId();
         }
+         return "redirect:/empleado/licencia/ver/" + idEmpleado;
     }
 
     @GetMapping("/empleado/licencia/alta/cancelar/{id}")
@@ -131,13 +157,15 @@ public class LicenciaTomadaController {
     }
 
     @GetMapping("/licencia/editar/{id}")
-    public String mostrarFormEditar(@PathVariable int id, Model modelo, @RequestParam(required = false)Integer idSuperpuesta) {
+    public String mostrarFormEditar(@PathVariable int id, Model modelo,
+            @RequestParam(required = false)Integer idSuperpuesta,
+            @RequestParam(required = false)Integer idInasistenciaSup) {
         LicenciaTomada lic = lictomser.findLicenciaTomadaById(id);
         LocalDate fechaActal = LocalDate.now();
         int anio = fechaActal.getYear();
         Empleado emp = empleadoser.findEmpleado(lic.getEmpleado().getId());
         if (lic.getTipoLicencia().getNombre().equals("Ordinaria")) {
-            int anioPeriodo = calcularPeriodo(anio);
+            int anioPeriodo = calcularPeriodo(lic.getFechaHasta().getYear());
             List<LicenciaOrdinaria> licords = lictomser.obtenerLicenciasOrdinariasParaEditar(lic.getEmpleado().getId(), anioPeriodo);
             licords.sort(Comparator.comparingInt(LicenciaOrdinaria::getAnio));
             int diasTotales = 0;
@@ -159,12 +187,16 @@ public class LicenciaTomadaController {
             System.out.println("SUPERPUESTA FECHA HASTA: "+superpuesta.getFechaHasta());
             modelo.addAttribute("superpuesta", superpuesta);
             }
+            
+            if(idInasistenciaSup != null){
+                Inasistencia inasistencia = inasiser.findInasistenciaById(idInasistenciaSup);
+                modelo.addAttribute("inasistenciaSup", inasistencia);
+            }
             return "editar_licenciasordinarias_emp";
         } else {
-            List<TipoLicenciaDTO> dtos = lictomser.armarTipoLicenciaDTO(lic.getEmpleado().getId(), anio);
+            List<TipoLicenciaDTO> dtos = lictomser.armarTipoLicenciaDTO(lic.getEmpleado().getId(), lic.getFechaHasta().getYear());
             int diasConsumidos = (int) ChronoUnit.DAYS.between(lic.getFechaDesde(), lic.getFechaHasta());
-            int anioPeriodo = calcularPeriodo(fechaActal);
-            modelo.addAttribute("anio", anioPeriodo);
+            modelo.addAttribute("anio", lic.getFechaHasta().getYear());
             modelo.addAttribute("licencia", lic);
             modelo.addAttribute("empleado", emp);
             modelo.addAttribute("dtos", dtos);
@@ -184,6 +216,10 @@ public class LicenciaTomadaController {
             modelo.addAttribute("superpuesta", superpuesta);
             }
             
+            if(idInasistenciaSup != null){
+                Inasistencia inasistencia = inasiser.findInasistenciaById(idInasistenciaSup);
+                modelo.addAttribute("inasistenciaSup", inasistencia);
+            }
             return "editar_licencias_emp";
         }
         
@@ -194,7 +230,7 @@ public class LicenciaTomadaController {
     public String editarLicencia(@PathVariable int id, @ModelAttribute("licencia") LicenciaTomada lic, Model modelo) {
         LicenciaTomada l = lictomser.findLicenciaTomadaById(id);
         lic.setIdLicenciaTomada(l.getIdLicenciaTomada());
-        if(lictomser.findLicenciaTomadaSupepuestaExcluyendose(l.getEmpleado().getId(), lic)==null){
+        if(lictomser.findLicenciaTomadaSupepuestaExcluyendose(l.getEmpleado().getId(), lic)==null && inasiser.findSuperpuestaAltaLicencia(l.getEmpleado().getId(), lic.getFechaDesde(), lic.getFechaHasta())==null){
             if (l.getTipoLicencia().getNombre().equals("Ordinaria")) {
                 int diasConsumidosOriginal = (int) ChronoUnit.DAYS.between(l.getFechaDesde(), l.getFechaHasta());
                 int diasConsumidosNuevo = (int) ChronoUnit.DAYS.between(lic.getFechaDesde(), lic.getFechaHasta());
@@ -213,12 +249,14 @@ public class LicenciaTomadaController {
             l.setTerminada(lic.isTerminada());
             lictomser.updateLicenciaTomada(l);
             return "redirect:/empleado/licencia/ver/" + l.getEmpleado().getId();
-        }else{
+        }else if(lictomser.findLicenciaTomadaSupepuestaExcluyendose(l.getEmpleado().getId(), lic)!=null){
             LicenciaTomada superpuesta = lictomser.findLicenciaTomadaSupepuestaExcluyendose(l.getEmpleado().getId(), lic);
             return "redirect:/licencia/editar/"+l.getIdLicenciaTomada()+"?idSuperpuesta="+superpuesta.getIdLicenciaTomada();
+        }else if(inasiser.findSuperpuestaAltaLicencia(l.getEmpleado().getId(), lic.getFechaDesde(), lic.getFechaHasta())!=null){
+            Inasistencia inasistencia = inasiser.findSuperpuestaAltaLicencia(l.getEmpleado().getId(), lic.getFechaDesde(), lic.getFechaHasta());
+            return "redirect:/licencia/editar/"+l.getIdLicenciaTomada()+"?idInasistenciaSup="+inasistencia.getId();
         }
-
-        
+        return "redirect:/empleado/licencia/ver/" + l.getEmpleado().getId();
     }
 
     @GetMapping("empleado/licencia/ver/detalle/{id}")

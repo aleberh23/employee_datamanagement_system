@@ -87,12 +87,11 @@
                         <table th:if="${!licencias.isEmpty()}"class="table table-success table-striped table-bordered" id="tabla-licencias">
                             <thead class="table">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Empleado</th>
                                     <th>Nro. Legajo</th>
+                                    <th>Empleado</th>
                                     <th>Sector</th>
                                     <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
+                                    <th>Fecha de Reincorporacion</th>
                                     <th>Tipo Licencia</th>
                                     <th>Certificado</th>
 
@@ -100,20 +99,22 @@
                             </thead>
                             <tbody>
                                 <tr th:each="licencia : ${licencias}" th:class="${licencia.terminada} ? 'table-danger' : 'table-success'">
-                                    <td th:text="${licencia.idLicenciaTomada}">ID</td>
-                                    <td th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}">Empleado</td>
-                                    <td th:text="${licencia.empleado.nroLegajo}">Nro. Legajo</td>
-                                    <td th:text="${licencia.empleado.sector.nombre}">Nro. Legajo</td>
+                                    <td th:text="${licencia.empleado.nroLegajo}">Nro. Legajo</td>                                    
+                                    <td th:text="${licencia.empleado.nombre + ' ' + licencia.empleado.apellido}">Empleado</td>                                    
+                                    <td th:text="${licencia.empleado.sector.nombre}">Sector</td>
                                     <td th:text="${#temporals.format(licencia.fechaDesde, 'dd/MM/YYYY')}">Fecha Inicio</td>
-                                    <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha Desde</td>
+                                    <td th:text="${#temporals.format(licencia.fechaHasta, 'dd/MM/YYYY')}">Fecha de Reincorporacion</td>
                                     <td th:text="${licencia.tipoLicencia.nombre}">Tipo Licencia</td>
                                     <td class="text-center">
-                                        <span th:if="${licencia.certificado}">
-                                            <i class="bi bi-check-circle text-success"></i>
-                                        </span>
-                                        <span th:unless="${licencia.certificado}">
-                                            <i class="bi bi-x-circle text-danger"></i>
-                                        </span>
+                                        <span th:if="${licencia.tipoLicencia.nombre == 'Ordinaria'}">-</span>
+                                            <span th:unless="${licencia.tipoLicencia.nombre == 'Ordinaria'}">
+                                                <span th:if="${licencia.certificado}">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                </span>
+                                                <span th:unless="${licencia.certificado}">
+                                                    <i class="bi bi-x-circle-fill text-danger"></i>
+                                                </span>
+                                            </span>
                                     </td>    
                                 </tr>
                             </tbody>

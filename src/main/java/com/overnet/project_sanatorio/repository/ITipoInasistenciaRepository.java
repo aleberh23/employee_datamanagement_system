@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ITipoInasistenciaRepository extends JpaRepository<TipoInasistencia, Integer> {
-    public TipoLicencia findByNombre(String nombre);
+    public TipoInasistencia findByNombre(String nombre);
 }
