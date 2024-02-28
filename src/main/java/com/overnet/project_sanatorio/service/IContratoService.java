@@ -18,4 +18,5 @@ public interface IContratoService {
     public LocalDate obtenerUltimaFechaFin(int idEmpleado);
     public LocalDate obtenerUltimaFechaFinExceptuando(int idEmpleado, int idContrato);
     public int countContratosActivos();
+    public Contrato findContratoProximoAFinalizarPorEmpleado(int idEmpleado);
 }

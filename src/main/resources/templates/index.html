@@ -85,7 +85,7 @@
             <div class="text-center">
                 <h1 class="display-4">
                     <span class="text-secondary">¡Bienvenido/a, </span>
-                    <span class="font-weight-bold text-primary" th:text="${#authentication.name}"></span>
+                    <span class="font-weight-bold text-primary" th:text="${#authentication.principal.username}"></span>
                     <span class="text-secondary">!</span>
                 </h1>
             </div>
@@ -135,15 +135,15 @@
                             <div class="row">                                
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="fw-semibold" for="cantidadEnfermeria">Enfermeria:</label>
+                                        <label class="fw-semibold" for="cantidadEnfermeria">Enfermería:</label>
                                         <p><span name="cantidadEnfermeria" th:text="${cantidadEnfermeria}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="fw-semibold" for="cantidadAdministracion">Administracion:</label>
+                                        <label class="fw-semibold" for="cantidadAdministracion">Administración:</label>
                                         <p><span name="cantidadAdministracion" th:text="${cantidadAdministracion}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="fw-semibold" for="cantidadCamilleria">Camilleria:</label>
+                                        <label class="fw-semibold" for="cantidadCamilleria">Camilleros/as:</label>
                                         <p><span name="cantidadCamilleria" th:text="${cantidadCamilleria}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                                         <p><span name="cantidadLimpieza" th:text="${cantidadLimpieza}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="fw-semibold" for="cantidadRecepcion">Recepcion:</label>
+                                        <label class="fw-semibold" for="cantidadRecepcion">Recepción:</label>
                                         <p><span name="cantidadRecepcion" th:text="${cantidadRecepcion}" class="text-primary display-2 fs-3 fst-italic"></span></p>
                                     </div>
                                 </div>

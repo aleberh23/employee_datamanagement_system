@@ -120,5 +120,12 @@ public class ContratoService implements IContratoService {
     public int countContratosActivos() {
         return contratorep.countContratosActivos();
     }
+
+    @Override
+    public Contrato findContratoProximoAFinalizarPorEmpleado(int idEmpleado) {
+        LocalDate hoy = LocalDate.now();
+        LocalDate hace5Dias = hoy.minusDays(5);
+        return contratorep.findContratoProximoAFinalizarPorEmpleado(hace5Dias, hoy, idEmpleado);
+    }
     
 }

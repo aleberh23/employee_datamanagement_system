@@ -225,6 +225,9 @@
                                         <p><span th:text="${empleado.contratado ? 'Si' : 'No'}" class="text-primary display-2 fs-3"></span></p>
                                     </div>
                                 </div>
+                                <div th:if="${contratoPorVencer != null}" class="alert alert-warning" role="alert">
+                                    <span th:text="|Esta por vencer el contrato desde ${#temporals.format(contratoPorVencer.fechaInicio, 'dd/MM/YYYY')} hasta ${#temporals.format(contratoPorVencer.fechaFin, 'dd/MM/YYYY')}|"></span>
+                                </div>                                
                             </div>
                         </div>
                     </div>

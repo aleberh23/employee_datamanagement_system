@@ -150,6 +150,9 @@
                                                 <label class="form-check-label" for="estudiante">Estudiante</label>
                                             </div>
                                         </div>
+                                        <div th:if="${param.exito}" class="alert alert-success" role="alert">
+                                            Empleado guardado con éxito!
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -242,14 +245,16 @@
                                                 <input type="checkbox" class="form-check-input" id="auditoriaMedica" name="auditoriaMedica" th:field="*{auditoriaMedica}">
                                                 <label class="form-check-label" for="auditoriaMedica">Auditoria Médica</label>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        
+                        
+                        
                         <div class="col-12 mt-3">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-end">                                
                                 <input type="hidden" name="sectorId" id="sectorId">
                                 <input type="hidden" name="sexoId" id="sexoId">
                                 <button type="submit" id="btn_submit" class="btn btn-primary" onclick="agregarSectorId(), agregarSexoId()">
@@ -379,9 +384,9 @@
                         }
 
                         function validarCorreo(correo) {
-                            var expReg = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+                            var expReg = /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
                             var esValido = expReg.test(correo);
-                            if (esValido == true) {
+                            if (esValido === true) {
                                 $("#btn_submit").prop("disabled", false);
                                 $("#emailError").text("");
                                 $("#email").removeClass("is-invalid");

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class EmpleadoController {
@@ -66,7 +67,7 @@ public class EmpleadoController {
         return "alta_empleado";
     }
     @PostMapping("/empleado/alta")
-    public String guardarEmpleado(@ModelAttribute("empleadodto")EmpleadoRegistroDTO emp, @RequestParam("sectorId") int sectorId, @RequestParam("sexoId") int sexoId){
+    public String guardarEmpleado(@ModelAttribute("empleadodto")EmpleadoRegistroDTO emp, @RequestParam("sectorId") int sectorId, @RequestParam("sexoId") int sexoId, RedirectAttributes redirectAttributes){
     if(empleadoser.existeNroLegajo(emp.getNroLegajo())){
         return "redirect:/empleado/alta?error="+emp.getNroLegajo();
     }
@@ -97,6 +98,7 @@ public class EmpleadoController {
     domicilio.setNumero(emp.getNumero());
     
     domicilioser.saveDomicilio(domicilio);
+    redirectAttributes.addAttribute("exito", true);
     return "redirect:/empleado/alta";
     }
     @GetMapping("empleado/ver")
@@ -106,7 +108,7 @@ public class EmpleadoController {
             palabra = ""; //
         }
         System.out.println(!deBaja);
-        List<Empleado> empleados = empleadoser.getEmpleados(palabra, deBaja);
+        List<Empleado> empleados = empleadoser.getEmpleados(palabra.toLowerCase(), deBaja);
         List<Empleado> empleadosOrdenados = empleados.stream()
         .sorted(Comparator.comparing(Empleado::getNroLegajo))
         .collect(Collectors.toList());
@@ -181,7 +183,9 @@ public class EmpleadoController {
     @GetMapping("empleado/detalle/{id}")
     public String detalleEmpleado(@PathVariable int id, Model modelo){
         Empleado empleado = empleadoser.findEmpleado(id);
+        Contrato contratoPorVencer = contratoser.findContratoProximoAFinalizarPorEmpleado(id);
         modelo.addAttribute("empleado", empleado);
+        modelo.addAttribute("contratoPorVencer", contratoPorVencer);
     return "ver_empleado";
     }
     

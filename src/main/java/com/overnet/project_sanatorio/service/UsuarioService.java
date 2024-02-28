@@ -48,7 +48,12 @@ import org.springframework.stereotype.Service;
         user.getRoles().forEach(r->System.out.println("ROL: "+r.getNombre()));
         Collection<? extends GrantedAuthority>authorities=mapearAutoridadesARoles(user.getRoles());
         authorities.forEach(a->System.out.println("AUT."+a.getAuthority()));
-        return new User(user.getEmail(), user.getPassword(), authorities);
+        return new User(user.getEmail(), user.getPassword(), authorities) {
+            @Override
+            public String getUsername() {
+                return user.getNombre()+" "+user.getApellido(); // Se establece el nombre del usuario como el nombre de usuario en Thymeleaf
+            }
+        };
     }
     private Collection<? extends GrantedAuthority> mapearAutoridadesARoles(Collection<Rol>roles){
         return roles.stream().map(role->new SimpleGrantedAuthority(role.getNombre())).collect(Collectors.toList());

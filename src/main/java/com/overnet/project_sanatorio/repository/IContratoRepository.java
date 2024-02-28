@@ -34,10 +34,12 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer>{
     public List<Contrato> findSuperpuestoEditar(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin, Integer idExcluir);*/
     @Query("SELECT c FROM contrato c WHERE c.empleado.id = ?1 AND ((c.fechaInicio BETWEEN ?2 AND ?3) OR (c.fechaFin BETWEEN ?2 AND ?3) OR (?2 BETWEEN c.fechaInicio AND c.fechaFin) OR (?3 BETWEEN c.fechaInicio AND c.fechaFin)) AND c.idContrato <> ?4")
     public List<Contrato> findSuperpuestoEditar(Integer idEmpleado, LocalDate fechaInicio, LocalDate fechaFin, Integer idExcluir);
-    @Query("SELECT MAX(c.fechaFin) from contrato c WHERE c.empleado.id = ?1")
+    @Query("SELECT MAX(c.fechaFin) from contrato c WHERE c.empleado.id = ?1 AND c.estado <> 'Cancelado'")
     public LocalDate obtenerUltimaFechaFin(Integer idEmpleado);
-    @Query("SELECT MAX(c.fechaFin) FROM contrato c WHERE c.empleado.id = ?1 AND c.id <> ?2")
+    @Query("SELECT MAX(c.fechaFin) FROM contrato c WHERE c.empleado.id = ?1 AND c.id <> ?2 AND c.estado <> 'Cancelado'")
     public LocalDate obtenerUltimaFechaFinExceptoContrato(Integer idEmpleado, Integer idContrato);
     @Query("SELECT COUNT(c) FROM contrato c WHERE c.baja=false")
     public int countContratosActivos();
+    @Query("SELECT c FROM contrato c WHERE c.fechaFin BETWEEN ?1 AND ?2 AND c.baja = false AND c.empleado.id = ?3")
+    public Contrato findContratoProximoAFinalizarPorEmpleado(LocalDate fechaInicio, LocalDate fechaFin, int idEmpleado);
 }

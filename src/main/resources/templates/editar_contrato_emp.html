@@ -172,9 +172,9 @@
     function validarFechas() {
         var fechaInicio = new Date($("#fecha_inicio").val());
         var fechaFin = new Date($("#fecha_fin").val());
-        var fechaLimite = new Date();
+        var fechaLimite = new Date(fechaFin);
         fechaLimite.setFullYear(fechaLimite.getFullYear() + 30);
-        var fechaInicioLimite = new Date();
+        var fechaInicioLimite = new Date(fechaInicio);
         fechaInicioLimite.setFullYear(fechaInicioLimite.getFullYear() - 1);
 
         // Obtener la fecha de ingreso del empleado desde el input hidden

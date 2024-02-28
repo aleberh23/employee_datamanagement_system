@@ -282,7 +282,7 @@ public class LicenciaTomadaController {
         System.out.println(!terminada);
         List<LicenciaTomada> lic = lictomser.getLicenciasTomadas(palabra, terminada);
         modelo.addAttribute("licencias", lic);
-        modelo.addAttribute("palabra", palabra);
+        modelo.addAttribute("palabra", palabra.toLowerCase());
         modelo.addAttribute("terminada", terminada);
 
         return "lista_licenciastomadas";

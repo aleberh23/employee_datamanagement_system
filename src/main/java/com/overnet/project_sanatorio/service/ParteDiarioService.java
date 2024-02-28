@@ -15,6 +15,7 @@ import com.overnet.project_sanatorio.repository.IParteDiarioRepository;
 import com.overnet.project_sanatorio.repository.ISectorDetalleParteDiarioRepository;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,6 +129,23 @@ public class ParteDiarioService implements IParteDiarioService {
             }
         }
         
+    }
+
+    @Override
+    public List<String> getPartesDiarioForAusencia(LocalDate fecha) {
+         List<String> partes = new ArrayList<>();
+
+        for (int i = 0; i < 4; i++) {
+            ParteDiario pd = pdiariorep.findByFecha(fecha);
+
+            if (pd != null) {
+                partes.add(pd.getFechaEmision().toString());
+            }
+
+            fecha = fecha.minusDays(1);
+        }
+
+        return partes;
     }
     
 }

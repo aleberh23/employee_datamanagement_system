@@ -14,4 +14,5 @@ public interface IParteDiarioService {
     public ParteDiario findById(int id);
     public DetalleParteDiario findByIdParteDiarioAndNombreSector(int idPd, String nombreSec);
     public void updateParteDiario(int idParteDIario);
+    public List<String> getPartesDiarioForAusencia(LocalDate fecha);
 }

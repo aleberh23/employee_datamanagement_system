@@ -177,10 +177,10 @@
         var fechaLimite = new Date();
         fechaLimite.setFullYear(fechaLimite.getFullYear() + 30);
         var fechaInicioLimite = new Date();
-        fechaInicioLimite.setDate(fechaInicioLimite.getDate()-1);
+        //fechaInicioLimite.setDate(fechaInicioLimite.getDate()-365);
+        
+        fechaInicioLimite.setFullYear(fechaInicioLimite.getFullYear() - 1);
         console.log(fechaInicioLimite);
-       //comente esta linea para que no se puedan cargar contratos previos a la fecha actual :)
-       //fechaInicioLimite.setFullYear(fechaInicioLimite.getFullYear() - 1);
 
         // Obtener la fecha de ingreso del empleado desde el input hidden
         var fechaIngreso = new Date($("#fecha_ingreso").val());

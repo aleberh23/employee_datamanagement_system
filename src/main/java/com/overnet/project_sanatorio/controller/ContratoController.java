@@ -32,8 +32,10 @@ public class ContratoController {
         LocalDate ultimaFechaFin = contratoser.obtenerUltimaFechaFin(idEmpleado); 
         if(emp.getContratos().isEmpty()){
             con.setFechaInicio(emp.getFechaIngreso());
-        } else{
-            con.setFechaInicio(ultimaFechaFin.plusDays(1));
+        } else if(ultimaFechaFin!=null){
+            con.setFechaInicio(ultimaFechaFin.plusDays(1));            
+        }else{
+            con.setFechaInicio(emp.getFechaIngreso());
         }
         
                
@@ -90,6 +92,7 @@ public class ContratoController {
             Contrato superpuesto = contratoser.findContrato(idSuperpuesto);
             System.out.println("superpuesto id: "+superpuesto.getIdContrato());
             modelo.addAttribute("superpuesto", superpuesto);
+            
         }
         return "editar_contrato_emp";
     }
@@ -119,7 +122,7 @@ public class ContratoController {
         System.out.println(!deBaja);
         List<Contrato> contratos = contratoser.findBySearch(palabra, deBaja);
         modelo.addAttribute("contratos", contratos);
-        modelo.addAttribute("palabra", palabra);
+        modelo.addAttribute("palabra", palabra.toLowerCase());
         modelo.addAttribute("deBaja", deBaja);
        
     return "lista_contratos";

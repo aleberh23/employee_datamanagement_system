@@ -30,7 +30,7 @@ public class AppController {
         int cantidadLicencias = lictomser.countLicenciasActivas();
         int cantidadEnfermeria = empser.countEmpleadosPorSector("Enfermeria");
         int cantidadAdministracion = empser.countEmpleadosPorSector("Administracion");
-        int cantidadCamilleria = empser.countEmpleadosPorSector("Camilleria");
+        int cantidadCamilleria = empser.countEmpleadosPorSector("Camilleros");
         int cantidadLimpieza = empser.countEmpleadosPorSector("Limpieza");
         int cantidadRecepcion = empser.countEmpleadosPorSector("Recepcion");
         
