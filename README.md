@@ -78,6 +78,7 @@ Before proceeding with the installation steps, you must have the following prere
 - PostgreSQL server running on localhost:5432 (for WINDOWS 64 bits: https://sbp.enterprisedb.com/getfile.jsp?fileid=1258893)
 
 <h3>Instalation Steps:</h3>
+
 1. Go to the final release: (https://github.com/aleberh23/employee_datamanagement_system/releases/tag/final)
 2. Download the .zip file called: "release.1.0.final".
 3. Extract the compressed file.
