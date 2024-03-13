@@ -1,4 +1,4 @@
-<h1 align="center">Member Management System</h1>
+<h1 align="center">Employee Data Management System</h1>
 
 
 This system, which I developed as the final project for my Software Development Technician career, originates from a practical need in the healthcare sector. It was born out of the specific requirements conveyed to me by two HR professionals working within a healthcare institution. With their insights and needs in mind, I crafted a solution tailored to the unique demands of managing human resources in a hospital clinic environment. This project serves as a testament to my ability to translate real-world challenges into effective software solutions, demonstrating my skills and expertise gained throughout my academic journey. The main parts of the system are:
