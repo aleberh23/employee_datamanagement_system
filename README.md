@@ -35,22 +35,41 @@ The second role, named "Entrance Desk," is specifically designed for employees t
 
 ## Technologies used:
 
+<h3>Backend:</h3>
+The project was developed using Spring Boot as the main framework. Spring Boot facilitates the creation of Java applications based on the Spring framework with minimal configuration and a convention-over-configuration approach. This provides a solid and efficient foundation for application development.
+In addition, Spring Security was utilized for managing different roles and users, providing robust authentication and authorization features. Spring Data JPA was employed as an ORM (Object-Relational Mapping) tool, simplifying the interaction with the database and enhancing data access capabilities.
+
+<h3>Frontend with HTML Templates and Bootstrap Styles:</h3>
+The user interface was implemented using HTML templates, taking advantage of the versatility and ease of development they offer. Additionally, I integrated small JavaScript scripts with JQuery for form validations in the frontend. Bootstrap styles were utilized to ensure an attractive design. Bootstrap simplifies the creation of appealing user interfaces.
+
+<h3>Thymeleaf Template Engine:</h3>
+Thymeleaf was used for dynamic HTML page rendering and integration with the backend. This template engine allows the incorporation of dynamic data into HTML pages, facilitating the presentation of server-generated dynamic information.
+
+<h3>PostgreSQL Database:</h3>
+PostgreSQL was chosen as the database management system for storing and retrieving data.
+
+<h3>Report Generation with JasperSoft:</h3>
+JasperSoft was implemented for report generation. JasperSoft simplifies the creation of detailed and visually appealing reports, offering robust capabilities for data presentation.
+
+The combination of Spring Boot, HTML with Bootstrap, Thymeleaf, PostgreSQL, and JasperSoft provided a solid and comprehensive technological foundation for the project. This architecture enabled efficient development of a web application with a user-friendly interface, a reliable database, and the ability to generate detailed reports.
+
+
 ## Images:
-Here are some screenshots of the working system. The data is censored.
+Here are some screenshots of the working system. The displayed information does not correspond to real individuals; rather, it consists of test data.
 <div style="display: flex; flex-wrap: wrap;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/eacc1808-4bd4-4d46-97e9-81ef0dfe7ddb" alt="login" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/9fe36de3-d7ce-4722-b489-a46c4cd87028" alt="new_member" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/207e1894-a077-4e2e-bc7f-3db68b828f7c" alt="member_view" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/c99face8-3d39-41e8-8b1a-ef5e8987b103" alt="memeber_filter" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/e1020b1d-1fbf-48d1-8e64-35d8705cd960" alt="test_member_data" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/c285712d-66e4-48e0-85eb-e2305498ee6c" alt="secondary_members_group_of_testmember" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/1b929ee0-9878-4fb0-82af-51039729e080" alt="alerts_change_of_categories" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/f308cbdf-3717-4584-b330-586f6b783628" alt="debt_collectors" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/c1d8db8b-09ea-4960-bdd8-bca810650106" alt="categories" style="width: 150px; margin: 5px;">
-    <img src="https://github.com/aleberh23/member-management-system/assets/158856472/a751d009-7bc2-41f7-8b6c-72b11b14b4e7" alt="change_of_category_alert" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/183f471f-84c4-40c9-9876-38729c902bba" alt="main menu" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/228f7da8-cb0f-4607-b461-077225032af4" alt="login" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/14503bcf-940b-4c2d-ba04-fffcd9ba639d" alt="licences" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/9930a316-e4ac-4d98-9168-18e8c2916955" alt="family charges" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/8fd7d250-24d4-4601-b6db-50965cc21f4a" alt="employee view" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/406b05ae-6288-4139-98b3-ceaaadbeede0" alt="employee detail" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/949235db-c814-4a20-bdc5-83f49273c861" alt="daily report" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/e5f41a23-f5f9-4fc0-b4f6-6b386ec40d13" alt="contracts" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/1e398f37-5e90-49ad-81ab-21d29c19c484" alt="adresses" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/29eac797-cc81-4593-87ac-76462d1d14d0" alt="absences" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/967ebac1-c629-48ab-8bc5-6e9bec29a844" alt="vacation days automatic calculation" style="width: 150px; margin: 5px;">
+    <img src="https://github.com/aleberh23/employee_datamanagement_system/assets/158856472/04def1e4-9621-4a92-8c1b-50f8fe45b9da" alt="new employee" style="width: 150px; margin: 5px;">
 </div>
-
-
 
 ## Installation instructions:
 Before proceeding with the installation steps, you must have the following prerequisites installed:
