@@ -77,4 +77,16 @@ Before proceeding with the installation steps, you must have the following prere
 - JDK 20 (for WINDOWS 64 bits: https://download.oracle.com/java/20/archive/jdk-20.0.2_windows-x64_bin.exe)
 - PostgreSQL server running on localhost:5432 (for WINDOWS 64 bits: https://sbp.enterprisedb.com/getfile.jsp?fileid=1258893)
 
-  <h3>Instalation Steps:</h3>
+<h3>Instalation Steps:</h3>
+1. Go to the final release: (https://github.com/aleberh23/employee_datamanagement_system/releases/tag/final)
+2. Download the .zip file called: "release.1.0.final".
+3. Extract the compressed file.
+4. In the folder you have the test database backup, and a .bat script, here you have two options.
+    - Execute the script, this will automatically create the DB called 'proyecto_sanatorio', then executes the command pg_restore to restore the backup to the new DB, and finally changes the password for the user 'postgres' to 'postgres'.
+    - Do this process manually, by creating the DB "proyecto_sanatorio" in pg_admin or by command line, restoring the DB backup called "proyectoSanatorio_ghub.sql", and finally changing the password of postgres user to 'postgres'.
+5. Open the .exe file of the system.
+6. After waiting 5 seconds, you should go to: http://localhost:8080/.
+7. The login screen should load in this page! The users are:
+    - prhh@gmail.com | PSWD: pruebarrhh (this is the HR personel user)
+    - mesaentrada@gmail.com | PSWD: mesaentrada (this is the entry desk user)
+8. Now the system is ready to use! (PS: when you stop using the system, you can use the 'kill8080.bat' script, that stop the process with a task kill command)
